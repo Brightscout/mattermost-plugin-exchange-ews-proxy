@@ -1,0 +1,24 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.ews'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.microsoft.ews-java-api:ews-java-api:2.0'
+	implementation 'javax.xml.ws:jaxws-api:2.3.1'
+}
+
+test {
+	useJUnitPlatform()
+}
