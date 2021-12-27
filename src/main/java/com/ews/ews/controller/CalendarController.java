@@ -15,7 +15,7 @@ import com.ews.ews.service.CalendarService;
 import com.ews.ews.service.EWSService;
 
 @RestController
-@RequestMapping("/api/calendar/")
+@RequestMapping("/api/calendar")
 public class CalendarController {
 	
 	@Autowired
@@ -31,8 +31,8 @@ public class CalendarController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Calendar> getCalendar(@RequestParam String email, @RequestParam String id) throws Exception {
-		return this.calendarService.getCalendar(ewsService.impersonateUser(email), id);
+	public ResponseEntity<Calendar> getCalendar(@RequestParam String email) throws Exception {
+		return this.calendarService.getCalendar(ewsService.impersonateUser(email));
 	}
 	
 }

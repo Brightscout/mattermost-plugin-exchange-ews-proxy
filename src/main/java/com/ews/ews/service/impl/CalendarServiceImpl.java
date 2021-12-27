@@ -29,8 +29,8 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String id) throws Exception {
-		FolderId folderId = new FolderId(id);
+	public ResponseEntity<Calendar> getCalendar(ExchangeService service) throws Exception {
+		FolderId folderId = new FolderId(WellKnownFolderName.Calendar);
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, folderId, PropertySet.FirstClassProperties);
 		Calendar calendar = new Calendar();
 		calendar.setId(calendarFolder.getId().toString());
@@ -52,9 +52,9 @@ public class CalendarServiceImpl implements CalendarService {
 			event.setId(appointment.getId().toString());
 			event.setiCalUID(appointment.getICalUid());
 			event.setSubject(appointment.getSubject());
-			MessageBody messageBody = appointment.getBody();
-			event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),
-					messageBody.getBodyType().toString()));
+//			MessageBody messageBody = appointment.getBody();
+//			event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),
+//					messageBody.getBodyType().toString()));
 			event.setImportance(appointment.getImportance().toString());
 			event.setAllDay(appointment.getIsAllDayEvent());
 			event.setCancelled(appointment.getIsCancelled());
@@ -66,6 +66,7 @@ public class CalendarServiceImpl implements CalendarService {
 			List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
 			attendeesList.addAll(appointment.getOptionalAttendees().getItems());
 			int attendeesLen = attendeesList.size();
+			System.out.println("Attendees Len is "+ attendeesLen);
 			com.ews.ews.model.event.Attendee[] attendees = new com.ews.ews.model.event.Attendee[attendeesLen];
 			for (int j = 0; j < attendeesLen; j++) {
 				Attendee attendee = attendeesList.get(j);
