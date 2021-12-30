@@ -12,25 +12,30 @@ import com.ews.ews.model.Calendar;
 import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
-import com.ews.ews.model.event.ItemBody;
 import com.ews.ews.service.CalendarService;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.search.FolderTraversal;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.search.CalendarView;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.FolderView;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	public ResponseEntity<Calendar> getCalendar(ExchangeService service) throws Exception {
-		FolderId folderId = new FolderId(WellKnownFolderName.Calendar);
+	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception {
+		FolderId folderId = new FolderId(calendarId);
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, folderId, PropertySet.FirstClassProperties);
 		Calendar calendar = new Calendar();
 		calendar.setId(calendarFolder.getId().toString());
@@ -101,6 +106,20 @@ public class CalendarServiceImpl implements CalendarService {
 
 		return new ResponseEntity<>(new Calendar(folder.getId().toString(), folder.getDisplayName()),
 				HttpStatus.CREATED);
+	}
+	
+	@Override
+	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception {
+        PropertySet psPropSet = new PropertySet(BasePropertySet.FirstClassProperties);
+        FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
+        FolderView fvFolderView = new FolderView(1000);
+        fvFolderView.setTraversal(FolderTraversal.Deep);
+        fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
+        SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
+        FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
+        ArrayList<Calendar> calendars = new ArrayList<>();
+        
+        return null;
 	}
 
 }
