@@ -48,6 +48,7 @@ public class RestControllerExceptionHandler {
 
 	@ExceptionHandler(BadRequestException.class)
 	@ResponseBody
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ApiResponse> resolveException(BadRequestException exception) {
 		ApiResponse apiResponse = exception.getApiResponse();
 
@@ -56,6 +57,7 @@ public class RestControllerExceptionHandler {
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseBody
+	@ResponseStatus(code = HttpStatus.NOT_FOUND)
 	public ResponseEntity<ApiResponse> resolveException(ResourceNotFoundException exception) {
 		ApiResponse apiResponse = exception.getApiResponse();
 

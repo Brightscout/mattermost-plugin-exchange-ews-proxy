@@ -19,12 +19,10 @@ public class ExceptionResponse {
 	}
 
 	public List<String> getMessages() {
-
-		return messages == null ? null : new ArrayList<>(messages);
+		return messages;
 	}
 
 	public final void setMessages(List<String> messages) {
-
 		if (messages == null) {
 			this.messages = null;
 		} else {

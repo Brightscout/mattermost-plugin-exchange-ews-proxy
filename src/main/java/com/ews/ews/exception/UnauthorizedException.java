@@ -7,7 +7,6 @@ import com.ews.ews.payload.ApiResponse;
 
 @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
 
 	private ApiResponse apiResponse;
 
@@ -25,6 +24,7 @@ public class UnauthorizedException extends RuntimeException {
 
 	public UnauthorizedException(String message, Throwable cause) {
 		super(message, cause);
+		this.message = message;
 	}
 
 	public ApiResponse getApiResponse() {

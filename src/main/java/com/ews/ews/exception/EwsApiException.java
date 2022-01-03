@@ -5,8 +5,7 @@ import org.springframework.http.HttpStatus;
 import com.ews.ews.payload.ApiResponse;
 
 public class EwsApiException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
-	
+
 	private final HttpStatus status;
 	private final String message;
 

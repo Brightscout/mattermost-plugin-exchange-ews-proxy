@@ -7,7 +7,6 @@ import com.ews.ews.payload.ApiResponse;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
 
 	private ApiResponse apiResponse;
 
