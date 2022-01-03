@@ -1,7 +1,5 @@
 package com.ews.ews.model.event;
 
-import java.util.Date;
-
 public class Event {
 	
 	private String id;
@@ -28,9 +26,9 @@ public class Event {
 	
 	//NA: private String webLink;
 	
-	private Date start;
+	private DateTime start;
 	
-	private Date end;
+	private DateTime end;
 	
 	//NA: private int reminderMinutesBeforeStart;
 	
@@ -106,19 +104,19 @@ public class Event {
 		this.responseRequested = responseRequested;
 	}
 
-	public Date getStart() {
+	public DateTime getStart() {
 		return start;
 	}
 
-	public void setStart(Date start) {
+	public void setStart(DateTime start) {
 		this.start = start;
 	}
 
-	public Date getEnd() {
+	public DateTime getEnd() {
 		return end;
 	}
 
-	public void setEnd(Date end) {
+	public void setEnd(DateTime end) {
 		this.end = end;
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ews.ews.model.Calendar;
+import com.ews.ews.model.event.DateTime;
 import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
@@ -34,7 +35,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception {
+	public Calendar getCalendar(ExchangeService service, String calendarId) throws Exception {
 		FolderId folderId = new FolderId(calendarId);
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, folderId, PropertySet.FirstClassProperties);
 		Calendar calendar = new Calendar();
@@ -64,8 +65,8 @@ public class CalendarServiceImpl implements CalendarService {
 			event.setAllDay(appointment.getIsAllDayEvent());
 			event.setCancelled(appointment.getIsCancelled());
 			event.setResponseRequested(appointment.getIsResponseRequested());
-			event.setStart(appointment.getStart());
-			event.setEnd(appointment.getEnd());
+			event.setStart(new DateTime(appointment.getStart().toString(), appointment.getTimeZone()));
+			event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
 			event.setLocation(appointment.getLocation());
 			// Attendees is combination of required and optional attendees in EWS
 			List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
@@ -95,7 +96,7 @@ public class CalendarServiceImpl implements CalendarService {
 		calendar.setCalendarView(events);
 		// TODO: Need to check for calendar view and user
 
-		return new ResponseEntity<>(calendar, HttpStatus.OK);
+		return calendar;
 	}
 
 	@Override
@@ -110,7 +111,6 @@ public class CalendarServiceImpl implements CalendarService {
 	
 	@Override
 	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception {
-        PropertySet psPropSet = new PropertySet(BasePropertySet.FirstClassProperties);
         FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
         FolderView fvFolderView = new FolderView(1000);
         fvFolderView.setTraversal(FolderTraversal.Deep);
@@ -118,8 +118,11 @@ public class CalendarServiceImpl implements CalendarService {
         SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
         FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
         ArrayList<Calendar> calendars = new ArrayList<>();
+        for (Folder folder : ffoldres.getFolders()) {
+        	calendars.add(getCalendar(service, folder.getId().toString()));
+        }
         
-        return null;
+        return new ResponseEntity<>(calendars, HttpStatus.OK);
 	}
 
 }
