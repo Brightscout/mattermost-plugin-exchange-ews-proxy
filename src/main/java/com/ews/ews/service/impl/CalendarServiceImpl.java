@@ -132,7 +132,7 @@ public class CalendarServiceImpl implements CalendarService {
 		Calendar calendar = new Calendar(calendarId, folder.getDisplayName());
 		folder.delete(DeleteMode.HardDelete);
 
-		return new ResponseEntity<>(calendar, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(calendar, HttpStatus.OK);
 	}
 
 	@Override
