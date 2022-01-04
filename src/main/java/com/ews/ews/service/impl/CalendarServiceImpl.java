@@ -20,6 +20,7 @@ import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.search.FolderTraversal;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -35,7 +36,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	public Calendar getCalendar(ExchangeService service, String calendarId) throws Exception {
+	public Calendar getCalendarById(ExchangeService service, String calendarId) throws Exception {
 		FolderId folderId = new FolderId(calendarId);
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, folderId, PropertySet.FirstClassProperties);
 		Calendar calendar = new Calendar();
@@ -72,7 +73,6 @@ public class CalendarServiceImpl implements CalendarService {
 			List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
 			attendeesList.addAll(appointment.getOptionalAttendees().getItems());
 			int attendeesLen = attendeesList.size();
-			System.out.println("Attendees Len is "+ attendeesLen);
 			com.ews.ews.model.event.Attendee[] attendees = new com.ews.ews.model.event.Attendee[attendeesLen];
 			for (int j = 0; j < attendeesLen; j++) {
 				Attendee attendee = attendeesList.get(j);
@@ -108,21 +108,35 @@ public class CalendarServiceImpl implements CalendarService {
 		return new ResponseEntity<>(new Calendar(folder.getId().toString(), folder.getDisplayName()),
 				HttpStatus.CREATED);
 	}
-	
+
 	@Override
 	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception {
-        FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
-        FolderView fvFolderView = new FolderView(1000);
-        fvFolderView.setTraversal(FolderTraversal.Deep);
-        fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
-        SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
-        FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
-        ArrayList<Calendar> calendars = new ArrayList<>();
-        for (Folder folder : ffoldres.getFolders()) {
-        	calendars.add(getCalendar(service, folder.getId().toString()));
-        }
-        
-        return new ResponseEntity<>(calendars, HttpStatus.OK);
+		FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
+		FolderView fvFolderView = new FolderView(1000);
+		fvFolderView.setTraversal(FolderTraversal.Deep);
+		fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
+		SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
+		FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
+		ArrayList<Calendar> calendars = new ArrayList<>();
+		for (Folder folder : ffoldres.getFolders()) {
+			calendars.add(getCalendarById(service, folder.getId().toString()));
+		}
+
+		return new ResponseEntity<>(calendars, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<Calendar> deleteCalendar(ExchangeService service, String calendarId) throws Exception {
+		FolderId folderId = new FolderId(calendarId);
+		Folder folder = Folder.bind(service, folderId);
+		Calendar calendar = new Calendar(calendarId, folder.getDisplayName());
+		folder.delete(DeleteMode.HardDelete);
+
+		return new ResponseEntity<>(calendar, HttpStatus.ACCEPTED);
+	}
+
+	@Override
+	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception {
+		return new ResponseEntity<>(getCalendarById(service, calendarId), HttpStatus.OK);
+	}
 }

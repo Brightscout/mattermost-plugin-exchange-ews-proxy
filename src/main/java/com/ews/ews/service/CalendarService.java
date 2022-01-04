@@ -13,4 +13,8 @@ public interface CalendarService {
 	public ResponseEntity<Calendar> createCalendar(ExchangeService service, Calendar calendar) throws Exception;
 	
 	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception;
+
+	public ResponseEntity<Calendar> deleteCalendar(ExchangeService service, String calendarId) throws Exception;
+
+	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception;
 }
