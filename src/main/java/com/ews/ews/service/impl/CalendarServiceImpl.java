@@ -117,9 +117,12 @@ public class CalendarServiceImpl implements CalendarService {
 		fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
 		SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
 		FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
+		String deletedFolderId = Folder.bind(service, WellKnownFolderName.DeletedItems).getId().getUniqueId();
 		ArrayList<Calendar> calendars = new ArrayList<>();
 		for (Folder folder : ffoldres.getFolders()) {
-			calendars.add(getCalendarById(service, folder.getId().toString()));
+			if (!folder.getParentFolderId().getUniqueId().equals(deletedFolderId)) {
+				calendars.add(getCalendarById(service, folder.getId().toString()));
+			}
 		}
 
 		return new ResponseEntity<>(calendars, HttpStatus.OK);
