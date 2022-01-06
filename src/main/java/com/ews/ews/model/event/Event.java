@@ -30,7 +30,7 @@ public class Event {
 	
 	private DateTime end;
 	
-	//NA: private int reminderMinutesBeforeStart;
+	private int reminderMinutesBeforeStart;
 	
 	private String location;
 	
@@ -150,6 +150,14 @@ public class Event {
 
 	public void setResponseStatus(EventResponseStatus responseStatus) {
 		this.responseStatus = responseStatus;
+	}
+
+	public int getReminderMinutesBeforeStart() {
+		return reminderMinutesBeforeStart;
+	}
+
+	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
+		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
 	}
 	
 }

@@ -65,6 +65,7 @@ public class CalendarServiceImpl implements CalendarService {
 			event.setImportance(appointment.getImportance().toString());
 			event.setAllDay(appointment.getIsAllDayEvent());
 			event.setCancelled(appointment.getIsCancelled());
+			event.setReminderMinutesBeforeStart(appointment.getReminderMinutesBeforeStart());
 			event.setResponseRequested(appointment.getIsResponseRequested());
 			event.setStart(new DateTime(appointment.getStart().toString(), appointment.getTimeZone()));
 			event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
