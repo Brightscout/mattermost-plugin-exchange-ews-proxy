@@ -7,7 +7,6 @@ public class EventResponseStatus {
 	private String time; // LastResponseTime
 
 	public EventResponseStatus() {
-		
 	}
 	
 	public EventResponseStatus(String response, String time) {

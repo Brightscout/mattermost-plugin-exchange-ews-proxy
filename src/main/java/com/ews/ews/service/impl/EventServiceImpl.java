@@ -25,7 +25,7 @@ public class EventServiceImpl implements EventService {
 	public ResponseEntity<Event> createEvent(ExchangeService service, Event event) throws Exception {
 		Appointment meeting = new Appointment(service);
 		meeting.setSubject(event.getSubject());
-		meeting.setBody(new MessageBody(event.getBody().getContent()));
+//		meeting.setBody(new MessageBody(event.getBody().getContent()));
 		meeting.setStart(new Date(event.getStart().getDateTime()));
 		meeting.setEnd(new Date(event.getEnd().getDateTime()));
 		TimeZoneDefinition timeZone = getTimeZone(service, event.getStart().getTimeZone());
@@ -36,11 +36,19 @@ public class EventServiceImpl implements EventService {
 		meeting.setIsAllDayEvent(event.isAllDay());
 		meeting.setReminderMinutesBeforeStart(event.getReminderMinutesBeforeStart());
 		meeting.setLocation(event.getLocation());
+		System.out.println(event.getSubject());
+//		System.out.println(event.getBody().getContent());
+		System.out.println(event.getStart().getDateTime());
+		System.out.println(event.getEnd().getDateTime());
+		System.out.println(timeZone);
+		System.out.println(event.isAllDay());
+		System.out.println(event.getReminderMinutesBeforeStart());
+		System.out.println(event.getLocation());
 		meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
 		
 		// Populate meeting and calendar ID
-		event.setId(meeting.getId().toString());
-		event.setiCalUID(meeting.getICalUid());
+//		event.setId(meeting.getId().toString());
+//		event.setiCalUID(meeting.getICalUid());
 		
 		return new ResponseEntity<>(event, HttpStatus.CREATED);
 	}

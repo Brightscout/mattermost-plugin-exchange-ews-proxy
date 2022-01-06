@@ -6,6 +6,9 @@ public class ItemBody {
 	
 	private String contentType; // BodyType
 	
+	public ItemBody() {
+	}
+	
 	public ItemBody(String content, String contentType) {
 		this.content = content;
 		this.contentType = contentType;

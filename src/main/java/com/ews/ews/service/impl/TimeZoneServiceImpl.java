@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.ews.ews.service.TimeZoneService;
 
@@ -20,6 +21,7 @@ import microsoft.exchange.webservices.data.misc.availability.GetUserAvailability
 import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
 import microsoft.exchange.webservices.data.property.complex.time.TimeZoneDefinition;
 
+@Service
 public class TimeZoneServiceImpl implements TimeZoneService {
 
 	@Override

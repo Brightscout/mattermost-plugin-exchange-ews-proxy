@@ -6,6 +6,9 @@ public class DateTime {
 	
 	private String timeZone;
 	
+	public DateTime() {
+	}
+	
 	public DateTime(String dateTime, String timeZone) {
 		this.dateTime = dateTime;
 		this.timeZone = timeZone;

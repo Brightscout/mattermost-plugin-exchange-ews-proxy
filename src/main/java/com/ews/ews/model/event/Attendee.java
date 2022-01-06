@@ -7,6 +7,9 @@ public class Attendee {
 	private EventResponseStatus status;
 	
 	private EmailAddress emailAddress;
+	
+	public Attendee() {
+	}
 
 	public Attendee(String type, EventResponseStatus status, EmailAddress emailAddress) {
 		this.type = type;
