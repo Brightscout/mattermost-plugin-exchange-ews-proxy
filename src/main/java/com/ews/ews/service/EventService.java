@@ -10,4 +10,6 @@ public interface EventService {
 	
 	public ResponseEntity<Event> createEvent(ExchangeService service, Event event) throws Exception;
 	
+	public ResponseEntity<Event[]> getEvents(ExchangeService service, String start, String end) throws Exception;
+	
 }

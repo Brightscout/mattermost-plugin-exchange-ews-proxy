@@ -1,5 +1,9 @@
 package com.ews.ews.utils;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.util.AntPathMatcher;
@@ -21,5 +25,9 @@ public class AppUtils {
 		}
 
 		return completeId;
+	}
+	
+	public static Date parseDateString(String date) {
+		return Date.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(date, Instant::from));
 	}
 }
