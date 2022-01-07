@@ -24,7 +24,7 @@ public class Event {
 	
 	//NA: private String showAs;
 	
-	//NA: private String webLink;
+	private String webLink;
 	
 	private DateTime start;
 	
@@ -158,6 +158,14 @@ public class Event {
 
 	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
 		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
+	}
+
+	public String getWebLink() {
+		return webLink;
+	}
+
+	public void setWebLink(String webLink) {
+		this.webLink = webLink;
 	}
 	
 }
