@@ -31,8 +31,8 @@ public class EventController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ArrayList<Event>> getEvents(@RequestParam String email, @RequestParam String start, @RequestParam String end) throws Exception {
-		return this.eventService.getEvents(this.ewsService.impersonateUser(email), start, end);
+	public ResponseEntity<ArrayList<Event>> getEvents(@RequestParam String email, @RequestParam String startDateTime, @RequestParam String endDateTime) throws Exception {
+		return this.eventService.getEvents(this.ewsService.impersonateUser(email), startDateTime, endDateTime);
 	}
 
 }

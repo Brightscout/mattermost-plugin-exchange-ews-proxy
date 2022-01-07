@@ -1,9 +1,7 @@
 package com.ews.ews.service.impl;
 
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +35,10 @@ public class EventServiceImpl implements EventService {
 		meeting.setIsAllDayEvent(event.isAllDay());
 		meeting.setReminderMinutesBeforeStart(event.getReminderMinutesBeforeStart());
 		meeting.setLocation(event.getLocation());
-		for (com.ews.ews.model.event.Attendee attendee : event.getAttendees()) {
-			meeting.getResources().add(new Attendee(attendee.getEmailAddress().getAddress()));
+		if (event.getAttendees() != null) {
+			for (com.ews.ews.model.event.Attendee attendee : event.getAttendees()) {
+				meeting.getResources().add(new Attendee(attendee.getEmailAddress().getAddress()));
+			}			
 		}
 		meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
 
@@ -49,23 +49,23 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResponseEntity<ArrayList<Event>> getEvents(ExchangeService service, String start, String end) throws Exception {
+	public ResponseEntity<ArrayList<Event>> getEvents(ExchangeService service, String start, String end)
+			throws Exception {
 		CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
 		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end));
-		calView.setPropertySet(
-				new PropertySet(AppointmentSchema.Subject, AppointmentSchema.NetShowUrl, AppointmentSchema.Start,
-						AppointmentSchema.End, AppointmentSchema.TimeZone));
+		calView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start,
+				AppointmentSchema.End, AppointmentSchema.TimeZone));
 		FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 		ArrayList<Event> events = new ArrayList<>();
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		for (Appointment appointment : appointments) {
 			Event event = new Event();
-			event.setStart(new DateTime(appointment.getStart().toString(), appointment.getTimeZone()));
-			event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
+			event.setStart(new DateTime(f.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+			event.setEnd(new DateTime(f.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 			event.setSubject(appointment.getSubject().toString());
-			event.setWebLink(appointment.getNetShowUrl());
 			events.add(event);
 		}
-		
+
 		return new ResponseEntity<>(events, HttpStatus.OK);
 	}
 

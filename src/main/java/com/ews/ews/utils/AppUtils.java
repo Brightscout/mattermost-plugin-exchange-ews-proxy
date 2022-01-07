@@ -26,7 +26,7 @@ public class AppUtils {
 
 		return completeId;
 	}
-	
+
 	public static Date parseDateString(String date) {
 		return Date.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(date, Instant::from));
 	}
