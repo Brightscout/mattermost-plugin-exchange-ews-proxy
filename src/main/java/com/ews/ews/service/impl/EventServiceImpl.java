@@ -39,7 +39,7 @@ public class EventServiceImpl implements EventService {
 		if (event.getAttendees() != null) {
 			for (com.ews.ews.model.event.Attendee attendee : event.getAttendees()) {
 				meeting.getResources().add(new Attendee(attendee.getEmailAddress().getAddress()));
-			}			
+			}
 		}
 		meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
 
@@ -55,12 +55,13 @@ public class EventServiceImpl implements EventService {
 		CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
 		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end));
 		calView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start,
-				AppointmentSchema.End, AppointmentSchema.TimeZone));
+				AppointmentSchema.End, AppointmentSchema.TimeZone, AppointmentSchema.Id));
 		FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 		ArrayList<Event> events = new ArrayList<>();
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		for (Appointment appointment : appointments) {
 			Event event = new Event();
+			event.setId(appointment.getId().toString());
 			event.setStart(new DateTime(f.format(appointment.getStart()).toString(), appointment.getTimeZone()));
 			event.setEnd(new DateTime(f.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 			event.setSubject(appointment.getSubject().toString());
@@ -72,17 +73,17 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public ResponseEntity<Event> acceptEvent(ExchangeService service, String eventId) throws Exception {
-		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet());
 		appointment.accept(true);
 
-		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+		return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<Event> declineEvent(ExchangeService service, String eventId) throws Exception {
 		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
 		appointment.decline(true);
-		
+
 		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
 	}
 
@@ -90,9 +91,8 @@ public class EventServiceImpl implements EventService {
 	public ResponseEntity<Event> tentativelyAcceptEvent(ExchangeService service, String eventId) throws Exception {
 		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
 		appointment.acceptTentatively(true);
-		
+
 		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
 	}
-	
 
 }
