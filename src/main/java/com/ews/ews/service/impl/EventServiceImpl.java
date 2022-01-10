@@ -20,6 +20,7 @@ import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 
@@ -68,5 +69,30 @@ public class EventServiceImpl implements EventService {
 
 		return new ResponseEntity<>(events, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<Event> acceptEvent(ExchangeService service, String eventId) throws Exception {
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		appointment.accept(true);
+
+		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Event> declineEvent(ExchangeService service, String eventId) throws Exception {
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		appointment.decline(true);
+		
+		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Event> tentativelyAcceptEvent(ExchangeService service, String eventId) throws Exception {
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		appointment.acceptTentatively(true);
+		
+		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+	}
+	
 
 }

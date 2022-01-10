@@ -1,44 +1,51 @@
 package com.ews.ews.model.event;
 
 public class Event {
-	
+
 	private String id;
-	
+
 	private String iCalUID;
-	
+
 	private String subject;
-	
+
 	// NA: private String bodyPreview;
-	
+
 	private ItemBody body;
-	
+
 	private String importance;
-	
+
 	private boolean isAllDay; // IsAllDayEvent
-	
+
 	private boolean isCancelled;
-	
+
 	// NA: private boolean isOrganizer;
-	
+
 	private boolean responseRequested; // IsResponseRequested
-	
-	//NA: private String showAs;
-	
-	//NA: private String webLink;
-	
+
+	// NA: private String showAs;
+
+	// NA: private String webLink;
+
 	private DateTime start;
-	
+
 	private DateTime end;
-	
+
 	private int reminderMinutesBeforeStart;
-	
+
 	private String location;
-	
+
 	private EventResponseStatus responseStatus;
-	
+
 	private Attendee[] attendees;
-	
+
 	private Attendee organizer;
+
+	public Event() {
+	}
+
+	public Event(String id) {
+		this.id = id;
+	}
 
 	public String getId() {
 		return id;
@@ -159,5 +166,5 @@ public class Event {
 	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
 		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
 	}
-	
+
 }
