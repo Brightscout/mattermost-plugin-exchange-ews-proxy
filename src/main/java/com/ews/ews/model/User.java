@@ -10,6 +10,16 @@ public class User {
 	
 	private String mail;
 
+	public User() {
+	}
+
+	public User(String id, String displayName, 	String userPrincipalName, String mail) {
+		this.id = id;
+		this.displayName = displayName;
+		this.userPrincipalName = userPrincipalName;
+		this.mail = mail;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -41,7 +51,4 @@ public class User {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
-	
-	
 }
