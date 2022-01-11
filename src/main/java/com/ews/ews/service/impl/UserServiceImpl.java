@@ -16,7 +16,6 @@ import com.ews.ews.model.User;
 @Service
 public class UserServiceImpl implements UserService {
     public ResponseEntity<User> getUser(ExchangeService service, String email) throws Exception {
-        User user = new User();
         NameResolutionCollection resolvedNames = service.resolveName(email);
 
         if (resolvedNames.getCount() != 1) {
@@ -27,8 +26,6 @@ public class UserServiceImpl implements UserService {
         String displayName = resolvedName.getMailbox().getName();
         String mail = resolvedName.getMailbox().getAddress();
 
-        user = new User(mail, displayName, mail);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new User(mail, displayName, mail), HttpStatus.OK);
     }
 }
