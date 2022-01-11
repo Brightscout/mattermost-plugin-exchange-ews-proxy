@@ -44,8 +44,8 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
-//
-//		// Populate meeting ID
+
+		// Populate meeting ID
 		event.setId(meeting.getId().toString());
 
 		return new ResponseEntity<>(event, HttpStatus.CREATED);
