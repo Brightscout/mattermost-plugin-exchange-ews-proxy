@@ -6,17 +6,14 @@ public class User {
 	
 	private String displayName;
 	
-	private String userPrincipalName;
-	
 	private String mail;
 
 	public User() {
 	}
 
-	public User(String id, String displayName, String userPrincipalName, String mail) {
+	public User(String id, String displayName, String mail) {
 		this.id = id;
 		this.displayName = displayName;
-		this.userPrincipalName = userPrincipalName;
 		this.mail = mail;
 	}
 
@@ -34,14 +31,6 @@ public class User {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-	}
-
-	public String getUserPrincipalName() {
-		return userPrincipalName;
-	}
-
-	public void setUserPrincipalName(String userPrincipalName) {
-		this.userPrincipalName = userPrincipalName;
 	}
 
 	public String getMail() {

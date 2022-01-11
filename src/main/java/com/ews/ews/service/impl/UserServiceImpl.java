@@ -19,16 +19,15 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         NameResolutionCollection resolvedNames = service.resolveName(email);
 
-        if (resolvedNames.getCount() == 1) {
-            NameResolution resolvedName = resolvedNames.iterator().next();
-
-            user = new User(
-                resolvedName.getMailbox().getAddress(),
-                resolvedName.getMailbox().getName(),
-                resolvedName.getMailbox().getName(),
-                resolvedName.getMailbox().getAddress()
-            );
+        if (resolvedNames.getCount() != 1) {
+            throw new Exception("User not found for the provided email address");
         }
+        NameResolution resolvedName = resolvedNames.iterator().next();
+
+        String displayName = resolvedName.getMailbox().getName();
+        String mail = resolvedName.getMailbox().getAddress();
+
+        user = new User(mail, displayName, mail);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

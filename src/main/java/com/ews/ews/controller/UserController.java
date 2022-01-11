@@ -16,12 +16,13 @@ import com.ews.ews.model.User;
 @RestController
 @RequestMapping("/api/me")
 public class UserController {
-    @Autowired
+
+	@Autowired
 	EWSService ewsService;
-    
-    @Autowired
+
+	@Autowired
 	UserService userService;
-    	
+
 	@GetMapping
 	public ResponseEntity<User> getUser(@RequestParam String email) throws Exception {
 		return this.userService.getUser(this.ewsService.impersonateUser(email), email);
