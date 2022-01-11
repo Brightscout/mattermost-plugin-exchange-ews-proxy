@@ -21,6 +21,7 @@ import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 
@@ -31,6 +32,7 @@ public class EventServiceImpl implements EventService {
 	public ResponseEntity<Event> createEvent(ExchangeService service, Event event) throws Exception {
 		Appointment meeting = new Appointment(service);
 		meeting.setSubject(event.getSubject());
+		meeting.setBody(new MessageBody(event.getBody().getContent()));
 		meeting.setStart(AppUtils.parseDateString(event.getStart().getDateTime()));
 		meeting.setEnd(AppUtils.parseDateString(event.getEnd().getDateTime()));
 		meeting.setIsAllDayEvent(event.isAllDay());
@@ -42,8 +44,8 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
-
-		// Populate meeting ID
+//
+//		// Populate meeting ID
 		event.setId(meeting.getId().toString());
 
 		return new ResponseEntity<>(event, HttpStatus.CREATED);
