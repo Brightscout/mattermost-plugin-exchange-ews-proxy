@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ews.ews.model.event.DateTime;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.service.EventService;
+import com.ews.ews.utils.AppConstants;
 import com.ews.ews.utils.AppUtils;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -55,15 +56,14 @@ public class EventServiceImpl implements EventService {
 	public ResponseEntity<ArrayList<Event>> getEvents(ExchangeService service, String start, String end)
 			throws Exception {
 		CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
-		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end));
+		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end), AppConstants.MAX_NUMBER_OF_EVENTS);
 		calView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start,
-				AppointmentSchema.End, AppointmentSchema.TimeZone, AppointmentSchema.Id));
+				AppointmentSchema.End, AppointmentSchema.TimeZone));
 		FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 		ArrayList<Event> events = new ArrayList<>();
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		for (Appointment appointment : appointments) {
 			Event event = new Event();
-			event.setId(appointment.getId().toString());
 			event.setStart(new DateTime(f.format(appointment.getStart()).toString(), appointment.getTimeZone()));
 			event.setEnd(new DateTime(f.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 			event.setSubject(appointment.getSubject().toString());
