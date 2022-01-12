@@ -61,11 +61,11 @@ public class EventServiceImpl implements EventService {
 				AppointmentSchema.End, AppointmentSchema.TimeZone));
 		FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 		ArrayList<Event> events = new ArrayList<>();
-		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 		for (Appointment appointment : appointments) {
 			Event event = new Event();
-			event.setStart(new DateTime(f.format(appointment.getStart()).toString(), appointment.getTimeZone()));
-			event.setEnd(new DateTime(f.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+			event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+			event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 			event.setSubject(appointment.getSubject().toString());
 			events.add(event);
 		}

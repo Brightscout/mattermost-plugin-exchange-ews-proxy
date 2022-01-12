@@ -20,5 +20,5 @@ public interface CalendarService {
 
 	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception;
 
-	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, FindMeetingTimes findMeetingTimes) throws Exception;
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, String organizerEmail, FindMeetingTimes findMeetingTimes) throws Exception;
 }

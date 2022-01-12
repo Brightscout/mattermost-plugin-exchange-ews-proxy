@@ -60,8 +60,7 @@ public class CalendarController {
 	
 	@PostMapping({ "/suggestions" })
 	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email, @RequestBody FindMeetingTimes findMeetingTimes) throws Exception {
-		this.calendarService.findMeetingTimes(this.ewsService.impersonateUser(email), findMeetingTimes);
-		return new ResponseEntity<>(new MeetingTimeSuggestionResults(), HttpStatus.OK);
+		return this.calendarService.findMeetingTimes(this.ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
 
 }

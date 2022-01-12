@@ -1,6 +1,6 @@
 package com.ews.ews.service.impl;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ews.ews.model.Calendar;
 import com.ews.ews.model.FindMeetingTimes;
+import com.ews.ews.model.MeetingTimeSuggestion;
 import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.model.event.DateTime;
 import com.ews.ews.model.event.EmailAddress;
@@ -156,7 +157,8 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
-	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, FindMeetingTimes findMeetingTimes) throws Exception {
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, String organizerEmail,
+			FindMeetingTimes findMeetingTimes) throws Exception {
 		List<AttendeeInfo> attendees = new ArrayList<>();
 		for (com.ews.ews.model.event.Attendee attendee : findMeetingTimes.getAttendees()) {
 			MeetingAttendeeType attendeeType = AppConstants.MEETING_ATTENDEE_TYPE_MAP.get(attendee.getType());
@@ -165,30 +167,25 @@ public class CalendarServiceImpl implements CalendarService {
 			}
 			attendees.add(new AttendeeInfo(attendee.getEmailAddress().getAddress(), attendeeType, false));
 		}
-		Date startDate = new Date();
-		Date endDate = new Date();
-		LocalDateTime.from(endDate.toInstant()).plusDays(2);
-		System.out.println("Start Date is "+ startDate);
-		System.out.println("End Date is "+ endDate);
-		GetUserAvailabilityResults results = service.getUserAvailability(attendees, new TimeWindow(startDate, endDate), AvailabilityData.Suggestions);
-		
+//		// Add organizer
+		attendees.add(new AttendeeInfo(organizerEmail, MeetingAttendeeType.Organizer, false));
+
+		java.util.Calendar cd = java.util.Calendar.getInstance();
+		Date startDate = cd.getTime();
+		cd.add(java.util.Calendar.DAY_OF_YEAR, 2);
+		Date endDate = cd.getTime();
+		GetUserAvailabilityResults results = service.getUserAvailability(attendees, new TimeWindow(startDate, endDate),
+				AvailabilityData.Suggestions);
+		ArrayList<MeetingTimeSuggestion> meetingTimes = new ArrayList<>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 		for (Suggestion suggestion : results.getSuggestions()) {
-			System.out.println("suggestion date "+ suggestion.getDate());
-			System.out.println("suggestion quality "+ suggestion.getQuality());
 			for (TimeSuggestion timeSuggestion : suggestion.getTimeSuggestions()) {
-				System.out.println("Time is "+ timeSuggestion.getMeetingTime());
-				System.out.println("Time quality is "+ timeSuggestion.getQuality());
+				meetingTimes.add(new MeetingTimeSuggestion(
+						new DateTime(dateFormat.format(timeSuggestion.getMeetingTime()), "")));
 			}
 		}
-		
-		return null;
+
+		return new ResponseEntity<>(new MeetingTimeSuggestionResults(meetingTimes), HttpStatus.OK);
 	}
-
-
-
-
-
-
-
 
 }
