@@ -1,5 +1,6 @@
 package com.ews.ews.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,14 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ews.ews.model.Calendar;
+import com.ews.ews.model.FindMeetingTimes;
+import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.model.event.DateTime;
 import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
 import com.ews.ews.service.CalendarService;
+import com.ews.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.availability.AvailabilityData;
+import microsoft.exchange.webservices.data.core.enumeration.availability.MeetingAttendeeType;
 import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.search.FolderTraversal;
@@ -25,8 +31,13 @@ import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
+import microsoft.exchange.webservices.data.misc.availability.AttendeeInfo;
+import microsoft.exchange.webservices.data.misc.availability.GetUserAvailabilityResults;
+import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.property.complex.availability.Suggestion;
+import microsoft.exchange.webservices.data.property.complex.availability.TimeSuggestion;
 import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
@@ -143,4 +154,41 @@ public class CalendarServiceImpl implements CalendarService {
 	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws Exception {
 		return new ResponseEntity<>(getCalendarById(service, calendarId), HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, FindMeetingTimes findMeetingTimes) throws Exception {
+		List<AttendeeInfo> attendees = new ArrayList<>();
+		for (com.ews.ews.model.event.Attendee attendee : findMeetingTimes.getAttendees()) {
+			MeetingAttendeeType attendeeType = AppConstants.MEETING_ATTENDEE_TYPE_MAP.get(attendee.getType());
+			if (attendeeType == null) {
+				continue;
+			}
+			attendees.add(new AttendeeInfo(attendee.getEmailAddress().getAddress(), attendeeType, false));
+		}
+		Date startDate = new Date();
+		Date endDate = new Date();
+		LocalDateTime.from(endDate.toInstant()).plusDays(2);
+		System.out.println("Start Date is "+ startDate);
+		System.out.println("End Date is "+ endDate);
+		GetUserAvailabilityResults results = service.getUserAvailability(attendees, new TimeWindow(startDate, endDate), AvailabilityData.Suggestions);
+		
+		for (Suggestion suggestion : results.getSuggestions()) {
+			System.out.println("suggestion date "+ suggestion.getDate());
+			System.out.println("suggestion quality "+ suggestion.getQuality());
+			for (TimeSuggestion timeSuggestion : suggestion.getTimeSuggestions()) {
+				System.out.println("Time is "+ timeSuggestion.getMeetingTime());
+				System.out.println("Time quality is "+ timeSuggestion.getQuality());
+			}
+		}
+		
+		return null;
+	}
+
+
+
+
+
+
+
+
 }
