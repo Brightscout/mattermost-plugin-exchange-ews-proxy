@@ -18,5 +18,5 @@ public class AppConstants {
 			put("optional", MeetingAttendeeType.Optional);
 		}
 	};
-	
+
 }
