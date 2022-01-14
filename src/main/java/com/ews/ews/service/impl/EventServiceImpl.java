@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ews.ews.model.event.DateTime;
+import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
+import com.ews.ews.model.event.EventResponseStatus;
 import com.ews.ews.service.EventService;
 import com.ews.ews.utils.AppConstants;
 import com.ews.ews.utils.AppUtils;
@@ -56,17 +58,26 @@ public class EventServiceImpl implements EventService {
 	public ResponseEntity<ArrayList<Event>> getEvents(ExchangeService service, String start, String end)
 			throws Exception {
 		CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
-		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end), AppConstants.MAX_NUMBER_OF_EVENTS);
-		calView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start,
-				AppointmentSchema.End, AppointmentSchema.TimeZone));
+		CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end),
+				AppConstants.MAX_NUMBER_OF_EVENTS);
 		FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 		ArrayList<Event> events = new ArrayList<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 		for (Appointment appointment : appointments) {
 			Event event = new Event();
-			event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
-			event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 			event.setSubject(appointment.getSubject().toString());
+			event.setStart(
+					new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+			event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+			event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+			event.setCancelled(appointment.getIsCancelled());
+			event.setResponseRequested(appointment.getIsResponseRequested());
+			event.setLocation(appointment.getLocation());
+			event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
+			microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
+					.getOrganizer();
+			event.setOrganizer(new com.ews.ews.model.event.Attendee(
+					new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
 			events.add(event);
 		}
 

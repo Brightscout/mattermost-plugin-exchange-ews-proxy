@@ -11,6 +11,11 @@ public class Attendee {
 	public Attendee() {
 	}
 
+	public Attendee(EmailAddress emailAddress) {
+		super();
+		this.emailAddress = emailAddress;
+	}
+
 	public Attendee(String type, EventResponseStatus status, EmailAddress emailAddress) {
 		this.type = type;
 		this.status = status;
