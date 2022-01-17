@@ -82,6 +82,7 @@ public class CalendarServiceImpl implements CalendarService {
 			event.setStart(new DateTime(appointment.getStart().toString(), appointment.getTimeZone()));
 			event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
 			event.setLocation(appointment.getLocation());
+			event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
 			// Attendees is combination of required and optional attendees in EWS
 			List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
 			attendeesList.addAll(appointment.getOptionalAttendees().getItems());
@@ -96,13 +97,11 @@ public class CalendarServiceImpl implements CalendarService {
 				// times functionality
 				attendees[j] = new com.ews.ews.model.event.Attendee("required/optional", status, emailAddress);
 			}
-			event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString(),
-					appointment.getLastModifiedTime().toString()));
+			event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
 			event.setAttendees(attendees);
 			microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
 					.getOrganizer();
-			event.setOrganizer(new com.ews.ews.model.event.Attendee("organizer", new EventResponseStatus(),
-					new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+			event.setOrganizer(new com.ews.ews.model.event.Attendee(new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
 			events[i] = event;
 		}
 		calendar.setEvents(events);
