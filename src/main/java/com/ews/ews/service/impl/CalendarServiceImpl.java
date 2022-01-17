@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ews.ews.exception.AppException;
+import com.ews.ews.exception.BadRequestException;
 import com.ews.ews.model.Calendar;
 import com.ews.ews.model.FindMeetingTimes;
 import com.ews.ews.model.MeetingTimeSuggestion;
@@ -17,6 +19,7 @@ import com.ews.ews.model.event.DateTime;
 import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
+import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.CalendarService;
 import com.ews.ews.utils.AppConstants;
 
@@ -113,31 +116,38 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<Calendar> createCalendar(ExchangeService service, Calendar calendar) throws Exception {
-		CalendarFolder folder = new CalendarFolder(service);
-		folder.setDisplayName(calendar.getName());
-		folder.save(WellKnownFolderName.Calendar);
-
-		return new ResponseEntity<>(new Calendar(folder.getId().toString(), folder.getDisplayName()),
-				HttpStatus.CREATED);
+		try {
+			CalendarFolder folder = new CalendarFolder(service);
+			folder.setDisplayName(calendar.getName());
+			folder.save(WellKnownFolderName.Calendar);
+			return new ResponseEntity<>(new Calendar(folder.getId().toString(), folder.getDisplayName()),
+					HttpStatus.CREATED);
+		} catch (Exception e) {
+			throw new BadRequestException(new ApiResponse(Boolean.FALSE, "error occurred while creating calendar. Error: "+ e.getMessage()));
+		}
 	}
 
 	@Override
 	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception {
-		FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
-		FolderView fvFolderView = new FolderView(1000);
-		fvFolderView.setTraversal(FolderTraversal.Deep);
-		fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
-		SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
-		FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
-		String deletedFolderId = Folder.bind(service, WellKnownFolderName.DeletedItems).getId().getUniqueId();
-		ArrayList<Calendar> calendars = new ArrayList<>();
-		for (Folder folder : ffoldres.getFolders()) {
-			if (!folder.getParentFolderId().getUniqueId().equals(deletedFolderId)) {
-				calendars.add(getCalendarById(service, folder.getId().toString()));
+		try {
+			FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
+			FolderView fvFolderView = new FolderView(1000);
+			fvFolderView.setTraversal(FolderTraversal.Deep);
+			fvFolderView.setPropertySet(new PropertySet(BasePropertySet.FirstClassProperties));
+			SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
+			FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
+			String deletedFolderId = Folder.bind(service, WellKnownFolderName.DeletedItems).getId().getUniqueId();
+			ArrayList<Calendar> calendars = new ArrayList<>();
+			for (Folder folder : ffoldres.getFolders()) {
+				if (!folder.getParentFolderId().getUniqueId().equals(deletedFolderId)) {
+					calendars.add(getCalendarById(service, folder.getId().toString()));
+				}
 			}
+			return new ResponseEntity<>(calendars, HttpStatus.OK);
+		} catch (Exception e) {
+			throw new BadRequestException(new ApiResponse(Boolean.FALSE, "error occurred while fetching calendar. Error: "+ e.getMessage()));
 		}
 
-		return new ResponseEntity<>(calendars, HttpStatus.OK);
 	}
 
 	@Override
