@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.ews.ews.exception.BadRequestException;
 import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.model.User;
 import com.ews.ews.payload.ApiResponse;
@@ -21,11 +20,11 @@ public class UserServiceImpl implements UserService {
 			NameResolutionCollection resolvedNames = service.resolveName(email);
 
 			if (resolvedNames.getCount() == 0) {
-				throw new BadRequestException(
+				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "no user found for the provided email address"));
 			}
 			if (resolvedNames.getCount() > 1) {
-				throw new BadRequestException(
+				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "multiple users found for the provided email address"));
 			}
 			NameResolution resolvedName = resolvedNames.iterator().next();
