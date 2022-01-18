@@ -13,6 +13,7 @@ import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
 import com.ews.ews.payload.ApiResponse;
+import com.ews.ews.model.event.ItemBody;
 import com.ews.ews.service.EventService;
 import com.ews.ews.utils.AppConstants;
 import com.ews.ews.utils.AppUtils;
@@ -20,6 +21,7 @@ import com.ews.ews.utils.AppUtils;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.ResponseActions;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendInvitationsMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -146,6 +148,7 @@ public class EventServiceImpl implements EventService {
         Event event = new Event();
 		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
         event.setId(appointment.getId().toString());
+		event.setiCalUID(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
 		event.setStart(
 				new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
@@ -154,6 +157,11 @@ public class EventServiceImpl implements EventService {
 		event.setCancelled(appointment.getIsCancelled());
 		event.setResponseRequested(appointment.getIsResponseRequested());
 		event.setLocation(appointment.getLocation());
+		event.setTimezone(appointment.getTimeZone());
+		event.setAllDay(appointment.getIsAllDayEvent());
+		event.setWebLink(appointment.getNetShowUrl());
+		event.setImportance(appointment.getImportance().toString());
+		event.setIsOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
 		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
 				.getOrganizer();
