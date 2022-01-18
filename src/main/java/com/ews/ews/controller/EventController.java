@@ -40,6 +40,12 @@ public class EventController {
 		return this.eventService.getEvents(this.ewsService.impersonateUser(email), startDateTime, endDateTime);
 	}
 
+	@GetMapping({ "/{id}/**" })
+    public ResponseEntity<Event> getEventUsingNotificationId(@RequestParam String email, @PathVariable String id,
+    HttpServletRequest request) throws Exception {
+        return this.eventService.getEventUsingId(this.ewsService.impersonateUser(email), AppUtils.getIdFromParams(id, request));
+    }
+
 	@GetMapping({ "/accept/{id}/**" })
 	public ResponseEntity<Event> acceptEvent(@RequestParam String email, @PathVariable String id,
 			HttpServletRequest request) throws Exception {
