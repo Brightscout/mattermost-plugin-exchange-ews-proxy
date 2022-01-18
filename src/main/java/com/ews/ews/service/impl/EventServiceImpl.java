@@ -108,4 +108,27 @@ public class EventServiceImpl implements EventService {
 		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<Event> getEventUsingId(ExchangeService service, String id) throws Exception {
+        Appointment appointment = Appointment.bind(service, new ItemId(id));
+        Event event = new Event();
+		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+        event.setId(appointment.getId().toString());
+		event.setSubject(appointment.getSubject().toString());
+		event.setStart(
+				new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+		event.setCancelled(appointment.getIsCancelled());
+		event.setResponseRequested(appointment.getIsResponseRequested());
+		event.setLocation(appointment.getLocation());
+		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
+		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
+				.getOrganizer();
+		event.setOrganizer(new com.ews.ews.model.event.Attendee(
+				new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+
+        return new ResponseEntity<Event>(event, HttpStatus.OK);
+    }	
+
 }

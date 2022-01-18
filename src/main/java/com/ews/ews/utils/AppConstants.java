@@ -11,6 +11,8 @@ public class AppConstants {
 
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
+	public static final int SUBSCRIPTION_LIFE_TIME_IN_MINUTE = 30;
+
 	public static final Map<String, MeetingAttendeeType> MEETING_ATTENDEE_TYPE_MAP = new HashMap<>() {
 		{
 			put("organizer", MeetingAttendeeType.Organizer);
