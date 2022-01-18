@@ -52,7 +52,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
                 @Override
                 public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
-                    System.out.println("wow");
                     for (NotificationEvent notification : args.getEvents()){
                         // Get id of the notification
                         ItemId eventId = ((ItemEvent)notification).getItemId();
@@ -65,27 +64,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     }
                 }
             });
-        
-            connection.addOnDisconnect(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
-                @Override public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
-                  StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
-                  try {
-                    connection.open();
-                    System.out.println("restarted");
-                  } catch (Throwable e) {
-                    e.printStackTrace();
-                  }
-                }
-              });
-          
+
             connection.open();
           
             Subscribe subscription = new Subscribe(streamingSubscription.getId().toString());
             return new ResponseEntity<Subscribe>(subscription, HttpStatus.OK);
         } catch (Exception e) {
-            // throw new Exception("Subscription error");
-        } while (true) {
-            
+            throw new Exception("Subscription error");
         }
     }
 
