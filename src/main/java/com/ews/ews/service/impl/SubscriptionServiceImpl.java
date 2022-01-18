@@ -1,7 +1,5 @@
 package com.ews.ews.service.impl;
 
-import com.ews.ews.service.SubscriptionService;
-
 import java.util.ArrayList;
 import java.util.List;
 import com.ews.ews.utils.AppConstants;
@@ -25,6 +23,7 @@ import microsoft.exchange.webservices.data.notification.StreamingSubscriptionCon
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 
+import com.ews.ews.service.SubscriptionService;
 import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.model.subscribe.Subscribe;
 import com.ews.ews.model.subscribe.SubscribeNotificationResponse;
