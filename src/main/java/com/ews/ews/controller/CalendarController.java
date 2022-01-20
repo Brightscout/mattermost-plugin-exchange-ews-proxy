@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ews.ews.model.Calendar;
-import com.ews.ews.model.FindMeetingTimes;
+import com.ews.ews.model.FindMeetingTimesParameters;
 import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.service.CalendarService;
 import com.ews.ews.service.EWSService;
@@ -59,7 +59,7 @@ public class CalendarController {
 	}
 	
 	@PostMapping({ "/suggestions" })
-	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email, @RequestBody FindMeetingTimes findMeetingTimes) throws Exception {
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email, @RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
 		return this.calendarService.findMeetingTimes(this.ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
 

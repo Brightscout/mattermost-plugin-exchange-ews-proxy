@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ews.ews.model.Calendar;
-import com.ews.ews.model.FindMeetingTimes;
+import com.ews.ews.model.FindMeetingTimesParameters;
 import com.ews.ews.model.MeetingTimeSuggestion;
 import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.model.event.DateTime;
@@ -158,7 +158,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, String organizerEmail,
-			FindMeetingTimes findMeetingTimes) throws Exception {
+			FindMeetingTimesParameters findMeetingTimes) throws Exception {
 		List<AttendeeInfo> attendees = new ArrayList<>();
 		for (com.ews.ews.model.event.Attendee attendee : findMeetingTimes.getAttendees()) {
 			MeetingAttendeeType attendeeType = AppConstants.MEETING_ATTENDEE_TYPE_MAP.get(attendee.getType());
