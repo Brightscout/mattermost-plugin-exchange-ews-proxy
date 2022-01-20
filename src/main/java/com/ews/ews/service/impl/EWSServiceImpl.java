@@ -53,5 +53,4 @@ public class EWSServiceImpl implements EWSService {
 	public void setService(ExchangeService service) {
 		this.service = service;
 	}
-
 }
