@@ -67,8 +67,7 @@ public class EventServiceImpl implements EventService {
 			throws Exception {
 		try {
 			CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
-			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end),
-					AppConstants.MAX_NUMBER_OF_EVENTS);
+			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end), AppConstants.MAX_NUMBER_OF_EVENTS);
 			FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 			ArrayList<Event> events = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
