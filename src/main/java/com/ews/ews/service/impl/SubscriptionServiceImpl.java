@@ -82,13 +82,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 	}
 
-    public void callWebhook(String notificationUrl, SubscribeNotificationResponse sub) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<SubscribeNotificationResponse> requestEntity = new HttpEntity<>(sub, headers);
-        
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForLocation(notificationUrl, requestEntity, SubscribeNotificationResponse.class);
-        return;
-    }
+	public void callWebhook(String notificationUrl, SubscribeNotificationResponse sub) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<SubscribeNotificationResponse> requestEntity = new HttpEntity<>(sub, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.postForLocation(notificationUrl, requestEntity, SubscribeNotificationResponse.class);
+		return;
+	}
 }
