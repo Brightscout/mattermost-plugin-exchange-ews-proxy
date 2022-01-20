@@ -13,7 +13,6 @@ import com.ews.ews.model.event.EmailAddress;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.model.event.EventResponseStatus;
 import com.ews.ews.payload.ApiResponse;
-import com.ews.ews.model.event.ItemBody;
 import com.ews.ews.service.EventService;
 import com.ews.ews.utils.AppConstants;
 import com.ews.ews.utils.AppUtils;
@@ -143,15 +142,14 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResponseEntity<Event> getEventUsingId(ExchangeService service, String id) throws Exception {
-        Appointment appointment = Appointment.bind(service, new ItemId(id));
-        Event event = new Event();
+	public ResponseEntity<Event> getEventById(ExchangeService service, String id) throws Exception {
+		Appointment appointment = Appointment.bind(service, new ItemId(id));
+		Event event = new Event();
 		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
-        event.setId(appointment.getId().toString());
+		event.setId(appointment.getId().toString());
 		event.setiCalUID(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
-		event.setStart(
-				new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
 		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
 		event.setCancelled(appointment.getIsCancelled());
@@ -163,12 +161,11 @@ public class EventServiceImpl implements EventService {
 		event.setImportance(appointment.getImportance().toString());
 		event.setIsOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
-		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
-				.getOrganizer();
+		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment.getOrganizer();
 		event.setOrganizer(new com.ews.ews.model.event.Attendee(
 				new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
 
-        return new ResponseEntity<Event>(event, HttpStatus.OK);
-    }	
+		return new ResponseEntity<Event>(event, HttpStatus.OK);
+	}
 
 }

@@ -172,7 +172,7 @@ public class Event {
 	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
 		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
 	}
-	
+
 	public String getShowAs() {
 		return showAs;
 	}
