@@ -12,7 +12,6 @@ public class Attendee {
 	}
 
 	public Attendee(EmailAddress emailAddress) {
-		super();
 		this.emailAddress = emailAddress;
 	}
 
