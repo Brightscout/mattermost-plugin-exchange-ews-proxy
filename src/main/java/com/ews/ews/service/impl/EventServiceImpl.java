@@ -83,18 +83,18 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public ResponseEntity<Event> declineEvent(ExchangeService service, String eventId) throws Exception {
-		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet());
 		appointment.decline(true);
 
-		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+		return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<Event> tentativelyAcceptEvent(ExchangeService service, String eventId) throws Exception {
-		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet(AppointmentSchema.Id));
+		Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet());
 		appointment.acceptTentatively(true);
 
-		return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+		return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 	}
 
 }
