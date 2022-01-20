@@ -20,6 +20,7 @@ import microsoft.exchange.webservices.data.notification.NotificationEvent;
 import microsoft.exchange.webservices.data.notification.NotificationEventArgs;
 import microsoft.exchange.webservices.data.notification.StreamingSubscription;
 import microsoft.exchange.webservices.data.notification.StreamingSubscriptionConnection;
+import microsoft.exchange.webservices.data.notification.SubscriptionErrorEventArgs;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 
@@ -68,6 +69,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 						// Call webhook for each new notifications
 						callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
+					}
+				}
+			});
+
+			connection.addOnDisconnect(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
+				@Override
+				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
+					StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
+					try {
+						connection.open();
+					} catch (Throwable e) {
+						throw new InternalServerException(new ApiResponse(Boolean.FALSE,
+								"error occurred while renewing subscription. Error: " + e.getMessage()));
 					}
 				}
 			});
