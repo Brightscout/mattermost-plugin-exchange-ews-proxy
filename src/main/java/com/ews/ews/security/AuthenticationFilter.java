@@ -34,7 +34,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 			}
 		} catch (Exception ex) {
-			throw new UnauthorizedException(new ApiResponse(Boolean.FALSE, "Could not set user authentication in security context. Error: %s"+ ex.getMessage()));
+			throw new UnauthorizedException(new ApiResponse(Boolean.FALSE, "Could not set user authentication in security context. Error: "+ ex.getMessage()));
 		}
 
 		filterChain.doFilter(request, response);
