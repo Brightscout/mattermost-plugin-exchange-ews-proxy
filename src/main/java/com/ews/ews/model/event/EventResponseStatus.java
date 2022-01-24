@@ -9,8 +9,11 @@ public class EventResponseStatus {
 	public EventResponseStatus() {
 	}
 	
+	public EventResponseStatus(String response) {
+		this.response = response;
+	}
+
 	public EventResponseStatus(String response, String time) {
-		super();
 		this.response = response;
 		this.time = time;
 	}
