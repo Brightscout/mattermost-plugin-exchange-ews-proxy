@@ -16,22 +16,11 @@ import microsoft.exchange.webservices.data.misc.ImpersonatedUserId;
 
 @Service
 public class EWSServiceImpl implements EWSService {
-	
+
 	private ExchangeService service;
-	
-	@Value("${username}")
-	String username;
 
-	@Value("${password}")
-	String password;
-
-	@Value("${domain}")
-	String domain;
-
-	@Value("exchangeServerURL")
-	String exchangeServerURL;
-
-	public EWSServiceImpl() {
+	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
+			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
 		System.out.println("Initialising EWS service with service account credentials");
 		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 
@@ -60,8 +49,5 @@ public class EWSServiceImpl implements EWSService {
 	public void setService(ExchangeService service) {
 		this.service = service;
 	}
-	
-	
-	
-	
+
 }
