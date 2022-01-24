@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ews.ews.model.Calendar;
+import com.ews.ews.model.FindMeetingTimesParameters;
+import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.service.CalendarService;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.utils.AppUtils;
@@ -53,6 +56,11 @@ public class CalendarController {
 			HttpServletRequest request) throws Exception {
 		return this.calendarService.deleteCalendar(ewsService.impersonateUser(email),
 				AppUtils.getIdFromParams(id, request));
+	}
+	
+	@PostMapping({ "/suggestions" })
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email, @RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
+		return this.calendarService.findMeetingTimes(this.ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
 
 }
