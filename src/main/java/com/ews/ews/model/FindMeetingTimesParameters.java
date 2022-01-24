@@ -2,7 +2,7 @@ package com.ews.ews.model;
 
 import com.ews.ews.model.event.Attendee;
 
-public class FindMeetingTimes {
+public class FindMeetingTimesParameters {
 
 	private Attendee[] attendees;
 
