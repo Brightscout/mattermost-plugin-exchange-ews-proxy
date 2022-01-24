@@ -22,7 +22,7 @@ public class Event {
 
 	private boolean responseRequested; // IsResponseRequested
 
-	// NA: private String showAs;
+	private String showAs;
 
 	// NA: private String webLink;
 
@@ -165,6 +165,14 @@ public class Event {
 
 	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
 		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
+	}
+	
+	public String getShowAs() {
+		return showAs;
+	}
+
+	public void setShowAs(String showAs) {
+		this.showAs = showAs;
 	}
 
 }
