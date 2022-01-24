@@ -15,9 +15,6 @@ import com.ews.ews.model.event.Event;
 import com.ews.ews.service.BatchService;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
-import com.ews.ews.utils.AppUtils;
-
-import microsoft.exchange.webservices.data.core.ExchangeService;
 
 @Service
 public class BatchServiceImpl implements BatchService {
@@ -33,10 +30,11 @@ public class BatchServiceImpl implements BatchService {
 		ArrayList<CalendarViewSingleResponse> responses = new ArrayList<>();
 		for (CalendarViewSingleRequest request : requests.getRequests()) {
 			ResponseEntity<ArrayList<Event>> response = this.eventService.getEvents(
-					this.ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
+					this.ewsService.impersonateUser(request.getId()), request.getStartDateTime(),
+					request.getEndDateTime());
 			responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
 		}
-		
+
 		return new ResponseEntity<>(new CalendarViewBatchResponse(responses), HttpStatus.OK);
 	}
 
