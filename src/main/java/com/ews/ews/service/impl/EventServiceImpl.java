@@ -167,5 +167,4 @@ public class EventServiceImpl implements EventService {
 
 		return new ResponseEntity<Event>(event, HttpStatus.OK);
 	}
-
 }
