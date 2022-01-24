@@ -5,6 +5,9 @@ public class EmailAddress {
 	private String address;
 	
 	private String name;
+	
+	public EmailAddress() {
+	}
 
 	public EmailAddress(String address, String name) {
 		this.address = address;

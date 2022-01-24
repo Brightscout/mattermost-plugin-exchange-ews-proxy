@@ -5,6 +5,8 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.ews.ews.exception.InternalServerException;
+import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.EWSService;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -21,17 +23,14 @@ public class EWSServiceImpl implements EWSService {
 
 	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
-		System.out.println("Initialising EWS service with service account credentials");
 		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
-
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		this.service.setCredentials(credentials);
-		this.service.setTraceEnabled(true);
 		try {
 			this.service.setUrl(new URI(exchangeServerURL));
 		} catch (Exception e) {
-			System.out.println("Failed to discover URL");
-			e.printStackTrace();
+			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
+					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
 		}
 	}
 
@@ -49,5 +48,4 @@ public class EWSServiceImpl implements EWSService {
 	public void setService(ExchangeService service) {
 		this.service = service;
 	}
-
 }

@@ -7,11 +7,13 @@ public class EventResponseStatus {
 	private String time; // LastResponseTime
 
 	public EventResponseStatus() {
-		
 	}
 	
+	public EventResponseStatus(String response) {
+		this.response = response;
+	}
+
 	public EventResponseStatus(String response, String time) {
-		super();
 		this.response = response;
 		this.time = time;
 	}
