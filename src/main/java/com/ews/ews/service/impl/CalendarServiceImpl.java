@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.model.Calendar;
-import com.ews.ews.model.FindMeetingTimes;
+import com.ews.ews.model.FindMeetingTimesParameters;
 import com.ews.ews.model.MeetingTimeSuggestion;
 import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.model.event.DateTime;
@@ -76,7 +76,7 @@ public class CalendarServiceImpl implements CalendarService {
 				event.setSubject(appointment.getSubject());
 //				MessageBody messageBody = appointment.getBody();
 //				event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),
-//						messageBody.getBodyType().toString()));
+//				messageBody.getBodyType().toString()));
 				event.setImportance(appointment.getImportance().toString());
 				event.setAllDay(appointment.getIsAllDayEvent());
 				event.setCancelled(appointment.getIsCancelled());
@@ -179,7 +179,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, String organizerEmail,
-			FindMeetingTimes findMeetingTimes) {
+			FindMeetingTimesParameters findMeetingTimes) throws Exception {
 		try {
 			List<AttendeeInfo> attendees = new ArrayList<>();
 			for (com.ews.ews.model.event.Attendee attendee : findMeetingTimes.getAttendees()) {

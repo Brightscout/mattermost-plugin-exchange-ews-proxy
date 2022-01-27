@@ -2,6 +2,7 @@ package com.ews.ews.service.impl;
 
 import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ews.ews.exception.InternalServerException;
@@ -20,19 +21,13 @@ public class EWSServiceImpl implements EWSService {
 
 	private ExchangeService service;
 
-	public EWSServiceImpl() {
+	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
+			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
+		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
+		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
+		this.service.setCredentials(credentials);
 		try {
-			this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
-			// TODO: Fetch credentials from environment variables
-			String userName = "ServiceAccount";
-			String password = "ubL.qJIuNv5kUNAgdmnL.6l@VKY%J*gQ";
-			String domain = "brightscout";
-			ExchangeCredentials credentials = new WebCredentials(userName, password, domain);
-			this.service.setCredentials(credentials);
-			this.service.setTraceEnabled(true);
-			// TODO: Fetch exchange server URL from environment variables
-			String exchangeURL = "https://exchangenode1.ad.brightscout.com/ews/exchange.asmx";
-			this.service.setUrl(new URI(exchangeURL));
+			this.service.setUrl(new URI(exchangeServerURL));
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
@@ -53,5 +48,4 @@ public class EWSServiceImpl implements EWSService {
 	public void setService(ExchangeService service) {
 		this.service = service;
 	}
-
 }

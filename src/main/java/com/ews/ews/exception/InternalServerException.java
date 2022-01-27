@@ -7,7 +7,6 @@ import com.ews.ews.payload.ApiResponse;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerException extends RuntimeException {
-	
 	private ApiResponse apiResponse;
 
 	public InternalServerException(ApiResponse apiResponse) {
@@ -26,5 +25,4 @@ public class InternalServerException extends RuntimeException {
 	public ApiResponse getApiResponse() {
 		return apiResponse;
 	}
-	
 }

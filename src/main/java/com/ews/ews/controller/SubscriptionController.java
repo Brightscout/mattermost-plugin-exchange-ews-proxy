@@ -9,23 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.ResponseEntity;
 
-import com.ews.ews.model.subscribe.Subscribe;
+import com.ews.ews.model.subscribe.Subscription;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.service.SubscriptionService;
 
 @RestController
 @RequestMapping("/api/subscribe")
 public class SubscriptionController {
-	@Autowired
+    @Autowired
 	EWSService ewsService;
 
-	@Autowired
-	SubscriptionService subscriptionService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
 	@PostMapping
-	public ResponseEntity<Subscribe> subscribeToStreamNotifications(@RequestParam String email,
-			@RequestBody Subscribe subscribe) throws Exception {
-		return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email),
-				subscribe);
-	}
+    public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email, @RequestBody Subscription subscribe) throws Exception {
+        return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email), subscribe);
+    }
 }

@@ -60,7 +60,6 @@ public class RestControllerExceptionHandler {
 	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<ApiResponse> resolveException(InternalServerException exception) {
 		ApiResponse apiResponse = exception.getApiResponse();
-
 		return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
