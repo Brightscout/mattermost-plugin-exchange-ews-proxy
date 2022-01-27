@@ -30,10 +30,11 @@ public class BatchServiceImpl implements BatchService {
 		ArrayList<CalendarViewSingleResponse> responses = new ArrayList<>();
 		for (CalendarViewSingleRequest request : requests.getRequests()) {
 			ResponseEntity<ArrayList<Event>> response = this.eventService.getEvents(
-					this.ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
+					this.ewsService.impersonateUser(request.getId()), request.getStartDateTime(),
+					request.getEndDateTime());
 			responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
 		}
-		
+
 		return new ResponseEntity<>(new CalendarViewBatchResponse(responses), HttpStatus.OK);
 	}
 

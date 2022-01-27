@@ -15,7 +15,6 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
 import microsoft.exchange.webservices.data.misc.ImpersonatedUserId;
-import microsoft.exchange.webservices.data.property.complex.time.TimeZoneDefinition;
 
 @Service
 public class EWSServiceImpl implements EWSService {

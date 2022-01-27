@@ -14,7 +14,7 @@ public interface EventService {
 	
 	public ResponseEntity<ArrayList<Event>> getEvents(ExchangeService service, String start, String end) throws Exception;
 
-	public ResponseEntity<Event> getEventUsingId(ExchangeService service, String id) throws Exception;
+	public ResponseEntity<Event> getEventById(ExchangeService service, String id) throws Exception;
 	
 	public ResponseEntity<Event> acceptEvent(ExchangeService service, String eventId) throws Exception;
 	
