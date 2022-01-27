@@ -54,6 +54,14 @@ public class RestControllerExceptionHandler {
 
 		return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(InternalServerException.class)
+	@ResponseBody
+	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<ApiResponse> resolveException(InternalServerException exception) {
+		ApiResponse apiResponse = exception.getApiResponse();
+		return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseBody

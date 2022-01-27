@@ -7,7 +7,6 @@ public class CalendarViewBatchResponse {
 	private ArrayList<CalendarViewSingleResponse> responses;
 
 	public CalendarViewBatchResponse(ArrayList<CalendarViewSingleResponse> responses) {
-		super();
 		this.responses = responses;
 	}
 

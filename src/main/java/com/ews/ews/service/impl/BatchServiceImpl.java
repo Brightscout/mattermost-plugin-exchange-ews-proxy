@@ -15,9 +15,6 @@ import com.ews.ews.model.event.Event;
 import com.ews.ews.service.BatchService;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
-import com.ews.ews.utils.AppUtils;
-
-import microsoft.exchange.webservices.data.core.ExchangeService;
 
 @Service
 public class BatchServiceImpl implements BatchService {

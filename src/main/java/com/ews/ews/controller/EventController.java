@@ -42,7 +42,7 @@ public class EventController {
 
 	@GetMapping({ "/{id}/**" })
     public ResponseEntity<Event> getEventUsingNotificationId(@RequestParam String email, @PathVariable String id,
-    HttpServletRequest request) throws Exception {
+    		HttpServletRequest request) throws Exception {
         return this.eventService.getEventUsingId(this.ewsService.impersonateUser(email), AppUtils.getIdFromParams(id, request));
     }
 
