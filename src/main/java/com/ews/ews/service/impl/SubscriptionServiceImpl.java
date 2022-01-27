@@ -1,17 +1,22 @@
 package com.ews.ews.service.impl;
-import com.ews.ews.service.SubscriptionService;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.ews.ews.utils.AppConstants;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.ews.ews.exception.InternalServerException;
+import com.ews.ews.model.subscribe.SubscribeNotificationResponse;
+import com.ews.ews.model.subscribe.Subscription;
+import com.ews.ews.payload.ApiResponse;
+import com.ews.ews.service.SubscriptionService;
+import com.ews.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
@@ -24,16 +29,10 @@ import microsoft.exchange.webservices.data.notification.StreamingSubscriptionCon
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 
-import com.ews.ews.service.SubscriptionService;
-import com.ews.ews.exception.InternalServerException;
-import com.ews.ews.model.subscribe.Subscribe;
-import com.ews.ews.model.subscribe.SubscribeNotificationResponse;
-import com.ews.ews.payload.ApiResponse;
-
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
-	public ResponseEntity<Subscribe> subscribeToStreamNotifications(ExchangeService service, Subscribe subscribe)
+	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
 			throws Exception {
 		try {
 			List<FolderId> folderIds = new ArrayList<FolderId>();
@@ -51,23 +50,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			// Keep the streaming connection open for 30 minutes.
 			// TODO: add logic to close the connection
 			final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
-					AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTE);
+					AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTES);
 			connection.addSubscription(streamingSubscription);
 
-			// Capture and call webhook URL for each new notifications
+			// Capture and call webhook URL for each new notification
 			connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
 				@Override
 				public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
-					for (NotificationEvent notification : args.getEvents()) {
+					for (NotificationEvent notificationEvent : args.getEvents()) {
 						// Get id of the notification
-						ItemId eventId = ((ItemEvent) notification).getItemId();
+						ItemId eventId = ((ItemEvent) notificationEvent).getItemId();
 
 						// Set response to be sent on calling the webhook URL
 						SubscribeNotificationResponse subscribeResponse = new SubscribeNotificationResponse(
-								eventId.toString(), notification.getEventType().toString(),
+								eventId.toString(), notificationEvent.getEventType().toString(),
 								streamingSubscription.getId().toString());
 
-						// Call webhook for each new notifications
+						// Call webhook for each new notification
 						callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
 					}
 				}
@@ -75,8 +74,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 			connection.open();
 
-			Subscribe subscription = new Subscribe(streamingSubscription.getId().toString());
-			return new ResponseEntity<Subscribe>(subscription, HttpStatus.OK);
+			Subscription subscription = new Subscription(streamingSubscription.getId().toString());
+			return new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while creating subscription. Error: " + e.getMessage()));

@@ -1,13 +1,13 @@
 package com.ews.ews.model.subscribe;
 
-public class Subscribe {
+public class Subscription {
 	private String subscriptionId;
 	private String webhookNotificationUrl;
 
-	public Subscribe() {
+	public Subscription() {
 	}
 
-	public Subscribe(String subscriptionId) {
+	public Subscription(String subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
 
