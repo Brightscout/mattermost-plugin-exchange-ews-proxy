@@ -1,17 +1,16 @@
 FROM openjdk:11
 
+# Source path of jar file
+ARG JAR_PATH
+
+# Server port on which server will run
+ARG SERVER_PORT
+
 # Add jar in docker container
-ADD build/libs/*.jar docker-ews-server.jar
+ADD ${JAR_PATH} docker-ews-server.jar
 
-# Export port on which server is running
-EXPOSE 8080
-
-# Export some environment variables
-ENV EWS_USERNAME=${EWS_USERNAME}
-ENV EWS_PASSWORD=${EWS_PASSWORD}
-ENV EWS_DOMAIN=${EWS_DOMAIN}
-ENV EWS_EXCHANGE_SERVER_URL=${EWS_EXCHANGE_SERVER_URL}
-ENV EWS_SECRET_AUTH_KEY=${EWS_SECRET_AUTH_KEY}
+# Expose the port on which server will run
+EXPOSE ${SERVER_PORT}
 
 # Execute the jar to run server
 ENTRYPOINT [ "java", "-jar", "docker-ews-server.jar" ]
