@@ -11,7 +11,6 @@ public class CalendarViewSingleResponse {
 	private ArrayList<Event> events;
 
 	public CalendarViewSingleResponse(String id, ArrayList<Event> events) {
-		super();
 		this.id = id;
 		this.events = events;
 	}

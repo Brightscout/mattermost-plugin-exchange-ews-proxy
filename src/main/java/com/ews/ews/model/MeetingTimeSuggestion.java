@@ -10,7 +10,6 @@ public class MeetingTimeSuggestion {
 	}
 
 	public MeetingTimeSuggestion(DateTime meetingTimeSlot) {
-		super();
 		this.meetingTimeSlot = meetingTimeSlot;
 	}
 

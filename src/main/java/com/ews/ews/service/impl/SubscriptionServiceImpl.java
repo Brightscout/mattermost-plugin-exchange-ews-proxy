@@ -11,8 +11,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.ews.ews.exception.InternalServerException;
+import com.ews.ews.model.subscribe.SubscribeNotificationResponse;
+import com.ews.ews.model.subscribe.Subscription;
+import com.ews.ews.payload.ApiResponse;
+import com.ews.ews.service.SubscriptionService;
+import com.ews.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
@@ -26,19 +33,13 @@ import microsoft.exchange.webservices.data.notification.SubscriptionErrorEventAr
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 
-import com.ews.ews.service.SubscriptionService;
-import com.ews.ews.exception.InternalServerException;
-import com.ews.ews.model.subscribe.Subscribe;
-import com.ews.ews.model.subscribe.SubscribeNotificationResponse;
-import com.ews.ews.payload.ApiResponse;
-
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 	private static final ConcurrentHashMap<String, StreamingSubscriptionConnection> subscriptionConnectionMap = new ConcurrentHashMap<String, StreamingSubscriptionConnection>();
 	private static final ConcurrentHashMap<String, StreamingSubscription> subscriptionMap = new ConcurrentHashMap<String, StreamingSubscription>();
 
 	@Override
-	public ResponseEntity<Subscribe> subscribeToStreamNotifications(ExchangeService service, Subscribe subscribe)
+	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
 			throws Exception {
 		try {
 			// Get existing subscription if any

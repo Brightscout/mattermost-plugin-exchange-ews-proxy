@@ -1,8 +1,8 @@
 package com.ews.ews.model.subscribe;
 
 public class SubscribeNotificationResponse {
-	private String eventId;
-	private String changeType;
+    private String eventId;
+	private String changeType; 
 	private String subscriptionId;
 
 	public SubscribeNotificationResponse() {

@@ -69,8 +69,7 @@ public class EventServiceImpl implements EventService {
 			throws Exception {
 		try {
 			CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
-			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end),
-					AppConstants.MAX_NUMBER_OF_EVENTS);
+			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end), AppConstants.MAX_NUMBER_OF_EVENTS);
 			FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 			ArrayList<Event> events = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
@@ -117,11 +116,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public ResponseEntity<Event> declineEvent(ExchangeService service, String eventId) throws Exception {
 		try {
-			Appointment appointment = Appointment.bind(service, new ItemId(eventId),
-					new PropertySet(AppointmentSchema.Id));
+			Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet());
 			appointment.decline(true);
 
-			return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+			return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while declining event. Error: " + e.getMessage()));
@@ -131,11 +129,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public ResponseEntity<Event> tentativelyAcceptEvent(ExchangeService service, String eventId) throws Exception {
 		try {
-			Appointment appointment = Appointment.bind(service, new ItemId(eventId),
-					new PropertySet(AppointmentSchema.Id));
+			Appointment appointment = Appointment.bind(service, new ItemId(eventId), new PropertySet());
 			appointment.acceptTentatively(true);
 
-			return new ResponseEntity<>(new Event(appointment.getId().toString()), HttpStatus.OK);
+			return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while tentatively accepting event. Error: " + e.getMessage()));
