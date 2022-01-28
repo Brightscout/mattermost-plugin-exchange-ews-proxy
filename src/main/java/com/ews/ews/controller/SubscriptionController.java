@@ -23,16 +23,16 @@ public class SubscriptionController {
     SubscriptionService subscriptionService;
 
 	@PostMapping({"/subscribe"})
-	public ResponseEntity<Subscribe> subscribeToStreamNotifications(@RequestParam String email,
-			@RequestBody Subscribe subscribe) throws Exception {
+	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email,
+			@RequestBody Subscription subscribe) throws Exception {
 		return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email),
 				subscribe);
 	}
 
 	@PostMapping({"/unsubscribe"})
-	public ResponseEntity<String> unSubscribeToStreamNotifications(@RequestBody Subscribe subscribe)
+	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestBody Subscription subscribe)
 	throws Exception {
-		return this.subscriptionService.unSubscribeToStreamNotifications(subscribe);
+		return this.subscriptionService.unsubscribeToStreamNotifications(subscribe);
 	}
 
 }

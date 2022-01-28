@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.ews.ews.utils.AppConstants;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,114 +42,111 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		try {
 			// Get existing subscription if any
 			StreamingSubscription existingSubscription = subscriptionMap.get(subscribe.getSubscriptionId());
-			if (existingSubscription == null) {
-				// Get all folderIds of the user
-				List<FolderId> folderIds = new ArrayList<FolderId>();
-				folderIds.add(new FolderId(WellKnownFolderName.Calendar));
-
-				// Subscribe to stream notification service
-				final StreamingSubscription streamingSubscription = service.subscribeToStreamingNotifications(folderIds,
-						EventType.Created
-				// TODO: confirm all required types
-				// EventType.Deleted,
-				// EventType.Modified
-				);
-
-				// Store the subscription in map, used during unsubscribe
-				subscriptionMap.put(streamingSubscription.getId(), streamingSubscription);
-
-				// Get existing subscription connection if any
-				StreamingSubscriptionConnection existingSubscriptionConnection = subscriptionConnectionMap
-						.get(subscribe.getSubscriptionId());
-
-				if (existingSubscriptionConnection == null) {
-					// Create a streaming connection to the service object, over which events are
-					// returned to the client.
-					// Keep the streaming connection open for 30 minutes.
-					final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
-							AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTE);
-
-					// Store the subscription connection in map, used during unsubscribe
-					subscriptionConnectionMap.put(streamingSubscription.getId(), connection);
-
-					// Add streaming subscription to the connection
-					connection.addSubscription(streamingSubscription);
-
-					// Throw exception on any subscription error
-					connection.addOnSubscriptionError(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
-						@Override
-						public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
-							if (args.getException() != null) {
-								throw new InternalServerException(
-										new ApiResponse(Boolean.FALSE, "error occurred in the subscription. Error: "
-												+ args.getException().getMessage()));
-							}
-						}
-					});
-
-					// Capture and call webhook URL for each new notifications
-					connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
-						@Override
-						public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
-							for (NotificationEvent notification : args.getEvents()) {
-								// Get id of the notification
-								ItemId eventId = ((ItemEvent) notification).getItemId();
-
-								// Set response to be sent on calling the webhook URL
-								SubscribeNotificationResponse subscribeResponse = new SubscribeNotificationResponse(
-										eventId.toString(), notification.getEventType().toString(),
-										streamingSubscription.getId().toString());
-
-								// Call webhook for each new notifications
-								callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
-							}
-						}
-					});
-
-					// Open the subscription connection when the previous subscription duration is
-					// expired
-					connection.addOnDisconnect(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
-						@Override
-						public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
-							StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
-							try {
-								StreamingSubscriptionConnection subscriptionConnection = subscriptionConnectionMap
-										.get(subscribe.getSubscriptionId());
-								if (subscriptionConnection != null) {
-									connection.open();
-								}
-							} catch (Throwable e) {
-								throw new InternalServerException(new ApiResponse(Boolean.FALSE,
-										"error occurred while renewing subscription. Error: " + e.getMessage()));
-							}
-						}
-					});
-
-					// Open the streaming connection when subscribed
-					connection.open();
-
-					// Set and send response on successful subscription
-					Subscribe subscription = new Subscribe(streamingSubscription.getId().toString());
-					return new ResponseEntity<Subscribe>(subscription, HttpStatus.OK);
-				} else {
-					throw new InternalServerException(new ApiResponse(Boolean.FALSE,
-							"error occurred while creating subscription. Error: "
-									+ "Subscription connection already exists for subscriptionId: "
-									+ subscribe.getSubscriptionId()));
-				}
-			} else {
+			if (existingSubscription != null) {
 				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "error occurred while creating subscription. Error: "
 								+ "Subscription already exists for subscriptionId: " + subscribe.getSubscriptionId()));
 			}
+			// Get all folderIds of the user
+			List<FolderId> folderIds = new ArrayList<FolderId>();
+			folderIds.add(new FolderId(WellKnownFolderName.Calendar));
+
+			// Subscribe to stream notification service
+			final StreamingSubscription streamingSubscription = service.subscribeToStreamingNotifications(folderIds,
+					EventType.Created
+			// TODO: confirm all required types
+			// EventType.Deleted,
+			// EventType.Modified
+			);
+
+			// Store the subscription in map, used during unsubscribe
+			subscriptionMap.put(streamingSubscription.getId(), streamingSubscription);
+
+			// Get existing subscription connection if any
+			StreamingSubscriptionConnection existingSubscriptionConnection = subscriptionConnectionMap
+					.get(subscribe.getSubscriptionId());
+
+			if (existingSubscriptionConnection != null) {
+				throw new InternalServerException(new ApiResponse(Boolean.FALSE,
+						"error occurred while creating subscription. Error: "
+								+ "Subscription connection already exists for subscriptionId: "
+								+ subscribe.getSubscriptionId()));
+			}
+			// Create a streaming connection to the service object, over which events are
+			// returned to the client.
+			// Keep the streaming connection open for 30 minutes.
+			final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
+					AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTES);
+
+			// Store the subscription connection in map, used during unsubscribe
+			subscriptionConnectionMap.put(streamingSubscription.getId(), connection);
+
+			// Add streaming subscription to the connection
+			connection.addSubscription(streamingSubscription);
+
+			// Throw exception on any subscription error
+			connection.addOnSubscriptionError(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
+				@Override
+				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
+					if (args.getException() != null) {
+						throw new InternalServerException(
+								new ApiResponse(Boolean.FALSE, "error occurred in the subscription. Error: "
+										+ args.getException().getMessage()));
+					}
+				}
+			});
+
+			// Capture and call webhook URL for each new notifications
+			connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
+				@Override
+				public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
+					for (NotificationEvent notification : args.getEvents()) {
+						// Get id of the notification
+						ItemId eventId = ((ItemEvent) notification).getItemId();
+
+						// Set response to be sent on calling the webhook URL
+						SubscribeNotificationResponse subscribeResponse = new SubscribeNotificationResponse(
+								eventId.toString(), notification.getEventType().toString(),
+								streamingSubscription.getId().toString());
+
+						// Call webhook for each new notifications
+						callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
+					}
+				}
+			});
+
+			// Open the subscription connection when the previous subscription duration is
+			// expired
+			connection.addOnDisconnect(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
+				@Override
+				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
+					StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
+					try {
+						StreamingSubscriptionConnection subscriptionConnection = subscriptionConnectionMap
+								.get(subscribe.getSubscriptionId());
+						if (subscriptionConnection != null) {
+							connection.open();
+						}
+					} catch (Throwable e) {
+						throw new InternalServerException(new ApiResponse(Boolean.FALSE,
+								"error occurred while renewing subscription. Error: " + e.getMessage()));
+					}
+				}
+			});
+
+			// Open the streaming connection when subscribed
+			connection.open();
+
+			// Set and send response on successful subscription
+			Subscription subscription = new Subscription(streamingSubscription.getId().toString());
+			return new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while creating subscription. Error: " + e.getMessage()));
 		}
 	}
 
-	// Used to make a post type call on the provided URL with captured notification
-	// data
+	// Used to make a post type call on the provided URL with captured notification data
 	public void callWebhook(String notificationUrl, SubscribeNotificationResponse sub) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -164,7 +159,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	// Unsubscribe to the streaming notification service
 	@Override
-	public ResponseEntity<String> unSubscribeToStreamNotifications(Subscribe subscribe) throws Exception {
+	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe) throws Exception {
 		try {
 			// get the connection from map
 			StreamingSubscriptionConnection subscriptionConnection = subscriptionConnectionMap
