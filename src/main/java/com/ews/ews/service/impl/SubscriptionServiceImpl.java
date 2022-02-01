@@ -74,7 +74,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			// returned to the client.
 			// Keep the streaming connection open for 30 minutes.
 			final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
-					AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTES);
+					AppConstants.SUBSCRIPTION_LIFETIME_IN_MINUTES);
 
 			// Store the subscription and subscription connection in map, used during
 			// unsubscribe
