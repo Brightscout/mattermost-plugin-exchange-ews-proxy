@@ -1,6 +1,7 @@
 package com.ews.ews.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -32,13 +33,36 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
+
+	static class Pair {
+		StreamingSubscription streamingSubscription;
+		StreamingSubscriptionConnection streamingSubscriptionConnection;
+
+		public Pair(StreamingSubscription streamingSubscription,
+				StreamingSubscriptionConnection streamingSubscriptionConnection) {
+			this.streamingSubscription = streamingSubscription;
+			this.streamingSubscriptionConnection = streamingSubscriptionConnection;
+		}
+	}
+
+	private static final HashMap<String, Pair> map = new HashMap<>();
+
 	@Override
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
 			throws Exception {
 		try {
+			// Get existing subscription if any
+			Pair existingSubscription = map.get(subscribe.getSubscriptionId());
+			if (existingSubscription != null) {
+				throw new InternalServerException(
+						new ApiResponse(Boolean.FALSE, "error occurred while creating subscription. Error: "
+								+ "Subscription already exists for subscriptionId: " + subscribe.getSubscriptionId()));
+			}
+			// Get all folderIds of the user
 			List<FolderId> folderIds = new ArrayList<FolderId>();
 			folderIds.add(new FolderId(WellKnownFolderName.Calendar));
 
+			// Subscribe to stream notification service
 			final StreamingSubscription streamingSubscription = service.subscribeToStreamingNotifications(folderIds,
 					EventType.Created
 			// TODO: confirm all required types
@@ -49,36 +73,57 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			// Create a streaming connection to the service object, over which events are
 			// returned to the client.
 			// Keep the streaming connection open for 30 minutes.
-			// TODO: add logic to close the connection
 			final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
 					AppConstants.SUBSCRIPTION_LIFE_TIME_IN_MINUTES);
+
+			// Store the subscription and subscription connection in map, used during
+			// unsubscribe
+			map.put(streamingSubscription.getId(), new Pair(streamingSubscription, connection));
+
+			// Add streaming subscription to the connection
 			connection.addSubscription(streamingSubscription);
 
-			// Capture and call webhook URL for each new notification
+			// Throw exception on any subscription error
+			connection.addOnSubscriptionError(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
+				@Override
+				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
+					if (args.getException() != null) {
+						throw new InternalServerException(new ApiResponse(Boolean.FALSE,
+								"error occurred in the subscription. Error: " + args.getException().getMessage()));
+					}
+				}
+			});
+
+			// Capture and call webhook URL for each new notifications
 			connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
 				@Override
 				public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
-					for (NotificationEvent notificationEvent : args.getEvents()) {
+					for (NotificationEvent notification : args.getEvents()) {
 						// Get id of the notification
-						ItemId eventId = ((ItemEvent) notificationEvent).getItemId();
+						ItemId eventId = ((ItemEvent) notification).getItemId();
 
 						// Set response to be sent on calling the webhook URL
 						SubscribeNotificationResponse subscribeResponse = new SubscribeNotificationResponse(
-								eventId.toString(), notificationEvent.getEventType().toString(),
+								eventId.toString(), notification.getEventType().toString(),
 								streamingSubscription.getId().toString());
 
-						// Call webhook for each new notification
+						// Call webhook for each new notifications
 						callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
 					}
 				}
 			});
 
+			// Open the subscription connection when the previous subscription duration is
+			// expired
 			connection.addOnDisconnect(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
 				@Override
 				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
 					StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
 					try {
-						connection.open();
+						Pair pair = map.get(subscribe.getSubscriptionId());
+						if (pair != null && pair.streamingSubscriptionConnection != null) {
+							connection.open();
+						}
 					} catch (Throwable e) {
 						throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 								"error occurred while renewing subscription. Error: " + e.getMessage()));
@@ -86,8 +131,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				}
 			});
 
+			// Open the streaming connection when subscribed
 			connection.open();
 
+			// Set and send response on successful subscription
 			Subscription subscription = new Subscription(streamingSubscription.getId().toString());
 			return new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
 		} catch (Exception e) {
@@ -96,6 +143,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 	}
 
+	// Used to make a post type call on the provided URL with captured notification data
 	public void callWebhook(String notificationUrl, SubscribeNotificationResponse sub) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -104,5 +152,44 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.postForLocation(notificationUrl, requestEntity, SubscribeNotificationResponse.class);
 		return;
+	}
+
+	// Unsubscribe to the streaming notification service
+	@Override
+	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe) throws Exception {
+		try {
+			Pair pair = map.get(subscribe.getSubscriptionId());
+			StreamingSubscriptionConnection subscriptionConnection = pair.streamingSubscriptionConnection;
+			StreamingSubscription subscription = pair.streamingSubscription;
+
+			// remove the subscription from map
+			map.remove(subscribe.getSubscriptionId());
+
+			// unsubscribe to streaming notification subscription
+			subscription.unsubscribe();
+
+			// close the streaming notification connection
+			subscriptionConnection.close();
+
+			// remove streaming notification subscription from the connection
+			subscriptionConnection.removeSubscription(subscription);
+
+			// Throw exception on any error on removal of subscription
+			subscriptionConnection
+					.removeSubscriptionError(new StreamingSubscriptionConnection.ISubscriptionErrorDelegate() {
+						@Override
+						public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
+							if (args.getException() != null) {
+								throw new InternalServerException(
+										new ApiResponse(Boolean.FALSE, "error occurred while unsubscribing. Error: "
+												+ args.getException().getMessage()));
+							}
+						}
+					});
+			return new ResponseEntity<String>("Unsubscribed", HttpStatus.OK);
+		} catch (Exception e) {
+			throw new InternalServerException(
+					new ApiResponse(Boolean.FALSE, "error occurred while unsubscribing. Error: " + e.getMessage()));
+		}
 	}
 }

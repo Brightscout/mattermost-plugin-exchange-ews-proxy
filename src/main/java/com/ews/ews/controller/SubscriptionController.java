@@ -14,16 +14,25 @@ import com.ews.ews.service.EWSService;
 import com.ews.ews.service.SubscriptionService;
 
 @RestController
-@RequestMapping("/api/subscribe")
+@RequestMapping("/api/notification")
 public class SubscriptionController {
-    @Autowired
+	@Autowired
 	EWSService ewsService;
 
-    @Autowired
-    SubscriptionService subscriptionService;
+	@Autowired
+	SubscriptionService subscriptionService;
 
-	@PostMapping
-    public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email, @RequestBody Subscription subscribe) throws Exception {
-        return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email), subscribe);
-    }
+	@PostMapping({ "/subscribe" })
+	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email,
+			@RequestBody Subscription subscription) throws Exception {
+		return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email),
+				subscription);
+	}
+
+	@PostMapping({ "/unsubscribe" })
+	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestBody Subscription subscription)
+			throws Exception {
+		return this.subscriptionService.unsubscribeToStreamNotifications(subscription);
+	}
+
 }
