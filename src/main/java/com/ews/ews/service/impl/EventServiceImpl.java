@@ -2,6 +2,7 @@ package com.ews.ews.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.ews.ews.utils.AppUtils;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.ResponseActions;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendInvitationsMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -122,7 +124,6 @@ public class EventServiceImpl implements EventService {
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while declining event. Error: " + e.getMessage()));
 		}
-		
 	}
 
 	@Override
@@ -136,5 +137,50 @@ public class EventServiceImpl implements EventService {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while tentatively accepting event. Error: " + e.getMessage()));
 		}
+	}
+
+	@Override
+	public ResponseEntity<Event> getEventById(ExchangeService service, String id) throws Exception {
+		Appointment appointment = Appointment.bind(service, new ItemId(id));
+		Event event = new Event();
+		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+
+		event.setId(appointment.getId().toString());
+		event.setiCalUID(appointment.getICalUid());
+		event.setSubject(appointment.getSubject().toString());
+		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+		event.setCancelled(appointment.getIsCancelled());
+		event.setResponseRequested(appointment.getIsResponseRequested());
+		event.setLocation(appointment.getLocation());
+		event.setTimezone(appointment.getTimeZone());
+		event.setAllDay(appointment.getIsAllDayEvent());
+		event.setWebLink(appointment.getNetShowUrl());
+		event.setImportance(appointment.getImportance().toString());
+		event.setIsOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
+		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
+		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment.getOrganizer();
+		event.setOrganizer(new com.ews.ews.model.event.Attendee(
+				new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+
+		// TODO: refactor to make it a reusable function as this same is used in
+		// calendarService
+		// Attendees is combination of required and optional attendees in EWS
+		List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
+		attendeesList.addAll(appointment.getOptionalAttendees().getItems());
+		int attendeesLen = attendeesList.size();
+		com.ews.ews.model.event.Attendee[] attendees = new com.ews.ews.model.event.Attendee[attendeesLen];
+		for (int j = 0; j < attendeesLen; j++) {
+			Attendee attendee = attendeesList.get(j);
+			EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString());
+			EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
+			// TODO: Need to populate correct type because this will affect find meeting
+			// times functionality
+			attendees[j] = new com.ews.ews.model.event.Attendee("required/optional", status, emailAddress);
+		}
+		event.setAttendees(attendees);
+
+		return new ResponseEntity<Event>(event, HttpStatus.OK);
 	}
 }

@@ -76,7 +76,7 @@ public class CalendarServiceImpl implements CalendarService {
 				event.setSubject(appointment.getSubject());
 //				MessageBody messageBody = appointment.getBody();
 //				event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),
-//						messageBody.getBodyType().toString()));
+//				messageBody.getBodyType().toString()));
 				event.setImportance(appointment.getImportance().toString());
 				event.setAllDay(appointment.getIsAllDayEvent());
 				event.setCancelled(appointment.getIsCancelled());

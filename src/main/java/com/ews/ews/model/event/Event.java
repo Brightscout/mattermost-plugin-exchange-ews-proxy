@@ -40,6 +40,12 @@ public class Event {
 
 	private Attendee organizer;
 
+	private String timezone;
+
+	private String webLink;
+
+	private Boolean isOrganizer;
+
 	public Event() {
 	}
 
@@ -166,7 +172,7 @@ public class Event {
 	public void setReminderMinutesBeforeStart(int reminderMinutesBeforeStart) {
 		this.reminderMinutesBeforeStart = reminderMinutesBeforeStart;
 	}
-	
+
 	public String getShowAs() {
 		return showAs;
 	}
@@ -175,4 +181,27 @@ public class Event {
 		this.showAs = showAs;
 	}
 
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setWebLink(String webLink) {
+		this.webLink = webLink;
+	}
+
+	public String getWebLink() {
+		return webLink;
+	}
+
+	public void setIsOrganizer(Boolean isOrganizer) {
+		this.isOrganizer = isOrganizer;
+	}
+
+	public Boolean getIsOrganizer() {
+		return isOrganizer;
+	}
 }
