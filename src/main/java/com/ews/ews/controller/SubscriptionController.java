@@ -16,11 +16,11 @@ import com.ews.ews.service.SubscriptionService;
 @RestController
 @RequestMapping("/api/notification")
 public class SubscriptionController {
-	@Autowired
+    @Autowired
 	EWSService ewsService;
 
-	@Autowired
-	SubscriptionService subscriptionService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
 	@PostMapping({ "/subscribe" })
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email,

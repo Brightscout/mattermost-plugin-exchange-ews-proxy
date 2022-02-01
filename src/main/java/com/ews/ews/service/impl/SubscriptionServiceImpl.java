@@ -98,16 +98,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			connection.addOnNotificationEvent(new StreamingSubscriptionConnection.INotificationEventDelegate() {
 				@Override
 				public void notificationEventDelegate(Object sender, NotificationEventArgs args) {
-					for (NotificationEvent notification : args.getEvents()) {
+					for (NotificationEvent notificationEvent : args.getEvents()) {
 						// Get id of the notification
-						ItemId eventId = ((ItemEvent) notification).getItemId();
+						ItemId eventId = ((ItemEvent) notificationEvent).getItemId();
 
 						// Set response to be sent on calling the webhook URL
 						SubscribeNotificationResponse subscribeResponse = new SubscribeNotificationResponse(
-								eventId.toString(), notification.getEventType().toString(),
+								eventId.toString(), notificationEvent.getEventType().toString(),
 								streamingSubscription.getId().toString());
 
-						// Call webhook for each new notifications
+						// Call webhook for each new notification
 						callWebhook(subscribe.getWebhookNotificationUrl(), subscribeResponse);
 					}
 				}
