@@ -2,6 +2,7 @@ package com.ews.ews.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -143,6 +144,7 @@ public class EventServiceImpl implements EventService {
 		Appointment appointment = Appointment.bind(service, new ItemId(id));
 		Event event = new Event();
 		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+
 		event.setId(appointment.getId().toString());
 		event.setiCalUID(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
@@ -161,6 +163,23 @@ public class EventServiceImpl implements EventService {
 		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment.getOrganizer();
 		event.setOrganizer(new com.ews.ews.model.event.Attendee(
 				new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+
+		// TODO: refactor to make it a reusable function as this same is used in
+		// calendarService
+		// Attendees is combination of required and optional attendees in EWS
+		List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
+		attendeesList.addAll(appointment.getOptionalAttendees().getItems());
+		int attendeesLen = attendeesList.size();
+		com.ews.ews.model.event.Attendee[] attendees = new com.ews.ews.model.event.Attendee[attendeesLen];
+		for (int j = 0; j < attendeesLen; j++) {
+			Attendee attendee = attendeesList.get(j);
+			EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString());
+			EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
+			// TODO: Need to populate correct type because this will affect find meeting
+			// times functionality
+			attendees[j] = new com.ews.ews.model.event.Attendee("required/optional", status, emailAddress);
+		}
+		event.setAttendees(attendees);
 
 		return new ResponseEntity<Event>(event, HttpStatus.OK);
 	}
