@@ -1,5 +1,7 @@
 package com.ews.ews.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ews.ews.model.CalendarViewBatchRequest;
 import com.ews.ews.model.CalendarViewBatchResponse;
+import com.ews.ews.model.User;
 import com.ews.ews.service.BatchService;
 
 @RestController
@@ -21,5 +24,10 @@ public class BatchController {
 	@PostMapping({"/event"})
 	public ResponseEntity<CalendarViewBatchResponse> getEvents(@RequestBody CalendarViewBatchRequest requests) throws Exception {
 		return this.batchService.getEvents(requests);
+	}
+	
+	@PostMapping({"/me"})
+	public ResponseEntity<ArrayList<User>> getUsers(@RequestBody ArrayList<String> emails) throws Exception {
+		return this.batchService.getUsers(emails);
 	}
 }
