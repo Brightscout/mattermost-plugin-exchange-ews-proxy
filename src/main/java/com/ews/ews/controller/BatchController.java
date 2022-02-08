@@ -26,7 +26,7 @@ public class BatchController {
 		return this.batchService.getEvents(requests);
 	}
 	
-	@PostMapping({"/me"})
+	@PostMapping({"/user"})
 	public ResponseEntity<ArrayList<UserBatchSingleResponse>> getUsers(@RequestBody ArrayList<String> emails) throws Exception {
 		return this.batchService.getUsers(emails);
 	}
