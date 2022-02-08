@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.model.CalendarViewBatchRequest;
 import com.ews.ews.model.CalendarViewBatchResponse;
 import com.ews.ews.model.CalendarViewSingleRequest;
@@ -14,7 +15,6 @@ import com.ews.ews.model.CalendarViewSingleResponse;
 import com.ews.ews.model.User;
 import com.ews.ews.model.UserBatchSingleResponse;
 import com.ews.ews.model.event.Event;
-import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.BatchService;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
@@ -53,8 +53,8 @@ public class BatchServiceImpl implements BatchService {
 			try {
 				ResponseEntity<User> user = this.userService.getUser(this.ewsService.impersonateUser(email), email);
 				userResponse = new UserBatchSingleResponse(user.getBody());
-			} catch(Exception e) {
-				userResponse = new UserBatchSingleResponse(new User(email), new ApiResponse(Boolean.FALSE, e.getMessage()));
+			} catch(InternalServerException e) {
+				userResponse = new UserBatchSingleResponse(new User(email), e.getApiResponse());
 			}
 			users.add(userResponse);
 		}
