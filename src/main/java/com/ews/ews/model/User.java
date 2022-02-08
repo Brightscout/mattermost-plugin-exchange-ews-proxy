@@ -11,6 +11,10 @@ public class User {
 	public User() {
 	}
 
+	public User(String mail) {
+		this.mail = mail;
+	}
+
 	public User(String id, String displayName, String mail) {
 		this.id = id;
 		this.displayName = displayName;

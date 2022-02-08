@@ -12,7 +12,9 @@ import com.ews.ews.model.CalendarViewBatchResponse;
 import com.ews.ews.model.CalendarViewSingleRequest;
 import com.ews.ews.model.CalendarViewSingleResponse;
 import com.ews.ews.model.User;
+import com.ews.ews.model.UserBatchSingleResponse;
 import com.ews.ews.model.event.Event;
+import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.BatchService;
 import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
@@ -44,15 +46,17 @@ public class BatchServiceImpl implements BatchService {
 	}
 	
 	@Override
-	public ResponseEntity<ArrayList<User>> getUsers(ArrayList<String> emails) throws Exception {
-		ArrayList<User> users = new ArrayList<User>();
+	public ResponseEntity<ArrayList<UserBatchSingleResponse>> getUsers(ArrayList<String> emails) throws Exception {
+		ArrayList<UserBatchSingleResponse> users = new ArrayList<>();
 		for (String email : emails) {
+			UserBatchSingleResponse userResponse;
 			try {
 				ResponseEntity<User> user = this.userService.getUser(this.ewsService.impersonateUser(email), email);
-				users.add(user.getBody());
+				userResponse = new UserBatchSingleResponse(user.getBody());
 			} catch(Exception e) {
-				System.out.printf("error occurred while fetching user deails for email: %s. Error: %s", email, e.getMessage());
+				userResponse = new UserBatchSingleResponse(new User(email), new ApiResponse(Boolean.FALSE, e.getMessage()));
 			}
+			users.add(userResponse);
 		}
 		
 		return new ResponseEntity<>(users, HttpStatus.OK);
