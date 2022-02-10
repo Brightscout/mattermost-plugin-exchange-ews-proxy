@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
 
@@ -23,7 +28,4 @@ public class BadRequestException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public ApiResponse getApiResponse() {
-		return apiResponse;
-	}
 }

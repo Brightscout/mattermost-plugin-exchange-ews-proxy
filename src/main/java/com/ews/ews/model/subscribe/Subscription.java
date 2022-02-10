@@ -1,5 +1,10 @@
 package com.ews.ews.model.subscribe;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Subscription {
 	private String subscriptionId;
 	private String webhookNotificationUrl;
@@ -11,19 +16,4 @@ public class Subscription {
 		this.subscriptionId = subscriptionId;
 	}
 
-	public void setSubscriptionId(String subscriptionId) {
-		this.subscriptionId = subscriptionId;
-	}
-
-	public void setWebhookNotificationUrl(String webhookNotificationUrl) {
-		this.webhookNotificationUrl = webhookNotificationUrl;
-	}
-
-	public String getSubscriptionId() {
-		return subscriptionId;
-	}
-
-	public String getWebhookNotificationUrl() {
-		return webhookNotificationUrl;
-	}
 }

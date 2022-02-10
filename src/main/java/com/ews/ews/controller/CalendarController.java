@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,40 +25,42 @@ import com.ews.ews.utils.AppUtils;
 @RequestMapping("/api/calendar")
 public class CalendarController {
 
-	@Autowired
-	EWSService ewsService;
+	private EWSService ewsService;
 
-	@Autowired
-	CalendarService calendarService;
+	private CalendarService calendarService;
+
+	public CalendarController(EWSService ewsService, CalendarService calendarService) {
+		this.ewsService = ewsService;
+		this.calendarService = calendarService;
+	}
 
 	@PostMapping
 	public ResponseEntity<Calendar> createCalendar(@RequestParam String email, @RequestBody Calendar calendar)
 			throws Exception {
-		return this.calendarService.createCalendar(ewsService.impersonateUser(email), calendar);
+		return calendarService.createCalendar(ewsService.impersonateUser(email), calendar);
 	}
 
 	@GetMapping
 	public ResponseEntity<ArrayList<Calendar>> getCalendars(@RequestParam String email) throws Exception {
-		return this.calendarService.getCalendars(ewsService.impersonateUser(email));
+		return calendarService.getCalendars(ewsService.impersonateUser(email));
 	}
 
 	@GetMapping({ "/{id}/**" })
 	public ResponseEntity<Calendar> getCalendar(@RequestParam String email, @PathVariable String id,
 			HttpServletRequest request) throws Exception {
-		return this.calendarService.getCalendar(ewsService.impersonateUser(email),
-				AppUtils.getIdFromParams(id, request));
+		return calendarService.getCalendar(ewsService.impersonateUser(email), AppUtils.getIdFromParams(id, request));
 	}
 
 	@DeleteMapping({ "/{id}/**" })
 	public ResponseEntity<Calendar> deleteCalendar(@RequestParam String email, @PathVariable String id,
 			HttpServletRequest request) throws Exception {
-		return this.calendarService.deleteCalendar(ewsService.impersonateUser(email),
-				AppUtils.getIdFromParams(id, request));
+		return calendarService.deleteCalendar(ewsService.impersonateUser(email), AppUtils.getIdFromParams(id, request));
 	}
-	
+
 	@PostMapping({ "/suggestions" })
-	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email, @RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
-		return this.calendarService.findMeetingTimes(this.ewsService.impersonateUser(email), email, findMeetingTimes);
+	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email,
+			@RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
+		return calendarService.findMeetingTimes(ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
 
 }

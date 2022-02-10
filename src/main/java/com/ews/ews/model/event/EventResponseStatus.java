@@ -1,14 +1,19 @@
 package com.ews.ews.model.event;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class EventResponseStatus {
-	
+
 	private String response; // ResponseType
-	
+
 	private String time; // LastResponseTime
 
 	public EventResponseStatus() {
 	}
-	
+
 	public EventResponseStatus(String response) {
 		this.response = response;
 	}
@@ -18,20 +23,4 @@ public class EventResponseStatus {
 		this.time = time;
 	}
 
-	public String getResponse() {
-		return response;
-	}
-
-	public void setResponse(String response) {
-		this.response = response;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-	
 }

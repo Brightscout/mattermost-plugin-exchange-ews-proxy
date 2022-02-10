@@ -25,7 +25,6 @@ import microsoft.exchange.webservices.data.core.enumeration.service.ResponseActi
 import microsoft.exchange.webservices.data.core.enumeration.service.SendInvitationsMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
-import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
@@ -69,7 +68,8 @@ public class EventServiceImpl implements EventService {
 			throws Exception {
 		try {
 			CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
-			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end), AppConstants.MAX_NUMBER_OF_EVENTS);
+			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end),
+					AppConstants.MAX_NUMBER_OF_EVENTS);
 			FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 			ArrayList<Event> events = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
@@ -85,10 +85,8 @@ public class EventServiceImpl implements EventService {
 				event.setResponseRequested(appointment.getIsResponseRequested());
 				event.setLocation(appointment.getLocation());
 				event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
-				microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
-						.getOrganizer();
-				event.setOrganizer(new com.ews.ews.model.event.Attendee(
-						new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+				event.setOrganizer(new com.ews.ews.model.event.Attendee(new EmailAddress(
+						appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
 				events.add(event);
 			}
 
@@ -146,7 +144,7 @@ public class EventServiceImpl implements EventService {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 
 		event.setId(appointment.getId().toString());
-		event.setiCalUID(appointment.getICalUid());
+		event.setICalUID(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
 		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
@@ -160,9 +158,8 @@ public class EventServiceImpl implements EventService {
 		event.setImportance(appointment.getImportance().toString());
 		event.setIsOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
-		microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment.getOrganizer();
 		event.setOrganizer(new com.ews.ews.model.event.Attendee(
-				new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
+				new EmailAddress(appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
 
 		// TODO: refactor to make it a reusable function as this same is used in
 		// calendarService

@@ -1,6 +1,5 @@
 package com.ews.ews.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,23 +15,26 @@ import com.ews.ews.service.SubscriptionService;
 @RestController
 @RequestMapping("/api/notification")
 public class SubscriptionController {
-    @Autowired
-	EWSService ewsService;
 
-    @Autowired
-    SubscriptionService subscriptionService;
+	private EWSService ewsService;
+
+	private SubscriptionService subscriptionService;
+
+	public SubscriptionController(EWSService ewsService, SubscriptionService subscriptionService) {
+		this.ewsService = ewsService;
+		this.subscriptionService = subscriptionService;
+	}
 
 	@PostMapping({ "/subscribe" })
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email,
 			@RequestBody Subscription subscription) throws Exception {
-		return this.subscriptionService.subscribeToStreamNotifications(this.ewsService.impersonateUser(email),
-				subscription);
+		return subscriptionService.subscribeToStreamNotifications(ewsService.impersonateUser(email), subscription);
 	}
 
 	@PostMapping({ "/unsubscribe" })
 	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestBody Subscription subscription)
 			throws Exception {
-		return this.subscriptionService.unsubscribeToStreamNotifications(subscription);
+		return subscriptionService.unsubscribeToStreamNotifications(subscription);
 	}
 
 }

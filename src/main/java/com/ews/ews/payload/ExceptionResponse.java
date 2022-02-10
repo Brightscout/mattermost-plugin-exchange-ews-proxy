@@ -1,10 +1,14 @@
 package com.ews.ews.payload;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ExceptionResponse {
 	private String error;
 	private Integer status;
@@ -18,10 +22,6 @@ public class ExceptionResponse {
 		this.timestamp = Instant.now();
 	}
 
-	public List<String> getMessages() {
-		return messages;
-	}
-
 	public final void setMessages(List<String> messages) {
 		if (messages == null) {
 			this.messages = null;
@@ -30,27 +30,4 @@ public class ExceptionResponse {
 		}
 	}
 
-	public String getError() {
-		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public Instant getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Instant timestamp) {
-		this.timestamp = timestamp;
-	}
 }

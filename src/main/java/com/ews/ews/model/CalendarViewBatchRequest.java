@@ -1,15 +1,15 @@
 package com.ews.ews.model;
 
+import java.util.ArrayList;
+
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CalendarViewBatchRequest {
 
-	private CalendarViewSingleRequest[] requests;
-
-	public CalendarViewSingleRequest[] getRequests() {
-		return requests;
-	}
-
-	public void setRequests(CalendarViewSingleRequest[] requests) {
-		this.requests = requests;
-	}
+	private ArrayList<CalendarViewSingleRequest> requests;
 
 }

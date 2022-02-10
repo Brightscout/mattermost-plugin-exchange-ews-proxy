@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RuntimeException {
 

@@ -4,6 +4,11 @@ import org.springframework.http.HttpStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class EwsApiException extends RuntimeException {
 
 	private final HttpStatus status;
@@ -19,14 +24,6 @@ public class EwsApiException extends RuntimeException {
 		super(exception);
 		this.status = status;
 		this.message = message;
-	}
-
-	public HttpStatus getStatus() {
-		return status;
-	}
-
-	public String getMessage() {
-		return message;
 	}
 
 }

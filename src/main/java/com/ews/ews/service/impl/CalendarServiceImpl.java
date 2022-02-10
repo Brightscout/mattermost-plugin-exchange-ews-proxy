@@ -72,7 +72,7 @@ public class CalendarServiceImpl implements CalendarService {
 				Appointment appointment = appointments.get(i);
 				Event event = new Event();
 				event.setId(appointment.getId().toString());
-				event.setiCalUID(appointment.getICalUid());
+				event.setICalUID(appointment.getICalUid());
 				event.setSubject(appointment.getSubject());
 //				MessageBody messageBody = appointment.getBody();
 //				event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),

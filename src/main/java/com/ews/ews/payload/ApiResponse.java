@@ -8,6 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @JsonPropertyOrder({ "success", "message" })
 public class ApiResponse implements Serializable {
 
@@ -37,27 +42,4 @@ public class ApiResponse implements Serializable {
 		this.status = httpStatus;
 	}
 
-	public Boolean getSuccess() {
-		return success;
-	}
-
-	public void setSuccess(Boolean success) {
-		this.success = success;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public HttpStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(HttpStatus status) {
-		this.status = status;
-	}
 }

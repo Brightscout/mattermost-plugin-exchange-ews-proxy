@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerException extends RuntimeException {
 	private ApiResponse apiResponse;
@@ -22,7 +27,4 @@ public class InternalServerException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public ApiResponse getApiResponse() {
-		return apiResponse;
-	}
 }

@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
@@ -21,25 +26,4 @@ public class ResourceNotFoundException extends RuntimeException {
 		this.fieldValue = fieldValue;
 	}
 
-	public String getResourceName() {
-		return resourceName;
-	}
-
-	public String getFieldName() {
-		return fieldName;
-	}
-
-	public Object getFieldValue() {
-		return fieldValue;
-	}
-
-	public ApiResponse getApiResponse() {
-		return apiResponse;
-	}
-
-	private void setApiResponse() {
-		String message = String.format("%s not found with %s: '%s'", resourceName, fieldName, fieldValue);
-
-		apiResponse = new ApiResponse(Boolean.FALSE, message);
-	}
 }

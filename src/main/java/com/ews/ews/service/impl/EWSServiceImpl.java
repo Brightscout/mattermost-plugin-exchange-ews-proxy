@@ -23,11 +23,11 @@ public class EWSServiceImpl implements EWSService {
 
 	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
-		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
+		service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
-		this.service.setCredentials(credentials);
+		service.setCredentials(credentials);
 		try {
-			this.service.setUrl(new URI(exchangeServerURL));
+			service.setUrl(new URI(exchangeServerURL));
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
@@ -37,8 +37,8 @@ public class EWSServiceImpl implements EWSService {
 	@Override
 	public ExchangeService impersonateUser(String userEmail) {
 		ImpersonatedUserId impersonatedUserId = new ImpersonatedUserId(ConnectingIdType.SmtpAddress, userEmail);
-		this.service.setImpersonatedUserId(impersonatedUserId);
-		return this.service;
+		service.setImpersonatedUserId(impersonatedUserId);
+		return service;
 	}
 
 	public ExchangeService getService() {

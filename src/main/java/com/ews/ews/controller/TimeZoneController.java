@@ -1,6 +1,5 @@
 package com.ews.ews.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +13,18 @@ import com.ews.ews.service.TimeZoneService;
 @RequestMapping("/api/timezone")
 public class TimeZoneController {
 
-	@Autowired
-	EWSService ewsService;
-	
-	@Autowired
-	TimeZoneService timeZoneService;
-	
+	private EWSService ewsService;
+
+	private TimeZoneService timeZoneService;
+
+	public TimeZoneController(EWSService ewsService, TimeZoneService timeZoneService) {
+		this.ewsService = ewsService;
+		this.timeZoneService = timeZoneService;
+	}
+
 	@GetMapping
 	public ResponseEntity<String> getTimeZone(@RequestParam String email) throws Exception {
-		return this.timeZoneService.getTimeZone(ewsService.impersonateUser(email), email);
+		return timeZoneService.getTimeZone(ewsService.impersonateUser(email), email);
 	}
-	
+
 }
