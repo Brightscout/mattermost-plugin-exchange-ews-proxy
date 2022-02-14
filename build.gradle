@@ -28,6 +28,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
+pmd {
+    consoleOutput = true
+    toolVersion = "6.21.0"
+    rulesMinimumPriority = 5
+	ruleSetConfig = resources.text.fromFile("config/pmd/ruleset.xml")
+    ruleSets = []
+}
+
 test {
 	useJUnitPlatform()
 }

@@ -13,6 +13,8 @@ import lombok.Setter;
 @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	private ApiResponse apiResponse;
 
 	private String message;
@@ -31,21 +33,4 @@ public class UnauthorizedException extends RuntimeException {
 		super(message, cause);
 		this.message = message;
 	}
-
-	public ApiResponse getApiResponse() {
-		return apiResponse;
-	}
-
-	public void setApiResponse(ApiResponse apiResponse) {
-		this.apiResponse = apiResponse;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 }

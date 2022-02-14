@@ -12,5 +12,4 @@ public class CalendarViewSingleRequest {
 	private String startDateTime;
 
 	private String endDateTime;
-
 }

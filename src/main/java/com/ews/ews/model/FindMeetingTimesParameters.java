@@ -1,6 +1,6 @@
 package com.ews.ews.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.ews.ews.model.event.Attendee;
 
@@ -11,6 +11,5 @@ import lombok.Setter;
 @Setter
 public class FindMeetingTimesParameters {
 
-	private ArrayList<Attendee> attendees;
-
+	private List<Attendee> attendees;
 }

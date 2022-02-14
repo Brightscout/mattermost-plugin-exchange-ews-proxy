@@ -64,7 +64,7 @@ public class CalendarServiceImpl implements CalendarService {
 			Date endDate = cd.getTime();
 			CalendarView calView = new CalendarView(startDate, endDate);
 			FindItemsResults<Appointment> itemResults = calendarFolder.findAppointments(calView);
-			ArrayList<Appointment> appointments = itemResults.getItems();
+			List<Appointment> appointments = itemResults.getItems();
 			int eventsLen = appointments.size();
 			Event[] events = new Event[eventsLen];
 
@@ -72,11 +72,8 @@ public class CalendarServiceImpl implements CalendarService {
 				Appointment appointment = appointments.get(i);
 				Event event = new Event();
 				event.setId(appointment.getId().toString());
-				event.setICalUID(appointment.getICalUid());
+				event.setCalUId(appointment.getICalUid());
 				event.setSubject(appointment.getSubject());
-//				MessageBody messageBody = appointment.getBody();
-//				event.setBody(new ItemBody(MessageBody.getStringFromMessageBody(messageBody),
-//				messageBody.getBodyType().toString()));
 				event.setImportance(appointment.getImportance().toString());
 				event.setAllDay(appointment.getIsAllDayEvent());
 				event.setCancelled(appointment.getIsCancelled());
@@ -86,6 +83,7 @@ public class CalendarServiceImpl implements CalendarService {
 				event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
 				event.setLocation(appointment.getLocation());
 				event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+				// TODO: Set message body in event
 				// Attendees is combination of required and optional attendees in EWS
 				List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
 				attendeesList.addAll(appointment.getOptionalAttendees().getItems());
@@ -134,7 +132,7 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
-	public ResponseEntity<ArrayList<Calendar>> getCalendars(ExchangeService service) throws Exception {
+	public ResponseEntity<List<Calendar>> getCalendars(ExchangeService service) throws Exception {
 		try {
 			FolderId rfRootFolderid = new FolderId(WellKnownFolderName.Root);
 			FolderView fvFolderView = new FolderView(1000);
@@ -143,7 +141,7 @@ public class CalendarServiceImpl implements CalendarService {
 			SearchFilter sfSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.FolderClass, "IPF.Appointment");
 			FindFoldersResults ffoldres = service.findFolders(rfRootFolderid, sfSearchFilter, fvFolderView);
 			String deletedFolderId = Folder.bind(service, WellKnownFolderName.DeletedItems).getId().getUniqueId();
-			ArrayList<Calendar> calendars = new ArrayList<>();
+			List<Calendar> calendars = new ArrayList<>();
 			for (Folder folder : ffoldres.getFolders()) {
 				if (!folder.getParentFolderId().getUniqueId().equals(deletedFolderId)) {
 					calendars.add(getCalendarById(service, folder.getId().toString()));
@@ -154,7 +152,6 @@ public class CalendarServiceImpl implements CalendarService {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching calendars. Error: " + e.getMessage()));
 		}
-
 	}
 
 	@Override
@@ -169,7 +166,6 @@ public class CalendarServiceImpl implements CalendarService {
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while deleting calendar. Error: " + e.getMessage()));
 		}
-
 	}
 
 	@Override
@@ -198,7 +194,7 @@ public class CalendarServiceImpl implements CalendarService {
 			Date endDate = cd.getTime();
 			GetUserAvailabilityResults results = service.getUserAvailability(attendees,
 					new TimeWindow(startDate, endDate), AvailabilityData.Suggestions);
-			ArrayList<MeetingTimeSuggestion> meetingTimes = new ArrayList<>();
+			List<MeetingTimeSuggestion> meetingTimes = new ArrayList<>();
 			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 			for (Suggestion suggestion : results.getSuggestions()) {
 				for (TimeSuggestion timeSuggestion : suggestion.getTimeSuggestions()) {
@@ -213,5 +209,4 @@ public class CalendarServiceImpl implements CalendarService {
 					"error occurred while finding meeting times. Error: " + e.getMessage()));
 		}
 	}
-
 }

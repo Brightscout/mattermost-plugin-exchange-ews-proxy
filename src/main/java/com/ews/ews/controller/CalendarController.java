@@ -1,7 +1,6 @@
 package com.ews.ews.controller;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -18,18 +17,18 @@ import com.ews.ews.model.Calendar;
 import com.ews.ews.model.FindMeetingTimesParameters;
 import com.ews.ews.model.MeetingTimeSuggestionResults;
 import com.ews.ews.service.CalendarService;
-import com.ews.ews.service.EWSService;
+import com.ews.ews.service.EwsService;
 import com.ews.ews.utils.AppUtils;
 
 @RestController
 @RequestMapping("/api/calendar")
 public class CalendarController {
 
-	private EWSService ewsService;
+	private transient EwsService ewsService;
 
-	private CalendarService calendarService;
+	private transient CalendarService calendarService;
 
-	public CalendarController(EWSService ewsService, CalendarService calendarService) {
+	public CalendarController(EwsService ewsService, CalendarService calendarService) {
 		this.ewsService = ewsService;
 		this.calendarService = calendarService;
 	}
@@ -41,7 +40,7 @@ public class CalendarController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ArrayList<Calendar>> getCalendars(@RequestParam String email) throws Exception {
+	public ResponseEntity<List<Calendar>> getCalendars(@RequestParam String email) throws Exception {
 		return calendarService.getCalendars(ewsService.impersonateUser(email));
 	}
 
@@ -62,5 +61,4 @@ public class CalendarController {
 			@RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
 		return calendarService.findMeetingTimes(ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
-
 }

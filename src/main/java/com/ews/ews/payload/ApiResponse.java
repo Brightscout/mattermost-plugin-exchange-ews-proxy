@@ -41,5 +41,4 @@ public class ApiResponse implements Serializable {
 		this.message = message;
 		this.status = httpStatus;
 	}
-
 }

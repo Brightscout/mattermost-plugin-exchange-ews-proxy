@@ -3,6 +3,7 @@ package com.ews.ews.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,8 @@ import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.SubscriptionService;
 import com.ews.ews.utils.AppConstants;
 
+import lombok.Getter;
+import lombok.Setter;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -34,9 +37,11 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 
+	@Getter
+	@Setter
 	static class Pair {
-		StreamingSubscription streamingSubscription;
-		StreamingSubscriptionConnection streamingSubscriptionConnection;
+		private StreamingSubscription streamingSubscription;
+		private StreamingSubscriptionConnection streamingSubscriptionConnection;
 
 		public Pair(StreamingSubscription streamingSubscription,
 				StreamingSubscriptionConnection streamingSubscriptionConnection) {
@@ -45,18 +50,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 	}
 
-	private static final HashMap<String, Pair> map = new HashMap<>();
+	private static final Map<String, Pair> SUBSCRIPTION_ID_PAIR_MAP = new HashMap<>();
 
 	@Override
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
 			throws Exception {
 		try {
 			// Get existing subscription if any
-			Pair existingSubscription = map.get(subscribe.getSubscriptionId());
+			Pair existingSubscription = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
 			if (existingSubscription != null) {
 				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "error occurred while creating subscription. Error: "
-								+ "Subscription already exists for subscriptionId: " + subscribe.getSubscriptionId()));
+								+ "Subscription already exists for subscriptionId: "
+								+ subscribe.getSubscriptionId()));
 			}
 			// Get all folderIds of the user
 			List<FolderId> folderIds = new ArrayList<FolderId>();
@@ -76,9 +82,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			final StreamingSubscriptionConnection connection = new StreamingSubscriptionConnection(service,
 					AppConstants.SUBSCRIPTION_LIFETIME_IN_MINUTES);
 
-			// Store the subscription and subscription connection in map, used during
-			// unsubscribe
-			map.put(streamingSubscription.getId(), new Pair(streamingSubscription, connection));
+			// Store the subscription and subscription connection in map, used during unsubscribe
+			SUBSCRIPTION_ID_PAIR_MAP.put(streamingSubscription.getId(), new Pair(streamingSubscription, connection));
 
 			// Add streaming subscription to the connection
 			connection.addSubscription(streamingSubscription);
@@ -120,7 +125,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
 					StreamingSubscriptionConnection connection = (StreamingSubscriptionConnection) sender;
 					try {
-						Pair pair = map.get(subscribe.getSubscriptionId());
+						Pair pair = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
 						if (pair != null && pair.streamingSubscriptionConnection != null) {
 							connection.open();
 						}
@@ -158,12 +163,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe) throws Exception {
 		try {
-			Pair pair = map.get(subscribe.getSubscriptionId());
+			Pair pair = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
 			StreamingSubscriptionConnection subscriptionConnection = pair.streamingSubscriptionConnection;
 			StreamingSubscription subscription = pair.streamingSubscription;
 
 			// remove the subscription from map
-			map.remove(subscribe.getSubscriptionId());
+			SUBSCRIPTION_ID_PAIR_MAP.remove(subscribe.getSubscriptionId());
 
 			// unsubscribe to streaming notification subscription
 			subscription.unsubscribe();
@@ -181,7 +186,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
 							if (args.getException() != null) {
 								throw new InternalServerException(
-										new ApiResponse(Boolean.FALSE, "error occurred while unsubscribing. Error: "
+										new ApiResponse(Boolean.FALSE,
+												"error occurred while unsubscribing. Error: "
 												+ args.getException().getMessage()));
 							}
 						}

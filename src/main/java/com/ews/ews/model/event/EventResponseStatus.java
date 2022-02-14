@@ -1,6 +1,7 @@
 package com.ews.ews.model.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,13 +15,12 @@ public class EventResponseStatus {
 	public EventResponseStatus() {
 	}
 
-	public EventResponseStatus(String response) {
+	public EventResponseStatus(@NonNull String response) {
 		this.response = response;
 	}
 
-	public EventResponseStatus(String response, String time) {
+	public EventResponseStatus(@NonNull String response, @NonNull String time) {
 		this.response = response;
 		this.time = time;
 	}
-
 }

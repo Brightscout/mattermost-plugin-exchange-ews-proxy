@@ -1,18 +1,18 @@
 package com.ews.ews.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class CalendarViewBatchResponse {
 
-	private ArrayList<CalendarViewSingleResponse> responses;
+	private List<CalendarViewSingleResponse> responses;
 
-	public CalendarViewBatchResponse(ArrayList<CalendarViewSingleResponse> responses) {
+	public CalendarViewBatchResponse(@NonNull List<CalendarViewSingleResponse> responses) {
 		this.responses = responses;
 	}
-
 }

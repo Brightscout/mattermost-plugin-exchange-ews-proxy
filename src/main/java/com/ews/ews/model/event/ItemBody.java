@@ -1,6 +1,7 @@
 package com.ews.ews.model.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,9 +15,8 @@ public class ItemBody {
 	public ItemBody() {
 	}
 
-	public ItemBody(String content, String contentType) {
+	public ItemBody(@NonNull String content, @NonNull String contentType) {
 		this.content = content;
 		this.contentType = contentType;
 	}
-
 }

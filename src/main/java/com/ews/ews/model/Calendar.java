@@ -3,6 +3,7 @@ package com.ews.ews.model;
 import com.ews.ews.model.event.Event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -20,12 +21,10 @@ public class Calendar {
 	private User owner;
 
 	public Calendar() {
-
 	}
 
-	public Calendar(String id, String name) {
+	public Calendar(@NonNull String id, @NonNull String name) {
 		this.id = id;
 		this.name = name;
 	}
-
 }

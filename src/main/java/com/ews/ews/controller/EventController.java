@@ -1,7 +1,6 @@
 package com.ews.ews.controller;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -14,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ews.ews.model.event.Event;
-import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
+import com.ews.ews.service.EwsService;
 import com.ews.ews.utils.AppUtils;
 
 @RestController
 @RequestMapping("/api/event")
 public class EventController {
 
-	private EWSService ewsService;
+	private transient EwsService ewsService;
 
-	private EventService eventService;
+	private transient EventService eventService;
 
-	public EventController(EWSService ewsService, EventService eventService) {
+	public EventController(EwsService ewsService, EventService eventService) {
 		this.ewsService = ewsService;
 		this.eventService = eventService;
 	}
@@ -37,7 +36,7 @@ public class EventController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ArrayList<Event>> getEvents(@RequestParam String email, @RequestParam String startDateTime,
+	public ResponseEntity<List<Event>> getEvents(@RequestParam String email, @RequestParam String startDateTime,
 			@RequestParam String endDateTime) throws Exception {
 		return eventService.getEvents(ewsService.impersonateUser(email), startDateTime, endDateTime);
 	}
@@ -66,5 +65,4 @@ public class EventController {
 		return eventService.tentativelyAcceptEvent(ewsService.impersonateUser(email),
 				AppUtils.getIdFromParams(id, request));
 	}
-
 }

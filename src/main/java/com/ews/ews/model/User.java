@@ -1,6 +1,7 @@
 package com.ews.ews.model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -16,14 +17,13 @@ public class User {
 	public User() {
 	}
 
-	public User(String mail) {
+	public User(@NonNull String mail) {
 		this.mail = mail;
 	}
 
-	public User(String id, String displayName, String mail) {
+	public User(@NonNull String id, @NonNull String displayName, @NonNull String mail) {
 		this.id = id;
 		this.displayName = displayName;
 		this.mail = mail;
 	}
-
 }

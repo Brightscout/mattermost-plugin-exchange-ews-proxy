@@ -3,6 +3,7 @@ package com.ews.ews.model;
 import com.ews.ews.payload.ApiResponse;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -13,13 +14,12 @@ public class UserBatchSingleResponse {
 
 	private ApiResponse error;
 
-	public UserBatchSingleResponse(User user) {
+	public UserBatchSingleResponse(@NonNull User user) {
 		this.user = user;
 	}
 
-	public UserBatchSingleResponse(User user, ApiResponse error) {
+	public UserBatchSingleResponse(@NonNull User user, @NonNull ApiResponse error) {
 		this.user = user;
 		this.error = error;
 	}
-
 }

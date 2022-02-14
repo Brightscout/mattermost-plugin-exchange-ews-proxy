@@ -2,8 +2,6 @@ package com.ews.ews.exception;
 
 import org.springframework.http.HttpStatus;
 
-import com.ews.ews.payload.ApiResponse;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class EwsApiException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
 	private final HttpStatus status;
 	private final String message;
 
@@ -25,5 +24,4 @@ public class EwsApiException extends RuntimeException {
 		this.status = status;
 		this.message = message;
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.ews.ews.payload;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,10 +25,9 @@ public class ExceptionResponse {
 
 	public final void setMessages(List<String> messages) {
 		if (messages == null) {
-			this.messages = null;
+			this.messages = new ArrayList<>();
 		} else {
 			this.messages = Collections.unmodifiableList(messages);
 		}
 	}
-
 }

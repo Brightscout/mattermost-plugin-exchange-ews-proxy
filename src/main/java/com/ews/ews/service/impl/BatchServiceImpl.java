@@ -1,6 +1,7 @@
 package com.ews.ews.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +16,20 @@ import com.ews.ews.model.User;
 import com.ews.ews.model.UserBatchSingleResponse;
 import com.ews.ews.model.event.Event;
 import com.ews.ews.service.BatchService;
-import com.ews.ews.service.EWSService;
 import com.ews.ews.service.EventService;
+import com.ews.ews.service.EwsService;
 import com.ews.ews.service.UserService;
 
 @Service
 public class BatchServiceImpl implements BatchService {
 
-	private EWSService ewsService;
+	private transient EwsService ewsService;
 
-	private EventService eventService;
+	private transient EventService eventService;
 
-	private UserService userService;
+	private transient UserService userService;
 
-	public BatchServiceImpl(EWSService ewsService, EventService eventService, UserService userService) {
+	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService) {
 		this.ewsService = ewsService;
 		this.eventService = eventService;
 		this.userService = userService;
@@ -36,9 +37,9 @@ public class BatchServiceImpl implements BatchService {
 
 	@Override
 	public ResponseEntity<CalendarViewBatchResponse> getEvents(CalendarViewBatchRequest requests) throws Exception {
-		ArrayList<CalendarViewSingleResponse> responses = new ArrayList<>();
+		List<CalendarViewSingleResponse> responses = new ArrayList<>();
 		for (CalendarViewSingleRequest request : requests.getRequests()) {
-			ResponseEntity<ArrayList<Event>> response = eventService.getEvents(
+			ResponseEntity<List<Event>> response = eventService.getEvents(
 					ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
 			responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
 		}
@@ -47,20 +48,17 @@ public class BatchServiceImpl implements BatchService {
 	}
 
 	@Override
-	public ResponseEntity<ArrayList<UserBatchSingleResponse>> getUsers(ArrayList<String> emails) throws Exception {
-		ArrayList<UserBatchSingleResponse> users = new ArrayList<>();
+	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(List<String> emails) throws Exception {
+		List<UserBatchSingleResponse> users = new ArrayList<>();
 		for (String email : emails) {
-			UserBatchSingleResponse userResponse;
 			try {
 				ResponseEntity<User> user = userService.getUser(ewsService.impersonateUser(email), email);
-				userResponse = new UserBatchSingleResponse(user.getBody());
+				users.add(new UserBatchSingleResponse(user.getBody()));
 			} catch (InternalServerException e) {
-				userResponse = new UserBatchSingleResponse(new User(email), e.getApiResponse());
+				users.add(new UserBatchSingleResponse(new User(email), e.getApiResponse()));
 			}
-			users.add(userResponse);
 		}
 
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
-
 }

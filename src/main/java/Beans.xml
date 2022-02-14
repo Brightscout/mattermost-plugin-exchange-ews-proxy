@@ -53,7 +53,7 @@
    </bean>
 
    <!-- Definition for ewsService bean -->
-   <bean id = "ewsService" class = "com.ews.ews.service.EWSService"></bean>
+   <bean id = "ewsService" class = "com.ews.ews.service.EwsService"></bean>
 
    <!-- Definition for batchService bean -->
    <bean id = "batchService" class = "com.ews.ews.service.BatchService"></bean>

@@ -1,7 +1,6 @@
 package com.ews.ews.model;
 
-import java.util.ArrayList;
-
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +9,5 @@ import lombok.Setter;
 @Setter
 public class CalendarViewBatchRequest {
 
-	private ArrayList<CalendarViewSingleRequest> requests;
-
+	private List<CalendarViewSingleRequest> requests;
 }

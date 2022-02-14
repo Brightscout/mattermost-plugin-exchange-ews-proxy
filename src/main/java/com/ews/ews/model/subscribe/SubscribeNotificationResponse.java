@@ -1,6 +1,7 @@
 package com.ews.ews.model.subscribe;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -13,10 +14,9 @@ public class SubscribeNotificationResponse {
 	public SubscribeNotificationResponse() {
 	}
 
-	public SubscribeNotificationResponse(String eventId, String changeType, String subscriptionId) {
+	public SubscribeNotificationResponse(@NonNull String eventId, @NonNull String changeType, @NonNull String subscriptionId) {
 		this.eventId = eventId;
 		this.changeType = changeType;
 		this.subscriptionId = subscriptionId;
 	}
-
 }

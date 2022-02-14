@@ -1,7 +1,6 @@
 package com.ews.ews.security;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ import com.ews.ews.payload.ApiResponse;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-	private String secretAuthKey;
+	private transient String secretAuthKey;
 
 	@Autowired
 	public void setValues(@Value("${app.secretAuthKey}") String secretAuthKey) {
@@ -53,5 +52,4 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		}
 		return null;
 	}
-
 }

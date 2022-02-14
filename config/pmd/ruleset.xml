@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="Rule Set for java">
+	<description>
+		Rules which enforce generally accepted best practices for java.
+    </description>
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="PreserveStackTrace"/>
+    </rule>
+    <rule ref="category/java/errorprone.xml">    
+        <exclude name="DataflowAnomalyAnalysis"/>
+        <exclude name="SimpleDateFormatNeedsLocale"/>
+    </rule>
+</ruleset>

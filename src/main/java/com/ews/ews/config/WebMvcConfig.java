@@ -13,7 +13,7 @@ import com.ews.ews.security.AuthenticationFilter;
 @EnableWebSecurity
 public class WebMvcConfig extends WebSecurityConfigurerAdapter {
 
-	private AuthenticationFilter authenticationFilter;
+	private transient AuthenticationFilter authenticationFilter;
 
 	public WebMvcConfig(AuthenticationFilter authenticationFilter) {
 		this.authenticationFilter = authenticationFilter;
@@ -21,9 +21,17 @@ public class WebMvcConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().exceptionHandling().authenticationEntryPoint(new AuthEntryPoint()).and()
-				.authorizeRequests().anyRequest().authenticated().and().csrf().disable().formLogin().disable()
-				.httpBasic().disable().logout().disable();
+		http.csrf().disable()
+			.exceptionHandling()
+			.authenticationEntryPoint(new AuthEntryPoint())
+			.and()
+			.authorizeRequests()
+			.anyRequest().authenticated()
+			.and()
+			.csrf().disable()
+			.formLogin().disable()
+			.httpBasic().disable()
+			.logout().disable();
 
 		http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}

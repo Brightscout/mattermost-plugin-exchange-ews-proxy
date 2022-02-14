@@ -3,6 +3,7 @@ package com.ews.ews.model;
 import com.ews.ews.model.event.DateTime;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,8 +15,7 @@ public class MeetingTimeSuggestion {
 	public MeetingTimeSuggestion() {
 	}
 
-	public MeetingTimeSuggestion(DateTime meetingTimeSlot) {
+	public MeetingTimeSuggestion(@NonNull DateTime meetingTimeSlot) {
 		this.meetingTimeSlot = meetingTimeSlot;
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.ews.ews.model.subscribe;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -12,8 +13,7 @@ public class Subscription {
 	public Subscription() {
 	}
 
-	public Subscription(String subscriptionId) {
+	public Subscription(@NonNull String subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
-
 }

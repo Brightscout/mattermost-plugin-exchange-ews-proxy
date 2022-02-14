@@ -1,7 +1,6 @@
 package com.ews.ews.controller;
 
-import java.util.ArrayList;
-
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,7 @@ import com.ews.ews.service.BatchService;
 @RequestMapping("/api/batch")
 public class BatchController {
 
-	private BatchService batchService;
+	private transient BatchService batchService;
 
 	public BatchController(BatchService batchService) {
 		this.batchService = batchService;
@@ -31,7 +30,7 @@ public class BatchController {
 	}
 
 	@PostMapping({ "/user" })
-	public ResponseEntity<ArrayList<UserBatchSingleResponse>> getUsers(@RequestBody ArrayList<String> emails)
+	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(@RequestBody List<String> emails)
 			throws Exception {
 		return batchService.getUsers(emails);
 	}

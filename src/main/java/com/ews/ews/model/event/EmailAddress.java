@@ -1,6 +1,7 @@
 package com.ews.ews.model.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,9 +15,8 @@ public class EmailAddress {
 	public EmailAddress() {
 	}
 
-	public EmailAddress(String address, String name) {
+	public EmailAddress(@NonNull String address, @NonNull String name) {
 		this.address = address;
 		this.name = name;
 	}
-
 }

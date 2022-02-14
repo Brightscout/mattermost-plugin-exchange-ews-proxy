@@ -12,6 +12,8 @@ import lombok.Setter;
 @Setter
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
 	private ApiResponse apiResponse;
 
 	public InternalServerException(ApiResponse apiResponse) {
@@ -26,5 +28,4 @@ public class InternalServerException extends RuntimeException {
 	public InternalServerException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

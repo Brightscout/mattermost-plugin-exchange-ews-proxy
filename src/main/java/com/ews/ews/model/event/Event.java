@@ -1,6 +1,7 @@
 package com.ews.ews.model.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -9,7 +10,7 @@ public class Event {
 
 	private String id;
 
-	private String iCalUID;
+	private String calUId;
 
 	private String subject;
 
@@ -49,21 +50,12 @@ public class Event {
 
 	private String webLink;
 
-	private boolean isOrganizer;
+	private boolean isAttendeeOrganizer;
 
 	public Event() {
 	}
 
-	public Event(String id) {
+	public Event(@NonNull String id) {
 		this.id = id;
 	}
-
-	public boolean isOrganizer() {
-		return isOrganizer;
-	}
-
-	public void setIsOrganizer(boolean isOrganizer) {
-		this.isOrganizer = isOrganizer;
-	}
-
 }

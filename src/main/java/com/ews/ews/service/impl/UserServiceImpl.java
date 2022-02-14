@@ -8,6 +8,7 @@ import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.model.User;
 import com.ews.ews.payload.ApiResponse;
 import com.ews.ews.service.UserService;
+import com.ews.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.misc.NameResolution;
@@ -15,6 +16,8 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
+	@Override
 	public ResponseEntity<User> getUser(ExchangeService service, String email) throws Exception {
 		try {
 			NameResolutionCollection resolvedNames = service.resolveName(email);
@@ -23,7 +26,7 @@ public class UserServiceImpl implements UserService {
 				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "no user found for the provided email address"));
 			}
-			if (resolvedNames.getCount() > 1) {
+			if (resolvedNames.getCount() > AppConstants.MAX_NUMBER_OF_USERS_PER_EMAIL) {
 				throw new InternalServerException(
 						new ApiResponse(Boolean.FALSE, "multiple users found for the provided email address"));
 			}
@@ -33,7 +36,6 @@ public class UserServiceImpl implements UserService {
 			String mail = resolvedName.getMailbox().getAddress();
 
 			return new ResponseEntity<>(new User(mail, displayName, mail), HttpStatus.OK);
-
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching user details. Error: " + e.getMessage()));

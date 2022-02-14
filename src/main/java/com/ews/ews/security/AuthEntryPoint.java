@@ -1,7 +1,6 @@
 package com.ews.ews.security;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,5 +18,4 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 				.println("{" + "\"message\": \"Sorry, You're not authorized to access this resource.\","
 						+ "\"success\": false" + "}");
 	}
-
 }

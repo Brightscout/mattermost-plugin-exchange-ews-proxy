@@ -30,7 +30,5 @@ public class TimeZoneServiceImpl implements TimeZoneService {
 		String timezone = attendeeAvailability.getWorkingHours().getTimeZone().toString();
 
 		return new ResponseEntity<>(timezone, HttpStatus.OK);
-
 	}
-
 }
