@@ -21,9 +21,9 @@ import com.ews.ews.utils.AppUtils;
 @RequestMapping("/api/event")
 public class EventController {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient EventService eventService;
+	private EventService eventService;
 
 	public EventController(EwsService ewsService, EventService eventService) {
 		this.ewsService = ewsService;

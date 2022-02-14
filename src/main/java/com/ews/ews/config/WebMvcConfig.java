@@ -13,7 +13,7 @@ import com.ews.ews.security.AuthenticationFilter;
 @EnableWebSecurity
 public class WebMvcConfig extends WebSecurityConfigurerAdapter {
 
-	private transient AuthenticationFilter authenticationFilter;
+	private AuthenticationFilter authenticationFilter;
 
 	public WebMvcConfig(AuthenticationFilter authenticationFilter) {
 		this.authenticationFilter = authenticationFilter;

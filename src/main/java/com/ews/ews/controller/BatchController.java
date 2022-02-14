@@ -17,7 +17,7 @@ import com.ews.ews.service.BatchService;
 @RequestMapping("/api/batch")
 public class BatchController {
 
-	private transient BatchService batchService;
+	private BatchService batchService;
 
 	public BatchController(BatchService batchService) {
 		this.batchService = batchService;

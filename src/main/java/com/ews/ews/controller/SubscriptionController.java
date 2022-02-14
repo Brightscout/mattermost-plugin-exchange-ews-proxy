@@ -15,9 +15,9 @@ import com.ews.ews.service.SubscriptionService;
 @RequestMapping("/api/notification")
 public class SubscriptionController {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient SubscriptionService subscriptionService;
+	private SubscriptionService subscriptionService;
 
 	public SubscriptionController(EwsService ewsService, SubscriptionService subscriptionService) {
 		this.ewsService = ewsService;

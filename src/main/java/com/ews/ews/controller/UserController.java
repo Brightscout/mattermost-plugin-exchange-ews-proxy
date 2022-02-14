@@ -14,9 +14,9 @@ import com.ews.ews.service.UserService;
 @RequestMapping("/api/user")
 public class UserController {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient UserService userService;
+	private UserService userService;
 
 	public UserController(EwsService ewsService, UserService userService) {
 		this.ewsService = ewsService;

@@ -20,7 +20,7 @@ import com.ews.ews.payload.ApiResponse;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-	private transient String secretAuthKey;
+	private String secretAuthKey;
 
 	@Autowired
 	public void setValues(@Value("${app.secretAuthKey}") String secretAuthKey) {

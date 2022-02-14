@@ -24,9 +24,9 @@ import com.ews.ews.utils.AppUtils;
 @RequestMapping("/api/calendar")
 public class CalendarController {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient CalendarService calendarService;
+	private CalendarService calendarService;
 
 	public CalendarController(EwsService ewsService, CalendarService calendarService) {
 		this.ewsService = ewsService;

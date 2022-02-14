@@ -13,9 +13,9 @@ import com.ews.ews.service.TimeZoneService;
 @RequestMapping("/api/timezone")
 public class TimeZoneController {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient TimeZoneService timeZoneService;
+	private TimeZoneService timeZoneService;
 
 	public TimeZoneController(EwsService ewsService, TimeZoneService timeZoneService) {
 		this.ewsService = ewsService;

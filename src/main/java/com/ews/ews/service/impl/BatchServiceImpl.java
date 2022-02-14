@@ -23,11 +23,11 @@ import com.ews.ews.service.UserService;
 @Service
 public class BatchServiceImpl implements BatchService {
 
-	private transient EwsService ewsService;
+	private EwsService ewsService;
 
-	private transient EventService eventService;
+	private EventService eventService;
 
-	private transient UserService userService;
+	private UserService userService;
 
 	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService) {
 		this.ewsService = ewsService;
