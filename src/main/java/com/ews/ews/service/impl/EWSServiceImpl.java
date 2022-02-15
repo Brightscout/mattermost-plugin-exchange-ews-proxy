@@ -23,7 +23,6 @@ public class EWSServiceImpl implements EWSService {
 
 	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
-		System.out.println("Server URL is:"+ exchangeServerURL);
 		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		this.service.setCredentials(credentials);
