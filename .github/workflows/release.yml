@@ -38,7 +38,6 @@ jobs:
       env:
         JAR_PATH: ${{ secrets.JAR_PATH }}
         SERVER_PORT: ${{ secrets.SERVER_PORT }}
-        DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-      run: docker build . -f Dockerfile --tag $DOCKER_IMAGE --build-arg JAR_PATH=$JAR_PATH --build-arg SERVER_PORT=$SERVER_PORT
+      run: docker build . -f Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} --build-arg JAR_PATH=$JAR_PATH --build-arg SERVER_PORT=$SERVER_PORT
     - name: Docker Push
-      run: docker push $DOCKER_IMAGE
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
