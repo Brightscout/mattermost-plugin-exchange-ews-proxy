@@ -29,4 +29,15 @@ jobs:
       uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
       with:
         arguments: build
-    
+    - name: Docker Login
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - name: Build the docker image
+      env:
+        JAR_PATH: ${{ secrets.JAR_PATH }}
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+      run: make build-server
+    - name: Docker Push
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/mattermost-exchange-ews-proxy
