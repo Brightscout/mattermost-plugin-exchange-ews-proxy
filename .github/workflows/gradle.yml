@@ -38,6 +38,6 @@ jobs:
       env:
         JAR_PATH: ${{ secrets.JAR_PATH }}
         SERVER_PORT: ${{ secrets.SERVER_PORT }}
-      run: docker build . -f Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/mattermost-exchange-ews-proxy:$(date +%s) --build-arg JAR_PATH=$JAR_PATH --build-arg SERVER_PORT=$SERVER_PORT
+      run: docker build . -f Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/mattermost-exchange-ews-proxy --build-arg JAR_PATH=$JAR_PATH --build-arg SERVER_PORT=$SERVER_PORT
     - name: Docker Push
       run: docker push ${{ secrets.DOCKER_USERNAME }}/mattermost-exchange-ews-proxy
