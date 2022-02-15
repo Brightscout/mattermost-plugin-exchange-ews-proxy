@@ -129,7 +129,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						if (pair != null && pair.streamingSubscriptionConnection != null) {
 							connection.open();
 						}
-					} catch (Throwable e) {
+					} catch (Exception e) {
 						throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 								"error occurred while renewing subscription. Error: " + e.getMessage()));
 					}

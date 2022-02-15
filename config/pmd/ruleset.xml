@@ -5,10 +5,12 @@
     </description>
     <rule ref="category/java/bestpractices.xml">
         <exclude name="PreserveStackTrace"/>
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
     </rule>
     <rule ref="category/java/errorprone.xml">
     	<exclude name="BeanMembersShouldSerialize"/>
         <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="SimpleDateFormatNeedsLocale"/>
+        <exclude name="CloseResource"/>
     </rule>
 </ruleset>
