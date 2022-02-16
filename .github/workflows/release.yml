@@ -9,9 +9,8 @@ name: Release
 
 on:
   push:
-    branches: [ MI-1654 ]
-  pull_request:
-    branches: [ MI-1654 ]
+    tags:
+      - 'v*'
 
 jobs:
   build_and_release:
