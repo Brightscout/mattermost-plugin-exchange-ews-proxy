@@ -1,7 +1,5 @@
 # Continuous Integration Workflow to check pushes to master and pull requests:
-# - code style guidelines are followed (make check-style)
-# - tests pass (make test)
-# - code builds (make dist)
+
 name: CI
 
 on:
