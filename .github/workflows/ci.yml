@@ -28,8 +28,11 @@ jobs:
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: build
+      - name: Set Bundle Name for JAR
+        id: bundle
+        run: echo ::set-output name=BUNDLE_NAME::$(cd build/libs; ls *.jar)
       - name: Upload the built jar as an artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Package
-          path: build/libs
+          name: ${{ steps.bundle.outputs.BUNDLE_NAME }}
+          path: build/libs/${{ steps.bundle.outputs.BUNDLE_NAME }}
