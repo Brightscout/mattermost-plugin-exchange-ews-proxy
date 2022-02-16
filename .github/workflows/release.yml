@@ -26,9 +26,10 @@ jobs:
         distribution: 'temurin'
     - name: Build with Gradle
       id: build
-      run: |
-        ./gradlew build
-        echo ::set-output name=BUNDLE_NAME::$(cd build/libs; ls *.jar)
+      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
+      with:
+        arguments: build
+      run: echo ::set-output name=BUNDLE_NAME::$(cd build/libs; ls *.jar)
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
