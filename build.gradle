@@ -8,10 +8,11 @@ plugins {
 
 jar {
     enabled = false
+    archivesBaseName = 'mattermost-exchange-ews-proxy'
 }
 
 group = 'com.ews'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '11'
 
 repositories {

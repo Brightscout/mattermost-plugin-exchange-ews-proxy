@@ -11,6 +11,6 @@ import com.ews.ews.model.UserBatchSingleResponse;
 public interface BatchService {
 
 	public ResponseEntity<CalendarViewBatchResponse> getEvents(CalendarViewBatchRequest requests) throws Exception;
-	
+
 	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(List<String> emails) throws Exception;
 }
