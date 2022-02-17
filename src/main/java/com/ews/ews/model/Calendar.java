@@ -1,5 +1,7 @@
 package com.ews.ews.model;
 
+import javax.validation.constraints.NotBlank;
+
 import com.ews.ews.model.event.Event;
 
 import lombok.Getter;
@@ -12,6 +14,7 @@ public class Calendar {
 
 	private String id;
 
+	@NotBlank
 	private String name;
 
 	private Event[] events;

@@ -2,6 +2,7 @@ package com.ews.ews.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class EventController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Event> createEvent(@RequestParam String email, @RequestBody Event event) throws Exception {
+	public ResponseEntity<Event> createEvent(@RequestParam String email, @Valid @RequestBody Event event) throws Exception {
 		return eventService.createEvent(ewsService.impersonateUser(email), event);
 	}
 

@@ -1,5 +1,7 @@
 package com.ews.ews.model.event;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,6 +14,7 @@ public class Event {
 
 	private String calUId;
 
+	@NotBlank
 	private String subject;
 
 	// NA: private String bodyPreview;

@@ -1,6 +1,7 @@
 package com.ews.ews.controller;
 
 import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +25,13 @@ public class BatchController {
 	}
 
 	@PostMapping({ "/event" })
-	public ResponseEntity<CalendarViewBatchResponse> getEvents(@RequestBody CalendarViewBatchRequest requests)
+	public ResponseEntity<CalendarViewBatchResponse> getEvents(@Valid @RequestBody CalendarViewBatchRequest requests)
 			throws Exception {
 		return batchService.getEvents(requests);
 	}
 
 	@PostMapping({ "/user" })
-	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(@RequestBody List<String> emails)
+	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(@Valid @RequestBody List<String> emails)
 			throws Exception {
 		return batchService.getUsers(emails);
 	}

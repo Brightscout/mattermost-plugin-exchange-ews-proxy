@@ -2,6 +2,7 @@ package com.ews.ews.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +35,7 @@ public class CalendarController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Calendar> createCalendar(@RequestParam String email, @RequestBody Calendar calendar)
+	public ResponseEntity<Calendar> createCalendar(@RequestParam String email, @Valid @RequestBody Calendar calendar)
 			throws Exception {
 		return calendarService.createCalendar(ewsService.impersonateUser(email), calendar);
 	}
@@ -58,7 +59,7 @@ public class CalendarController {
 
 	@PostMapping({ "/suggestions" })
 	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(@RequestParam String email,
-			@RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
+			@Valid @RequestBody FindMeetingTimesParameters findMeetingTimes) throws Exception {
 		return calendarService.findMeetingTimes(ewsService.impersonateUser(email), email, findMeetingTimes);
 	}
 }
