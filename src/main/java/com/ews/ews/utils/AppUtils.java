@@ -16,14 +16,7 @@ public class AppUtils {
 
 		String arguments = new AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
 
-		String completeId = "";
-		if (null != arguments && !arguments.isEmpty()) {
-			completeId = id + '/' + arguments;
-		} else {
-			completeId = id;
-		}
-
-		return completeId;
+		return arguments != null && !arguments.isEmpty() ? id + '/' + arguments : id;
 	}
 
 	public static Date parseDateString(String date) {
