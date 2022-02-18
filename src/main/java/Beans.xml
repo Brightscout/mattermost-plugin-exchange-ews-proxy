@@ -1,0 +1,79 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Definition for batchController bean -->
+   <bean id = "batchController" class = "com.ews.ews.controller.BatchController">
+      <constructor-arg ref = "batchService"/>
+   </bean>
+
+   <!-- Definition for calendarController bean -->
+   <bean id = "calendarController" class = "com.ews.ews.controller.CalendarController">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "calendarService"/>
+   </bean>
+
+   <!-- Definition for eventController bean -->
+   <bean id = "eventController" class = "com.ews.ews.controller.EventController">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "eventService"/>
+   </bean>
+
+   <!-- Definition for subscriptionController bean -->
+   <bean id = "subscriptionController" class = "com.ews.ews.controller.SubscriptionController">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "subscriptionService"/>
+   </bean>
+
+   <!-- Definition for timeZoneController bean -->
+   <bean id = "timeZoneController" class = "com.ews.ews.controller.TimeZoneController">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "timeZoneService"/>
+   </bean>
+
+   <!-- Definition for userController bean -->
+   <bean id = "userController" class = "com.ews.ews.controller.UserController">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "userService"/>
+   </bean>
+
+   <!-- Definition for batchServiceImpl bean -->
+   <bean id = "batchServiceImpl" class = "com.ews.ews.service.impl.BatchServiceImpl">
+      <constructor-arg ref = "ewsService"/>
+      <constructor-arg ref = "eventService"/>
+      <constructor-arg ref = "userService"/>
+   </bean>
+
+   <!-- Definition for webMvcConfig bean -->
+   <bean id = "webMvcConfig" class = "com.ews.ews.config.WebMvcConfig">
+      <constructor-arg ref = "authenticationFilter"/>
+   </bean>
+
+   <!-- Definition for ewsService bean -->
+   <bean id = "ewsService" class = "com.ews.ews.service.EwsService"></bean>
+
+   <!-- Definition for batchService bean -->
+   <bean id = "batchService" class = "com.ews.ews.service.BatchService"></bean>
+
+   <!-- Definition for calendarService bean -->
+   <bean id = "calendarService" class = "com.ews.ews.service.CalendarService"></bean>
+
+   <!-- Definition for eventService bean -->
+   <bean id = "eventService" class = "com.ews.ews.service.EventService"></bean>
+
+   <!-- Definition for subscriptionService bean -->
+   <bean id = "subscriptionService" class = "com.ews.ews.service.SubscriptionService"></bean>
+
+   <!-- Definition for timeZoneService bean -->
+   <bean id = "timeZoneService" class = "com.ews.ews.service.TimeZoneService"></bean>
+
+   <!-- Definition for userService bean -->
+   <bean id = "userService" class = "com.ews.ews.service.UserService"></bean>
+
+   <!-- Definition for authenticationFilter bean -->
+   <bean id = "authenticationFilter" class = "com.ews.ews.security.AuthenticationFilter"></bean>
+
+</beans>
