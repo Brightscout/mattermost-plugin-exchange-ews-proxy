@@ -1,21 +1,18 @@
 package com.ews.ews.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UserBatchRequest {
 
-	private ArrayList<String> emails;
-	
-	public UserBatchRequest(ArrayList<String> emails) {
+	private List<String> emails;
+
+	public UserBatchRequest(@NonNull List<String> emails) {
 		this.emails = emails;
 	}
-
-	public ArrayList<String> getEmails() {
-		return emails;
-	}
-
-	public void setEmails(ArrayList<String> emails) {
-		this.emails = emails;
-	}	
-
 }

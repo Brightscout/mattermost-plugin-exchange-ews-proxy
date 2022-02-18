@@ -40,7 +40,6 @@ public class RestControllerExceptionHandler {
 	@ResponseBody
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	public ResponseEntity<ApiResponse> resolveException(UnauthorizedException exception) {
-
 		ApiResponse apiResponse = exception.getApiResponse();
 
 		return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);

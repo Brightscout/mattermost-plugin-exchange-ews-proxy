@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ews.ews.exception.InternalServerException;
 import com.ews.ews.payload.ApiResponse;
-import com.ews.ews.service.EWSService;
+import com.ews.ews.service.EwsService;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ConnectingIdType;
@@ -17,17 +17,17 @@ import microsoft.exchange.webservices.data.credential.WebCredentials;
 import microsoft.exchange.webservices.data.misc.ImpersonatedUserId;
 
 @Service
-public class EWSServiceImpl implements EWSService {
+public class EwsServiceImpl implements EwsService {
 
 	private ExchangeService service;
 
-	public EWSServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
-			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerURL) {
-		this.service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
+	public EwsServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
+			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerUrl) {
+		service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
-		this.service.setCredentials(credentials);
+		service.setCredentials(credentials);
 		try {
-			this.service.setUrl(new URI(exchangeServerURL));
+			service.setUrl(new URI(exchangeServerUrl));
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
@@ -37,8 +37,8 @@ public class EWSServiceImpl implements EWSService {
 	@Override
 	public ExchangeService impersonateUser(String userEmail) {
 		ImpersonatedUserId impersonatedUserId = new ImpersonatedUserId(ConnectingIdType.SmtpAddress, userEmail);
-		this.service.setImpersonatedUserId(impersonatedUserId);
-		return this.service;
+		service.setImpersonatedUserId(impersonatedUserId);
+		return service;
 	}
 
 	public ExchangeService getService() {

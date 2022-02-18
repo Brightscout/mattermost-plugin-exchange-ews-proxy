@@ -1,17 +1,17 @@
 package com.ews.ews.model;
 
+import java.util.List;
+import javax.validation.constraints.NotNull;
+
 import com.ews.ews.model.event.Attendee;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class FindMeetingTimesParameters {
 
-	private Attendee[] attendees;
-
-	public Attendee[] getAttendees() {
-		return attendees;
-	}
-
-	public void setAttendees(Attendee[] attendees) {
-		this.attendees = attendees;
-	}
-
+	@NotNull
+	private List<Attendee> attendees;
 }

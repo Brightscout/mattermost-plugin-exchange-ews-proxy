@@ -1,48 +1,29 @@
 package com.ews.ews.model.event;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Attendee {
-	
+
 	private String type;
-	
+
 	private EventResponseStatus status;
-	
+
 	private EmailAddress emailAddress;
-	
+
 	public Attendee() {
 	}
 
-	public Attendee(EmailAddress emailAddress) {
+	public Attendee(@NonNull EmailAddress emailAddress) {
 		this.emailAddress = emailAddress;
 	}
 
-	public Attendee(String type, EventResponseStatus status, EmailAddress emailAddress) {
+	public Attendee(@NonNull String type, @NonNull EventResponseStatus status, @NonNull EmailAddress emailAddress) {
 		this.type = type;
 		this.status = status;
 		this.emailAddress = emailAddress;
 	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public EventResponseStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(EventResponseStatus status) {
-		this.status = status;
-	}
-
-	public EmailAddress getEmailAddress() {
-		return emailAddress;
-	}
-
-	public void setEmailAddress(EmailAddress emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-	
 }

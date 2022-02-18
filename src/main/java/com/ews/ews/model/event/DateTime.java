@@ -1,33 +1,22 @@
 package com.ews.ews.model.event;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class DateTime {
-	
-	private String dateTime;
-	
+
+	private String date;
+
 	private String timeZone;
-	
+
 	public DateTime() {
 	}
-	
-	public DateTime(String dateTime, String timeZone) {
-		this.dateTime = dateTime;
+
+	public DateTime(@NonNull String date, @NonNull String timeZone) {
+		this.date = date;
 		this.timeZone = timeZone;
 	}
-
-	public String getDateTime() {
-		return dateTime;
-	}
-
-	public void setDateTime(String dateTime) {
-		this.dateTime = dateTime;
-	}
-
-	public String getTimeZone() {
-		return timeZone;
-	}
-
-	public void setTimeZone(String timeZone) {
-		this.timeZone = timeZone;
-	}
-
 }

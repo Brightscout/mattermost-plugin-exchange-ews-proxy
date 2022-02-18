@@ -1,12 +1,12 @@
 package com.ews.ews.security;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,22 +19,27 @@ import com.ews.ews.payload.ApiResponse;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
-	
-	@Value("${app.secretAuthKey}")
+
 	private String secretAuthKey;
 
-	
+	@Autowired
+	public void setValues(@Value("${app.secretAuthKey}") String secretAuthKey) {
+		this.secretAuthKey = secretAuthKey;
+	}
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
 			String token = getTokenFromRequest(request);
 			if (StringUtils.hasText(token) && secretAuthKey != null && secretAuthKey.equals(token)) {
-				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(token, token, null);
+				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(token,
+						token, null);
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 			}
 		} catch (Exception ex) {
-			throw new UnauthorizedException(new ApiResponse(Boolean.FALSE, "Could not set user authentication in security context. Error: "+ ex.getMessage()));
+			throw new UnauthorizedException(new ApiResponse(Boolean.FALSE,
+					"Could not set user authentication in security context. Error: " + ex.getMessage()));
 		}
 
 		filterChain.doFilter(request, response);
@@ -47,5 +52,4 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		}
 		return null;
 	}
-
 }

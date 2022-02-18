@@ -1,33 +1,22 @@
 package com.ews.ews.model.event;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ItemBody {
-	
+
 	private String content; // Text
-	
+
 	private String contentType; // BodyType
-	
+
 	public ItemBody() {
 	}
-	
-	public ItemBody(String content, String contentType) {
+
+	public ItemBody(@NonNull String content, @NonNull String contentType) {
 		this.content = content;
 		this.contentType = contentType;
 	}
-	
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getContentType() {
-		return contentType;
-	}
-
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
-	
 }

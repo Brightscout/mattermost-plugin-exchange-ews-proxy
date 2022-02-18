@@ -5,8 +5,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ews.ews.payload.ApiResponse;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
 	private ApiResponse apiResponse;
 
 	public InternalServerException(ApiResponse apiResponse) {
@@ -20,9 +27,5 @@ public class InternalServerException extends RuntimeException {
 
 	public InternalServerException(String message, Throwable cause) {
 		super(message, cause);
-	}
-
-	public ApiResponse getApiResponse() {
-		return apiResponse;
 	}
 }

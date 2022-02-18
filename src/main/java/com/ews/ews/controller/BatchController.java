@@ -1,8 +1,8 @@
 package com.ews.ews.controller;
 
-import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,16 +18,21 @@ import com.ews.ews.service.BatchService;
 @RequestMapping("/api/batch")
 public class BatchController {
 
-	@Autowired
-	BatchService batchService;
-	
-	@PostMapping({"/event"})
-	public ResponseEntity<CalendarViewBatchResponse> getEvents(@RequestBody CalendarViewBatchRequest requests) throws Exception {
-		return this.batchService.getEvents(requests);
+	private BatchService batchService;
+
+	public BatchController(BatchService batchService) {
+		this.batchService = batchService;
 	}
-	
-	@PostMapping({"/user"})
-	public ResponseEntity<ArrayList<UserBatchSingleResponse>> getUsers(@RequestBody ArrayList<String> emails) throws Exception {
-		return this.batchService.getUsers(emails);
+
+	@PostMapping({ "/event" })
+	public ResponseEntity<CalendarViewBatchResponse> getEvents(@Valid @RequestBody CalendarViewBatchRequest requests)
+			throws Exception {
+		return batchService.getEvents(requests);
+	}
+
+	@PostMapping({ "/user" })
+	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(@Valid @RequestBody List<String> emails)
+			throws Exception {
+		return batchService.getUsers(emails);
 	}
 }

@@ -9,5 +9,4 @@ public class EwsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EwsApplication.class, args);
 	}
-
 }

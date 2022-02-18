@@ -9,5 +9,4 @@ class EwsApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
