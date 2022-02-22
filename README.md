@@ -32,10 +32,10 @@ $ ./gradlew build
 
 ### Environment variables
 
-Create a `.env` file in root folder and add the following environment variables:
+Create a `.env` file in the root folder and add the following environment variables:
 
-* **EWS_USERNAME** : Username of service account.
-* **EWS_PASSWORD** : Password of service account.
+* **EWS_USERNAME** : Username of the service account.
+* **EWS_PASSWORD** : Password of the service account.
 * **EWS_DOMAIN** : Domain of exchange server.
 * **EWS_EXCHANGE_SERVER_URL** : URL of exchange server.
 * **EWS_SECRET_AUTH_KEY** : Key used for authentication between mattermost-plugin-exchange-ews-proxy and mattermost-plugin-exchange-mscalendar.
@@ -43,6 +43,7 @@ Create a `.env` file in root folder and add the following environment variables:
 * **SERVER_PORT** : Port on which server will run.
 
 **Note**: When trying to run using java command, make sure to export these variables in the terminal.
+![image](https://user-images.githubusercontent.com/85667960/155085353-7cd41275-9d10-41bc-9917-3eac23b26e43.png)
 
 ## Getting started
 
