@@ -185,8 +185,6 @@ public class CalendarServiceImpl implements CalendarService {
 				}
 				attendees.add(new AttendeeInfo(attendee.getEmailAddress().getAddress(), attendeeType, false));
 			}
-			// Add organizer
-			attendees.add(new AttendeeInfo(organizerEmail, MeetingAttendeeType.Organizer, false));
 
 			java.util.Calendar cd = java.util.Calendar.getInstance();
 			Date startDate = cd.getTime();
