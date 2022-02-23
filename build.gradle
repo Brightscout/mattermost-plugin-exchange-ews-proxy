@@ -8,7 +8,7 @@ plugins {
 
 jar {
     enabled = false
-    archivesBaseName = 'mattermost-exchange-ews-proxy'
+    archivesBaseName = 'mattermost-plugin-exchange-ews-proxy'
 }
 
 group = 'com.ews'
