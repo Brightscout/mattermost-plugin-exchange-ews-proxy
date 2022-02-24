@@ -55,7 +55,7 @@ To test that it works, open a browser tab at `http://localhost:8080` .
 
 #### Try it out with [Docker](https://www.docker.com/)
 
-Run these commands after installing Docke.
+Run these commands after installing Docker.
 	
     make build-server
     make run-server
