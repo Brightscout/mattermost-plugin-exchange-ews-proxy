@@ -15,12 +15,10 @@ import com.brightscout.ews.model.FindMeetingTimesParameters;
 import com.brightscout.ews.model.MeetingTimeSuggestion;
 import com.brightscout.ews.model.MeetingTimeSuggestionResults;
 import com.brightscout.ews.model.event.DateTime;
-import com.brightscout.ews.model.event.EmailAddress;
-import com.brightscout.ews.model.event.Event;
-import com.brightscout.ews.model.event.EventResponseStatus;
 import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.CalendarService;
 import com.brightscout.ews.utils.AppConstants;
+import com.brightscout.ews.utils.AppUtils;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -32,89 +30,25 @@ import microsoft.exchange.webservices.data.core.enumeration.search.FolderTravers
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.misc.availability.AttendeeInfo;
 import microsoft.exchange.webservices.data.misc.availability.GetUserAvailabilityResults;
 import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
-import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.availability.Suggestion;
 import microsoft.exchange.webservices.data.property.complex.availability.TimeSuggestion;
-import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
-import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.FolderView;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	public Calendar getCalendarById(ExchangeService service, String calendarId) throws InternalServerException {
-		try {
-			FolderId folderId = new FolderId(calendarId);
-			CalendarFolder calendarFolder = CalendarFolder.bind(service, folderId, PropertySet.FirstClassProperties);
-			Calendar calendar = new Calendar();
-			calendar.setId(calendarFolder.getId().toString());
-			calendar.setName(calendarFolder.getDisplayName());
-			// TODO: Fetch limited number of results
-			java.util.Calendar cd = java.util.Calendar.getInstance();
-			Date startDate = cd.getTime();
-			cd.add(java.util.Calendar.DAY_OF_YEAR, 1);
-			Date endDate = cd.getTime();
-			CalendarView calView = new CalendarView(startDate, endDate);
-			FindItemsResults<Appointment> itemResults = calendarFolder.findAppointments(calView);
-			List<Appointment> appointments = itemResults.getItems();
-			int eventsLen = appointments.size();
-			Event[] events = new Event[eventsLen];
+	public Calendar getCalendarById(ExchangeService service, String calendarId) throws Exception {
+		CalendarFolder calendarFolder = CalendarFolder.bind(service, new FolderId(calendarId), PropertySet.FirstClassProperties);
+		Calendar calendar = new Calendar(calendarFolder.getId().toString(), calendarFolder.getDisplayName());
 
-			for (int i = 0; i < eventsLen; i++) {
-				Appointment appointment = appointments.get(i);
-				Event event = new Event();
-				event.setId(appointment.getId().toString());
-				event.setCalUId(appointment.getICalUid());
-				event.setSubject(appointment.getSubject());
-				event.setImportance(appointment.getImportance().toString());
-				event.setAllDay(appointment.getIsAllDayEvent());
-				event.setCancelled(appointment.getIsCancelled());
-				event.setReminderMinutesBeforeStart(appointment.getReminderMinutesBeforeStart());
-				event.setResponseRequested(appointment.getIsResponseRequested());
-				event.setStart(new DateTime(appointment.getStart().toString(), appointment.getTimeZone()));
-				event.setEnd(new DateTime(appointment.getEnd().toString(), appointment.getTimeZone()));
-				event.setLocation(appointment.getLocation());
-				event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
-				// TODO: Set message body in event
-				// Attendees is combination of required and optional attendees in EWS
-				List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
-				attendeesList.addAll(appointment.getOptionalAttendees().getItems());
-				int attendeesLen = attendeesList.size();
-				com.brightscout.ews.model.event.Attendee[] attendees = new com.brightscout.ews.model.event.Attendee[attendeesLen];
-				for (int j = 0; j < attendeesLen; j++) {
-					Attendee attendee = attendeesList.get(j);
-					EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString(),
-							attendee.getLastResponseTime().toString());
-					EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
-					// TODO: Need to populate correct type because this will affect find meeting
-					// times functionality
-					attendees[j] = new com.brightscout.ews.model.event.Attendee("required/optional", status, emailAddress);
-				}
-				event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
-				event.setAttendees(attendees);
-				microsoft.exchange.webservices.data.property.complex.EmailAddress organizerAddress = appointment
-						.getOrganizer();
-				event.setOrganizer(new com.brightscout.ews.model.event.Attendee(
-						new EmailAddress(organizerAddress.getAddress(), organizerAddress.getName())));
-				events[i] = event;
-			}
-			calendar.setEvents(events);
-			calendar.setCalendarView(events);
-			// TODO: Need to check for calendar view and user
-
-			return calendar;
-		} catch (Exception e) {
-			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
-					"error occurred while fetching calendar by id. Error: " + e.getMessage()));
-		}
+		return calendar;
 	}
 
 	@Override
@@ -170,7 +104,12 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws InternalServerException {
-		return new ResponseEntity<>(getCalendarById(service, calendarId), HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(getCalendarById(service, calendarId), HttpStatus.OK);
+		} catch (Exception e) {
+			throw new InternalServerException(
+					new ApiResponse(Boolean.FALSE, "error occurred while fetching calendar. Error: " + e.getMessage()));
+		}
 	}
 
 	@Override
@@ -185,8 +124,6 @@ public class CalendarServiceImpl implements CalendarService {
 				}
 				attendees.add(new AttendeeInfo(attendee.getEmailAddress().getAddress(), attendeeType, false));
 			}
-			// Add organizer
-			attendees.add(new AttendeeInfo(organizerEmail, MeetingAttendeeType.Organizer, false));
 
 			java.util.Calendar cd = java.util.Calendar.getInstance();
 			Date startDate = cd.getTime();
@@ -195,11 +132,11 @@ public class CalendarServiceImpl implements CalendarService {
 			GetUserAvailabilityResults results = service.getUserAvailability(attendees,
 					new TimeWindow(startDate, endDate), AvailabilityData.Suggestions);
 			List<MeetingTimeSuggestion> meetingTimes = new ArrayList<>();
-			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+			SimpleDateFormat dateFormat = AppUtils.getDateFormat();
 			for (Suggestion suggestion : results.getSuggestions()) {
 				for (TimeSuggestion timeSuggestion : suggestion.getTimeSuggestions()) {
 					meetingTimes.add(new MeetingTimeSuggestion(
-							new DateTime(dateFormat.format(timeSuggestion.getMeetingTime()), "")));
+							new DateTime(dateFormat.format(timeSuggestion.getMeetingTime()))));
 				}
 			}
 
