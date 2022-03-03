@@ -1,0 +1,43 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'checkstyle'
+	id 'pmd'
+}
+
+jar {
+    enabled = false
+    archivesBaseName = 'mattermost-plugin-exchange-ews-proxy'
+}
+
+group = 'com.ews'
+version = '0.0.1'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.3'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.0'
+	implementation 'com.microsoft.ews-java-api:ews-java-api:2.0'
+	implementation 'javax.xml.ws:jaxws-api:2.3.1'
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.3'
+	compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.21.0"
+    rulesMinimumPriority = 5
+	ruleSetConfig = resources.text.fromFile("config/pmd/ruleset.xml")
+    ruleSets = []
+}
+
+test {
+	useJUnitPlatform()
+}

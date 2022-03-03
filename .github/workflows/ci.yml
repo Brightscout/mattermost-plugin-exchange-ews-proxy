@@ -1,0 +1,41 @@
+# Continuous Integration Workflow to check pushes to master and pull requests:
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+    name: Validate; build; test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - name: Set Bundle Name for JAR
+        id: bundle
+        run: echo ::set-output name=BUNDLE_NAME::$(cd build/libs; ls *.jar)
+
+      - name: Upload the built jar as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.bundle.outputs.BUNDLE_NAME }}
+          path: build/libs/${{ steps.bundle.outputs.BUNDLE_NAME }}
