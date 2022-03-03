@@ -1,0 +1,38 @@
+package com.brightscout.ews.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.brightscout.ews.model.subscribe.Subscription;
+import com.brightscout.ews.service.EwsService;
+import com.brightscout.ews.service.SubscriptionService;
+
+@RestController
+@RequestMapping("/api/notification")
+public class SubscriptionController {
+
+	private EwsService ewsService;
+
+	private SubscriptionService subscriptionService;
+
+	public SubscriptionController(EwsService ewsService, SubscriptionService subscriptionService) {
+		this.ewsService = ewsService;
+		this.subscriptionService = subscriptionService;
+	}
+
+	@PostMapping({ "/subscribe" })
+	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam String email,
+			@RequestBody Subscription subscription) throws Exception {
+		return subscriptionService.subscribeToStreamNotifications(ewsService.impersonateUser(email), subscription);
+	}
+
+	@PostMapping({ "/unsubscribe" })
+	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestBody Subscription subscription)
+			throws Exception {
+		return subscriptionService.unsubscribeToStreamNotifications(subscription);
+	}
+}
