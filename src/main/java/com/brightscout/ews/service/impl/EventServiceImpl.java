@@ -50,12 +50,12 @@ public class EventServiceImpl implements EventService {
 
 	private Event getEventFromAppointment(Appointment appointment) throws Exception {
 		Event event = new Event();
-		SimpleDateFormat dateFormat = AppUtils.getDateFormat();
 		appointment.load();
 		event.setId(appointment.getId().toString());
 		event.setCalUId(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
 		event.setBody(new ItemBody(appointment.getBody().toString()));
+		SimpleDateFormat dateFormat = AppUtils.getDateFormat();
 		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString()));
 		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());

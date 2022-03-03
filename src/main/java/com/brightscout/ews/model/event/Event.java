@@ -1,7 +1,6 @@
 package com.brightscout.ews.model.event;
 
 import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
