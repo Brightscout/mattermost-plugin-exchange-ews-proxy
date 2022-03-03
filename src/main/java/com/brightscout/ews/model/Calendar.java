@@ -1,7 +1,5 @@
 package com.brightscout.ews.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 
 import com.brightscout.ews.model.event.Event;
@@ -25,9 +23,9 @@ public class Calendar {
 	@NonNull
 	private String name;
 
-	private List<Event> events;
+	private Event[] events;
 
-	private List<Event> calendarView;
+	private Event[] calendarView;
 
 	private User owner;
 }

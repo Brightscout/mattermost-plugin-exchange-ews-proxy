@@ -13,7 +13,6 @@ import com.brightscout.ews.model.event.DateTime;
 import com.brightscout.ews.model.event.EmailAddress;
 import com.brightscout.ews.model.event.Event;
 import com.brightscout.ews.model.event.EventResponseStatus;
-import com.brightscout.ews.model.event.ItemBody;
 import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.EventService;
 import com.brightscout.ews.utils.AppConstants;
@@ -21,7 +20,6 @@ import com.brightscout.ews.utils.AppUtils;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.availability.MeetingAttendeeType;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.service.ResponseActions;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendInvitationsMode;
@@ -36,48 +34,6 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 @Service
 public class EventServiceImpl implements EventService {
 
-	private List<com.brightscout.ews.model.event.Attendee> getAttendee(List<Attendee> attendeesList, MeetingAttendeeType attendeeType) {
-		List<com.brightscout.ews.model.event.Attendee> attendees = new ArrayList<>();
-		for (Attendee attendee : attendeesList) {
-			EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString(),
-					attendee.getLastResponseTime().toString());
-			EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
-			attendees.add(new com.brightscout.ews.model.event.Attendee(attendeeType.toString(), status, emailAddress));
-		}
-
-		return attendees;
-	}
-
-	private Event getEventFromAppointment(Appointment appointment) throws Exception {
-		Event event = new Event();
-		SimpleDateFormat dateFormat = AppUtils.getDateFormat();
-		appointment.load();
-		event.setId(appointment.getId().toString());
-		event.setCalUId(appointment.getICalUid());
-		event.setSubject(appointment.getSubject().toString());
-		event.setBody(new ItemBody(appointment.getBody().toString()));
-		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString()));
-		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString()));
-		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
-		event.setCancelled(appointment.getIsCancelled());
-		event.setResponseRequested(appointment.getIsResponseRequested());
-		event.setImportance(appointment.getImportance().toString());
-		event.setLocation(appointment.getLocation());
-		event.setAllDay(appointment.getIsAllDayEvent());
-		event.setWebLink(appointment.getNetShowUrl());
-		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
-		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
-		event.setOrganizer(new com.brightscout.ews.model.event.Attendee(
-				new EmailAddress(appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
-		event.setReminderMinutesBeforeStart(appointment.getReminderMinutesBeforeStart());
-		List<com.brightscout.ews.model.event.Attendee> attendees = new ArrayList<>();
-		attendees.addAll(getAttendee(appointment.getRequiredAttendees().getItems(), MeetingAttendeeType.Required));
-		attendees.addAll(getAttendee(appointment.getOptionalAttendees().getItems(), MeetingAttendeeType.Optional));
-		event.setAttendees(attendees);
-
-		return event;
-	}
-	
 	@Override
 	public ResponseEntity<Event> createEvent(ExchangeService service, Event event) throws InternalServerException {
 		try {
@@ -115,8 +71,22 @@ public class EventServiceImpl implements EventService {
 					AppConstants.MAX_NUMBER_OF_EVENTS);
 			FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 			List<Event> events = new ArrayList<>();
+			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
 			for (Appointment appointment : appointments) {
-				events.add(getEventFromAppointment(appointment));
+				Event event = new Event();
+				event.setSubject(appointment.getSubject().toString());
+				event.setStart(
+						new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+				event.setEnd(
+						new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+				event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+				event.setCancelled(appointment.getIsCancelled());
+				event.setResponseRequested(appointment.getIsResponseRequested());
+				event.setLocation(appointment.getLocation());
+				event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
+				event.setOrganizer(new com.brightscout.ews.model.event.Attendee(new EmailAddress(
+						appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
+				events.add(event);
 			}
 
 			return new ResponseEntity<>(events, HttpStatus.OK);
@@ -168,7 +138,46 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public ResponseEntity<Event> getEventById(ExchangeService service, String id) throws InternalServerException {
 		try {
-			return new ResponseEntity<Event>(getEventFromAppointment(Appointment.bind(service, new ItemId(id))), HttpStatus.OK);
+			Appointment appointment = Appointment.bind(service, new ItemId(id));
+			Event event = new Event();
+			SimpleDateFormat dateFormat = new SimpleDateFormat(AppConstants.DATE_TIME_FORMAT);
+			
+			event.setId(appointment.getId().toString());
+			event.setCalUId(appointment.getICalUid());
+			event.setSubject(appointment.getSubject().toString());
+			event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString(), appointment.getTimeZone()));
+			event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString(), appointment.getTimeZone()));
+			event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+			event.setCancelled(appointment.getIsCancelled());
+			event.setResponseRequested(appointment.getIsResponseRequested());
+			event.setLocation(appointment.getLocation());
+			event.setTimezone(appointment.getTimeZone());
+			event.setAllDay(appointment.getIsAllDayEvent());
+			event.setWebLink(appointment.getNetShowUrl());
+			event.setImportance(appointment.getImportance().toString());
+			event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
+			event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
+			event.setOrganizer(new com.brightscout.ews.model.event.Attendee(
+					new EmailAddress(appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
+			
+			// TODO: refactor to make it a reusable function as this same is used in
+			// calendarService
+			// Attendees is combination of required and optional attendees in EWS
+			List<Attendee> attendeesList = appointment.getRequiredAttendees().getItems();
+			attendeesList.addAll(appointment.getOptionalAttendees().getItems());
+			int attendeesLen = attendeesList.size();
+			com.brightscout.ews.model.event.Attendee[] attendees = new com.brightscout.ews.model.event.Attendee[attendeesLen];
+			for (int j = 0; j < attendeesLen; j++) {
+				Attendee attendee = attendeesList.get(j);
+				EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString());
+				EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
+				// TODO: Need to populate correct type because this will affect find meeting
+				// times functionality
+				attendees[j] = new com.brightscout.ews.model.event.Attendee("required/optional", status, emailAddress);
+			}
+			event.setAttendees(attendees);
+			
+			return new ResponseEntity<Event>(event, HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching event by id. Error: " + e.getMessage()));
