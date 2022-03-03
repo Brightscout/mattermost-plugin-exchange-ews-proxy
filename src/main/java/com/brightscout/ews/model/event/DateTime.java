@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-<<<<<<< HEAD
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class DateTime {
@@ -16,7 +15,4 @@ public class DateTime {
 	private String date;
 
 	private String timeZone;
-=======
-public class DateTime {
-
-	private String date;
+}

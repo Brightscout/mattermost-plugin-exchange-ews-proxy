@@ -15,19 +15,10 @@ import com.brightscout.ews.model.FindMeetingTimesParameters;
 import com.brightscout.ews.model.MeetingTimeSuggestion;
 import com.brightscout.ews.model.MeetingTimeSuggestionResults;
 import com.brightscout.ews.model.event.DateTime;
-<<<<<<< HEAD
 import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.CalendarService;
 import com.brightscout.ews.utils.AppConstants;
 import com.brightscout.ews.utils.AppUtils;
-=======
-import com.brightscout.ews.model.event.EmailAddress;
-import com.brightscout.ews.model.event.Event;
-import com.brightscout.ews.model.event.EventResponseStatus;
-import com.brightscout.ews.payload.ApiResponse;
-import com.brightscout.ews.service.CalendarService;
-import com.brightscout.ews.utils.AppConstants;
->>>>>>> main_1
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -39,28 +30,14 @@ import microsoft.exchange.webservices.data.core.enumeration.search.FolderTravers
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
-<<<<<<< HEAD
-=======
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
->>>>>>> main_1
 import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.misc.availability.AttendeeInfo;
 import microsoft.exchange.webservices.data.misc.availability.GetUserAvailabilityResults;
 import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
-<<<<<<< HEAD
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.availability.Suggestion;
 import microsoft.exchange.webservices.data.property.complex.availability.TimeSuggestion;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
-=======
-import microsoft.exchange.webservices.data.property.complex.Attendee;
-import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.availability.Suggestion;
-import microsoft.exchange.webservices.data.property.complex.availability.TimeSuggestion;
-import microsoft.exchange.webservices.data.search.CalendarView;
-import microsoft.exchange.webservices.data.search.FindFoldersResults;
-import microsoft.exchange.webservices.data.search.FindItemsResults;
->>>>>>> main_1
 import microsoft.exchange.webservices.data.search.FolderView;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 

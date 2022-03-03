@@ -8,16 +8,9 @@ plugins {
 
 jar {
     enabled = false
-<<<<<<< HEAD
 }
 
 group = 'com.brightscout'
-=======
-    archivesBaseName = 'mattermost-plugin-exchange-ews-proxy'
-}
-
-group = 'com.ews'
->>>>>>> main_1
 version = '0.0.1'
 sourceCompatibility = '11'
 
