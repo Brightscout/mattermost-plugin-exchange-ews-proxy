@@ -39,8 +39,7 @@ public class EventServiceImpl implements EventService {
 	private List<com.brightscout.ews.model.event.Attendee> getAttendee(List<Attendee> attendeesList, MeetingAttendeeType attendeeType) {
 		List<com.brightscout.ews.model.event.Attendee> attendees = new ArrayList<>();
 		for (Attendee attendee : attendeesList) {
-			EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString(),
-					attendee.getLastResponseTime().toString());
+			EventResponseStatus status = new EventResponseStatus(attendee.getResponseType().toString());
 			EmailAddress emailAddress = new EmailAddress(attendee.getAddress(), attendee.getName());
 			attendees.add(new com.brightscout.ews.model.event.Attendee(attendeeType.toString(), status, emailAddress));
 		}
@@ -73,6 +72,7 @@ public class EventServiceImpl implements EventService {
 		List<com.brightscout.ews.model.event.Attendee> attendees = new ArrayList<>();
 		attendees.addAll(getAttendee(appointment.getRequiredAttendees().getItems(), MeetingAttendeeType.Required));
 		attendees.addAll(getAttendee(appointment.getOptionalAttendees().getItems(), MeetingAttendeeType.Optional));
+		attendees.addAll(getAttendee(appointment.getResources().getItems(), MeetingAttendeeType.Resource));
 		event.setAttendees(attendees);
 
 		return event;
@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService {
 			meeting.setLocation(event.getLocation());
 			if (event.getAttendees() != null) {
 				for (com.brightscout.ews.model.event.Attendee attendee : event.getAttendees()) {
-					meeting.getResources().add(new Attendee(attendee.getEmailAddress().getAddress()));
+					meeting.getRequiredAttendees().add(new Attendee(attendee.getEmailAddress().getAddress()));
 				}
 			}
 			meeting.save(WellKnownFolderName.Calendar, SendInvitationsMode.SendOnlyToAll);
