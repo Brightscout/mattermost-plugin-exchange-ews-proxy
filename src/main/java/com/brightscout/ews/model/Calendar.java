@@ -1,33 +1,32 @@
 package com.brightscout.ews.model;
 
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 
 import com.brightscout.ews.model.event.Event;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class Calendar {
 
+	@NonNull
 	private String id;
 
 	@NotBlank
+	@NonNull
 	private String name;
 
-	private Event[] events;
+	private List<Event> events;
 
-	private Event[] calendarView;
+	private List<Event> calendarView;
 
 	private User owner;
-
-	public Calendar() {
-	}
-
-	public Calendar(@NonNull String id, @NonNull String name) {
-		this.id = id;
-		this.name = name;
-	}
 }

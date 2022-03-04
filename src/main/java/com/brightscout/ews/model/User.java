@@ -2,28 +2,24 @@ package com.brightscout.ews.model;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class User {
 
+	@NonNull
 	private String id;
 
+	@NonNull
 	private String displayName;
 
+	@NonNull
 	private String mail;
 
-	public User() {
-	}
-
-	public User(@NonNull String mail) {
-		this.mail = mail;
-	}
-
-	public User(@NonNull String id, @NonNull String displayName, @NonNull String mail) {
-		this.id = id;
-		this.displayName = displayName;
+	public User(String mail) {
 		this.mail = mail;
 	}
 }

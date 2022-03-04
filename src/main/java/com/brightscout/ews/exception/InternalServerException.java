@@ -13,7 +13,7 @@ import lombok.Setter;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8826720095015192971L;
 	private ApiResponse apiResponse;
 
 	public InternalServerException(ApiResponse apiResponse) {

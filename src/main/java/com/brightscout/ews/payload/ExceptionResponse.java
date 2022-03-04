@@ -24,10 +24,6 @@ public class ExceptionResponse {
 	}
 
 	public final void setMessages(List<String> messages) {
-		if (messages == null) {
-			this.messages = new ArrayList<>();
-		} else {
-			this.messages = Collections.unmodifiableList(messages);
-		}
+		this.messages = messages == null ? new ArrayList<>() : Collections.unmodifiableList(messages);
 	}
 }

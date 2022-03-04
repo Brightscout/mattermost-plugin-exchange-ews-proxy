@@ -13,7 +13,7 @@ import lombok.Setter;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7108880513872353734L;
 	private ApiResponse apiResponse;
 
 	public BadRequestException(ApiResponse apiResponse) {

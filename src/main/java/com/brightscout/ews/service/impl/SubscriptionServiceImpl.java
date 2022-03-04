@@ -54,7 +54,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
-			throws Exception {
+			throws InternalServerException {
 		try {
 			// Get existing subscription if any
 			Pair existingSubscription = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
@@ -161,7 +161,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	// Unsubscribe to the streaming notification service
 	@Override
-	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe) throws Exception {
+	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe) throws InternalServerException {
 		try {
 			Pair pair = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
 			StreamingSubscriptionConnection subscriptionConnection = pair.streamingSubscriptionConnection;

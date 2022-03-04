@@ -2,21 +2,20 @@ package com.brightscout.ews.model.subscribe;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class SubscribeNotificationResponse {
+
+	@NonNull
 	private String eventId;
+
+	@NonNull
 	private String changeType;
+
+	@NonNull
 	private String subscriptionId;
-
-	public SubscribeNotificationResponse() {
-	}
-
-	public SubscribeNotificationResponse(@NonNull String eventId, @NonNull String changeType, @NonNull String subscriptionId) {
-		this.eventId = eventId;
-		this.changeType = changeType;
-		this.subscriptionId = subscriptionId;
-	}
 }

@@ -1,5 +1,6 @@
 package com.brightscout.ews.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +16,7 @@ public class WebMvcConfig extends WebSecurityConfigurerAdapter {
 
 	private AuthenticationFilter authenticationFilter;
 
+	@Autowired
 	public WebMvcConfig(AuthenticationFilter authenticationFilter) {
 		this.authenticationFilter = authenticationFilter;
 	}

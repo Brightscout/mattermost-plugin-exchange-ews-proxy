@@ -3,6 +3,7 @@ package com.brightscout.ews.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class BatchServiceImpl implements BatchService {
 
 	private UserService userService;
 
+	@Autowired
 	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService) {
 		this.ewsService = ewsService;
 		this.eventService = eventService;
@@ -36,7 +38,7 @@ public class BatchServiceImpl implements BatchService {
 	}
 
 	@Override
-	public ResponseEntity<CalendarViewBatchResponse> getEvents(CalendarViewBatchRequest requests) throws Exception {
+	public ResponseEntity<CalendarViewBatchResponse> getEvents(CalendarViewBatchRequest requests) throws InternalServerException {
 		List<CalendarViewSingleResponse> responses = new ArrayList<>();
 		for (CalendarViewSingleRequest request : requests.getRequests()) {
 			ResponseEntity<List<Event>> response = eventService.getEvents(
@@ -48,7 +50,7 @@ public class BatchServiceImpl implements BatchService {
 	}
 
 	@Override
-	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(List<String> emails) throws Exception {
+	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(List<String> emails) throws InternalServerException {
 		List<UserBatchSingleResponse> users = new ArrayList<>();
 		for (String email : emails) {
 			try {

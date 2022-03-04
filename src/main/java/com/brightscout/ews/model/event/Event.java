@@ -1,23 +1,27 @@
 package com.brightscout.ews.model.event;
 
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Event {
 
+	@NonNull
 	private String id;
 
 	private String calUId;
 
 	@NotBlank
 	private String subject;
-
-	// NA: private String bodyPreview;
 
 	private ItemBody body;
 
@@ -27,13 +31,9 @@ public class Event {
 
 	private boolean isCancelled;
 
-	// NA: private boolean isOrganizer;
-
 	private boolean responseRequested; // IsResponseRequested
 
 	private String showAs;
-
-	// NA: private String webLink;
 
 	private DateTime start;
 
@@ -45,7 +45,7 @@ public class Event {
 
 	private EventResponseStatus responseStatus;
 
-	private Attendee[] attendees;
+	private List<Attendee> attendees;
 
 	private Attendee organizer;
 
@@ -54,11 +54,4 @@ public class Event {
 	private String webLink;
 
 	private boolean isAttendeeOrganizer;
-
-	public Event() {
-	}
-
-	public Event(@NonNull String id) {
-		this.id = id;
-	}
 }

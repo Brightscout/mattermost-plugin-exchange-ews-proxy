@@ -1,26 +1,24 @@
 package com.brightscout.ews.model.event;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class EventResponseStatus {
 
+	@NonNull
 	private String response; // ResponseType
 
+	@NonNull
 	private String time; // LastResponseTime
-
-	public EventResponseStatus() {
-	}
 
 	public EventResponseStatus(@NonNull String response) {
 		this.response = response;
-	}
-
-	public EventResponseStatus(@NonNull String response, @NonNull String time) {
-		this.response = response;
-		this.time = time;
 	}
 }

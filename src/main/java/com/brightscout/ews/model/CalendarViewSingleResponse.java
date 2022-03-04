@@ -6,18 +6,17 @@ import com.brightscout.ews.model.event.Event;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class CalendarViewSingleResponse {
 
+	@NonNull
 	private String id;
 
+	@NonNull
 	private List<Event> events;
-
-	public CalendarViewSingleResponse(@NonNull String id, @NonNull List<Event> events) {
-		this.id = id;
-		this.events = events;
-	}
 }

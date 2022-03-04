@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class EwsApiException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3928484627507208458L;
 	private final HttpStatus status;
 	private final String message;
 

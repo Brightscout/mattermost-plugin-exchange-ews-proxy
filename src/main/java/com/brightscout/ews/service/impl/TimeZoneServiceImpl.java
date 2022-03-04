@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.brightscout.ews.exception.InternalServerException;
+import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.TimeZoneService;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -21,14 +23,21 @@ import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
 public class TimeZoneServiceImpl implements TimeZoneService {
 
 	@Override
-	public ResponseEntity<String> getTimeZone(ExchangeService service, String userEmail) throws Exception {
-		GetUserAvailabilityResults userAvailability = service.getUserAvailability(
-				Collections.singletonList(new AttendeeInfo(userEmail)),
-				new TimeWindow(new Date(), new Date(System.currentTimeMillis() + DateUtils.MILLIS_PER_DAY)),
-				AvailabilityData.FreeBusy);
-		AttendeeAvailability attendeeAvailability = userAvailability.getAttendeesAvailability().getResponseAtIndex(0);
-		String timezone = attendeeAvailability.getWorkingHours().getTimeZone().toString();
+	public ResponseEntity<String> getTimeZone(ExchangeService service, String userEmail)
+			throws InternalServerException {
+		try {
+			GetUserAvailabilityResults userAvailability = service.getUserAvailability(
+					Collections.singletonList(new AttendeeInfo(userEmail)),
+					new TimeWindow(new Date(), new Date(System.currentTimeMillis() + DateUtils.MILLIS_PER_DAY)),
+					AvailabilityData.FreeBusy);
+			AttendeeAvailability attendeeAvailability = userAvailability.getAttendeesAvailability()
+					.getResponseAtIndex(0);
+			String timezone = attendeeAvailability.getWorkingHours().getTimeZone().toString();
 
-		return new ResponseEntity<>(timezone, HttpStatus.OK);
+			return new ResponseEntity<>(timezone, HttpStatus.OK);
+		} catch (Exception e) {
+			throw new InternalServerException(
+					new ApiResponse(Boolean.FALSE, "error occurred while fetching timezone. Error: " + e.getMessage()));
+		}
 	}
 }

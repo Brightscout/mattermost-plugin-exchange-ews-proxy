@@ -16,8 +16,7 @@ public class AppConstants {
 	public static final int MAX_NUMBER_OF_USERS_PER_EMAIL = 1;
 
 	public static final Map<String, MeetingAttendeeType> MEETING_ATTENDEE_TYPE_MAP = new HashMap<>() {
-		private static final long serialVersionUID = 1L;
-
+		private static final long serialVersionUID = -6534140953829903293L;
 		{
 			put("organizer", MeetingAttendeeType.Organizer);
 			put("required", MeetingAttendeeType.Required);

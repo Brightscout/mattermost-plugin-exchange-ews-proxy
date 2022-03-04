@@ -3,6 +3,9 @@ package com.brightscout.ews.exception;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,6 +119,19 @@ public class RestControllerExceptionHandler {
 		String message = "Please provide Request Body in valid JSON format";
 		List<String> messages = new ArrayList<>(1);
 		messages.add(message);
+		return new ResponseEntity<>(new ExceptionResponse(messages, HttpStatus.BAD_REQUEST.getReasonPhrase(),
+				HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler({ ConstraintViolationException.class })
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ExceptionResponse> resolveException(ConstraintViolationException ex) {
+		Set<ConstraintViolation<?>> fieldErrors = ex.getConstraintViolations();
+		List<String> messages = new ArrayList<>(fieldErrors.size());
+		for (ConstraintViolation<?> error : fieldErrors) {
+			messages.add(error.getPropertyPath().toString() + " - " + error.getMessage());
+		}
 		return new ResponseEntity<>(new ExceptionResponse(messages, HttpStatus.BAD_REQUEST.getReasonPhrase(),
 				HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 	}

@@ -13,7 +13,7 @@ import lombok.Setter;
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1227153329931590486L;
 
 	private transient ApiResponse apiResponse;
 

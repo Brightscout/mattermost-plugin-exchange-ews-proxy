@@ -18,7 +18,7 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 public class UserServiceImpl implements UserService {
 	
 	@Override
-	public ResponseEntity<User> getUser(ExchangeService service, String email) throws Exception {
+	public ResponseEntity<User> getUser(ExchangeService service, String email) throws InternalServerException {
 		try {
 			NameResolutionCollection resolvedNames = service.resolveName(email);
 

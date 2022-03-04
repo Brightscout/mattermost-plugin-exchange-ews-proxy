@@ -1,29 +1,27 @@
 package com.brightscout.ews.model.event;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Attendee {
 
+	@NonNull
 	private String type;
 
+	@NonNull
 	private EventResponseStatus status;
 
+	@NonNull
 	private EmailAddress emailAddress;
 
-	public Attendee() {
-	}
-
 	public Attendee(@NonNull EmailAddress emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public Attendee(@NonNull String type, @NonNull EventResponseStatus status, @NonNull EmailAddress emailAddress) {
-		this.type = type;
-		this.status = status;
 		this.emailAddress = emailAddress;
 	}
 }
