@@ -23,4 +23,12 @@ public class AppConstants {
 			put("optional", MeetingAttendeeType.Optional);
 		}
 	};
+
+	public static final String EXCHANGE_SERVER_ADDRESS = "ews/exchange.asmx";
+
+	public static final String EXCHANGE_OUTLOOK_ADDRESS = "owa";
+
+	public static final String EVENT_URL_FORMAT = "%s/%s/?itemid=%s#exvsurl=1&path=/calendar/item";
+
+	public static final String SYNC_SUBSCRIPTIONS_URL = "/sync/subscribe";
 }

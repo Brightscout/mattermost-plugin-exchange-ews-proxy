@@ -1,9 +1,12 @@
 package com.brightscout.ews.service.impl;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,12 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 @Service
 public class EventServiceImpl implements EventService {
 
+	private String exchangeServerUrl;
+
+	public EventServiceImpl(@Value("${app.exchangeServerURL}") String exchangeServerUrl) {
+		this.exchangeServerUrl = exchangeServerUrl;
+	}
+
 	private List<com.brightscout.ews.model.event.Attendee> getAttendee(List<Attendee> attendeesList, MeetingAttendeeType attendeeType) {
 		List<com.brightscout.ews.model.event.Attendee> attendees = new ArrayList<>();
 		for (Attendee attendee : attendeesList) {
@@ -45,6 +54,11 @@ public class EventServiceImpl implements EventService {
 		}
 
 		return attendees;
+	}
+
+	public String getEventURL(String eventId) {
+		return String.format(AppConstants.EVENT_URL_FORMAT, exchangeServerUrl,
+				AppConstants.EXCHANGE_OUTLOOK_ADDRESS, URLEncoder.encode(eventId, StandardCharsets.UTF_8));
 	}
 
 	private Event getEventFromAppointment(Appointment appointment) throws Exception {
@@ -64,6 +78,7 @@ public class EventServiceImpl implements EventService {
 		event.setLocation(appointment.getLocation());
 		event.setAllDay(appointment.getIsAllDayEvent());
 		event.setWebLink(appointment.getNetShowUrl());
+		event.setWebLink(getEventURL(event.getId()));
 		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
 		event.setOrganizer(new com.brightscout.ews.model.event.Attendee(

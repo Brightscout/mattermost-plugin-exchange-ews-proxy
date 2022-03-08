@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.brightscout.ews.exception.InternalServerException;
 import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.EwsService;
+import com.brightscout.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ConnectingIdType;
@@ -27,7 +28,7 @@ public class EwsServiceImpl implements EwsService {
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		service.setCredentials(credentials);
 		try {
-			service.setUrl(new URI(exchangeServerUrl));
+			service.setUrl(new URI(String.format("%s/%s", exchangeServerUrl, AppConstants.EXCHANGE_SERVER_ADDRESS)));
 		} catch (Exception e) {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));

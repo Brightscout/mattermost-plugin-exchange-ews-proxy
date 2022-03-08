@@ -166,10 +166,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			Pair pair = SUBSCRIPTION_ID_PAIR_MAP.get(subscribe.getSubscriptionId());
 			StreamingSubscriptionConnection subscriptionConnection = pair.streamingSubscriptionConnection;
 			StreamingSubscription subscription = pair.streamingSubscription;
-
-			// remove the subscription from map
-			SUBSCRIPTION_ID_PAIR_MAP.remove(subscribe.getSubscriptionId());
-
 			// unsubscribe to streaming notification subscription
 			subscription.unsubscribe();
 
@@ -192,6 +188,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 							}
 						}
 					});
+
+			// remove the subscription from map
+			SUBSCRIPTION_ID_PAIR_MAP.remove(subscribe.getSubscriptionId());
+
 			return new ResponseEntity<String>("Unsubscribed", HttpStatus.OK);
 		} catch (Exception e) {
 			throw new InternalServerException(

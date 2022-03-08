@@ -14,6 +14,8 @@ import com.brightscout.ews.exception.InternalServerException;
 import com.brightscout.ews.model.CalendarViewBatchRequest;
 import com.brightscout.ews.model.CalendarViewBatchResponse;
 import com.brightscout.ews.model.UserBatchSingleResponse;
+import com.brightscout.ews.model.subscribe.SubscriptionBatchSingleRequest;
+import com.brightscout.ews.model.subscribe.SubscriptionBatchSingleResponse;
 import com.brightscout.ews.service.BatchService;
 
 @RestController
@@ -37,5 +39,11 @@ public class BatchController {
 	public ResponseEntity<List<UserBatchSingleResponse>> getUsers(@Valid @RequestBody List<String> emails)
 			throws InternalServerException {
 		return batchService.getUsers(emails);
+	}
+	
+	@PostMapping({ "/subscribe" })
+	public ResponseEntity<List<SubscriptionBatchSingleResponse>> getSubscriptions(@Valid @RequestBody List<SubscriptionBatchSingleRequest> requests)
+			throws InternalServerException {
+		return batchService.getSubscriptions(requests);
 	}
 }
