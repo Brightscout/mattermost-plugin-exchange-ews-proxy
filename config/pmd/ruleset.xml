@@ -6,6 +6,8 @@
     <rule ref="category/java/bestpractices.xml">
         <exclude name="PreserveStackTrace"/>
         <exclude name="JUnitTestsShouldIncludeAssert"/>
+        <!-- TODO: Remove this rule after testing -->
+        <exclude name="SystemPrintln"></exclude>
     </rule>
     <rule ref="category/java/errorprone.xml">
     	<exclude name="BeanMembersShouldSerialize"/>
