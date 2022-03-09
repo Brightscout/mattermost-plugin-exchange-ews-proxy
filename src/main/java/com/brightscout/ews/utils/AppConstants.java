@@ -30,5 +30,9 @@ public class AppConstants {
 
 	public static final String EVENT_URL_FORMAT = "%s/%s/?itemid=%s#exvsurl=1&path=/calendar/item";
 
-	public static final String SYNC_SUBSCRIPTIONS_URL = "/sync/subscribe";
+	public static final String PATH_SYNC = "/sync";
+
+	public static final String PATH_API = "/api/v1";
+
+	public static final String PATH_SUBSCRIPTION = "/subscription";
 }

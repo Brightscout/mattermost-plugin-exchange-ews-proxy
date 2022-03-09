@@ -36,12 +36,4 @@ public class SubscriptionController {
 			@RequestBody Subscription subscription) throws InternalServerException {
 		return subscriptionService.subscribeToStreamNotifications(ewsService.impersonateUser(email), subscription);
 	}
-
-	@PostMapping({ "/unsubscribe" })
-	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestParam @Email String email,
-			@RequestBody Subscription subscription)
-			throws InternalServerException {
-		ewsService.impersonateUser(email);
-		return subscriptionService.unsubscribeToStreamNotifications(subscription);
-	}
 }

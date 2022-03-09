@@ -11,7 +11,4 @@ public interface SubscriptionService {
 
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
 			throws InternalServerException;
-
-	public ResponseEntity<String> unsubscribeToStreamNotifications(Subscription subscribe)
-			throws InternalServerException;
 }
