@@ -35,4 +35,6 @@ public class AppConstants {
 	public static final String PATH_API = "/api/v1";
 
 	public static final String PATH_SUBSCRIPTION = "/subscription";
+
+	public static final long WAIT_INTERVAL_IN_MILLISECONDS = 3000; // 3 seconds
 }

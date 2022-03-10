@@ -40,10 +40,10 @@ public class BatchController {
 			throws InternalServerException {
 		return batchService.getUsers(emails);
 	}
-	
+
 	@PostMapping({ "/subscribe" })
-	public ResponseEntity<List<SubscriptionBatchSingleResponse>> getSubscriptions(@Valid @RequestBody List<SubscriptionBatchSingleRequest> requests)
-			throws InternalServerException {
+	public ResponseEntity<List<SubscriptionBatchSingleResponse>> getSubscriptions(
+			@Valid @RequestBody List<SubscriptionBatchSingleRequest> requests) throws InternalServerException {
 		return batchService.getSubscriptions(requests);
 	}
 }

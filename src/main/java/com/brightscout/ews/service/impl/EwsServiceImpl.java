@@ -20,11 +20,25 @@ import microsoft.exchange.webservices.data.misc.ImpersonatedUserId;
 @Service
 public class EwsServiceImpl implements EwsService {
 
-	private ExchangeService service;
+	private String username;
+
+	private String password;
+
+	private String domain;
+
+	private String exchangeServerUrl;
 
 	public EwsServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerUrl) {
-		service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
+		this.username = username;
+		this.password = password;
+		this.domain = domain;
+		this.exchangeServerUrl = exchangeServerUrl;
+	}
+
+	@Override
+	public ExchangeService impersonateUser(String userEmail) {
+		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		service.setCredentials(credentials);
 		try {
@@ -33,20 +47,8 @@ public class EwsServiceImpl implements EwsService {
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
 		}
-	}
-
-	@Override
-	public ExchangeService impersonateUser(String userEmail) {
 		ImpersonatedUserId impersonatedUserId = new ImpersonatedUserId(ConnectingIdType.SmtpAddress, userEmail);
 		service.setImpersonatedUserId(impersonatedUserId);
 		return service;
-	}
-
-	public ExchangeService getService() {
-		return service;
-	}
-
-	public void setService(ExchangeService service) {
-		this.service = service;
 	}
 }

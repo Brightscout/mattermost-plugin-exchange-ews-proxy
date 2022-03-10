@@ -5,10 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.retry.annotation.EnableRetry;
 
 import com.brightscout.ews.service.RestService;
 
 @SpringBootApplication
+@EnableRetry
 public class EwsApplication {
 
 	private RestService restService;
@@ -20,7 +22,7 @@ public class EwsApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void init() {
-	    this.restService.syncSubscriptions();
+		this.restService.syncSubscriptions();
 	}
 
 	public static void main(String[] args) {

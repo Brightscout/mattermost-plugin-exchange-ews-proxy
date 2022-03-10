@@ -35,7 +35,7 @@ public class RestServiceImpl implements RestService {
 			restTemplate.getForEntity(url, Void.class);
 		} catch (Exception e) {
 			// TODO: Log the error
-			System.out.println("error occurred while syncing subscriptions. Error: "+ e.getMessage());
+			System.out.println("error occurred while syncing subscriptions. Error: " + e.getMessage());
 		}
 	}
 
@@ -53,7 +53,7 @@ public class RestServiceImpl implements RestService {
 			return Boolean.parseBoolean(response.getBody());
 		} catch (Exception e) {
 			// TODO: Log the error
-			System.out.println("error occurred while fetching subscription by id. Error: "+ e.getMessage());
+			System.out.println("error occurred while fetching subscription by id. Error: " + e.getMessage());
 			return false;
 		}
 	}
