@@ -14,8 +14,8 @@ import com.brightscout.ews.exception.InternalServerException;
 import com.brightscout.ews.model.CalendarViewBatchRequest;
 import com.brightscout.ews.model.CalendarViewBatchResponse;
 import com.brightscout.ews.model.UserBatchSingleResponse;
-import com.brightscout.ews.model.subscribe.SubscriptionBatchSingleRequest;
-import com.brightscout.ews.model.subscribe.SubscriptionBatchSingleResponse;
+import com.brightscout.ews.model.subscription.SubscriptionBatchSingleRequest;
+import com.brightscout.ews.model.subscription.SubscriptionBatchSingleResponse;
 import com.brightscout.ews.service.BatchService;
 
 @RestController

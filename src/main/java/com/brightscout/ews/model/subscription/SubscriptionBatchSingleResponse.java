@@ -1,4 +1,4 @@
-package com.brightscout.ews.model.subscribe;
+package com.brightscout.ews.model.subscription;
 
 import com.brightscout.ews.payload.ApiResponse;
 

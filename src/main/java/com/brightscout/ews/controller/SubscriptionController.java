@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brightscout.ews.exception.InternalServerException;
-import com.brightscout.ews.model.subscribe.Subscription;
+import com.brightscout.ews.model.subscription.Subscription;
 import com.brightscout.ews.service.EwsService;
 import com.brightscout.ews.service.SubscriptionService;
 

@@ -5,7 +5,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 
 import com.brightscout.ews.exception.InternalServerException;
-import com.brightscout.ews.model.subscribe.Subscription;
+import com.brightscout.ews.model.subscription.Subscription;
 import com.brightscout.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;

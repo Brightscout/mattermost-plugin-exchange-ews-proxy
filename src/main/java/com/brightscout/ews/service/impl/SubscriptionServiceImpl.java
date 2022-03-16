@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.brightscout.ews.exception.InternalServerException;
-import com.brightscout.ews.model.subscribe.SubscribeNotificationResponse;
-import com.brightscout.ews.model.subscribe.Subscription;
+import com.brightscout.ews.model.subscription.SubscribeNotificationResponse;
+import com.brightscout.ews.model.subscription.Subscription;
 import com.brightscout.ews.payload.ApiResponse;
 import com.brightscout.ews.service.RestService;
 import com.brightscout.ews.service.SubscriptionService;
