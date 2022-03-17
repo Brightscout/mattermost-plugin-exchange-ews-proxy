@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class AppUtils {
+
+	public static String encodeBase64String(String str) {
+		return new String(Base64.getEncoder().encode(str.getBytes()));
+	}
+
 	public static String decodeBase64String(String str) {
 		return new String(Base64.getDecoder().decode(str));
 	}

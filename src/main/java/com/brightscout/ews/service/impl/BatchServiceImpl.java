@@ -16,9 +16,13 @@ import com.brightscout.ews.model.CalendarViewSingleResponse;
 import com.brightscout.ews.model.User;
 import com.brightscout.ews.model.UserBatchSingleResponse;
 import com.brightscout.ews.model.event.Event;
+import com.brightscout.ews.model.subscription.Subscription;
+import com.brightscout.ews.model.subscription.SubscriptionBatchSingleRequest;
+import com.brightscout.ews.model.subscription.SubscriptionBatchSingleResponse;
 import com.brightscout.ews.service.BatchService;
 import com.brightscout.ews.service.EventService;
 import com.brightscout.ews.service.EwsService;
+import com.brightscout.ews.service.SubscriptionService;
 import com.brightscout.ews.service.UserService;
 
 @Service
@@ -30,11 +34,14 @@ public class BatchServiceImpl implements BatchService {
 
 	private UserService userService;
 
+	private SubscriptionService subscriptionService;
+
 	@Autowired
-	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService) {
+	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService, SubscriptionService subscriptionService) {
 		this.ewsService = ewsService;
 		this.eventService = eventService;
 		this.userService = userService;
+		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
@@ -62,5 +69,22 @@ public class BatchServiceImpl implements BatchService {
 		}
 
 		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<SubscriptionBatchSingleResponse>> getSubscriptions(List<SubscriptionBatchSingleRequest> requests)
+			throws InternalServerException {
+		List<SubscriptionBatchSingleResponse> subscriptions = new ArrayList<>();
+		for (SubscriptionBatchSingleRequest request : requests) {
+			try {
+				ResponseEntity<Subscription> subscription = subscriptionService.subscribeToStreamNotifications(
+						ewsService.impersonateUser(request.getEmail()), request.getSubscription());
+				subscriptions.add(new SubscriptionBatchSingleResponse(request.getEmail(), subscription.getBody()));
+			} catch (InternalServerException e) {
+				subscriptions.add(new SubscriptionBatchSingleResponse(request.getEmail(), e.getApiResponse()));
+			}
+		}
+
+		return new ResponseEntity<>(subscriptions, HttpStatus.OK);
 	}
 }

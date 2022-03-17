@@ -23,4 +23,18 @@ public class AppConstants {
 			put("optional", MeetingAttendeeType.Optional);
 		}
 	};
+
+	public static final String EXCHANGE_SERVER_ADDRESS = "ews/exchange.asmx";
+
+	public static final String EXCHANGE_OUTLOOK_ADDRESS = "owa";
+
+	public static final String EVENT_URL_FORMAT = "%s/%s/?itemid=%s#exvsurl=1&path=/calendar/item";
+
+	public static final String PATH_SYNC = "/sync";
+
+	public static final String PATH_API = "/api/v1";
+
+	public static final String PATH_SUBSCRIPTION = "/subscription";
+
+	public static final long WAIT_INTERVAL_IN_MILLISECONDS = 3000; // 3 seconds
 }

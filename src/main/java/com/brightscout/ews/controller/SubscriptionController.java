@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brightscout.ews.exception.InternalServerException;
-import com.brightscout.ews.model.subscribe.Subscription;
+import com.brightscout.ews.model.subscription.Subscription;
 import com.brightscout.ews.service.EwsService;
 import com.brightscout.ews.service.SubscriptionService;
 
@@ -35,11 +35,5 @@ public class SubscriptionController {
 	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam @Email String email,
 			@RequestBody Subscription subscription) throws InternalServerException {
 		return subscriptionService.subscribeToStreamNotifications(ewsService.impersonateUser(email), subscription);
-	}
-
-	@PostMapping({ "/unsubscribe" })
-	public ResponseEntity<String> unsubscribeToStreamNotifications(@RequestBody Subscription subscription)
-			throws InternalServerException {
-		return subscriptionService.unsubscribeToStreamNotifications(subscription);
 	}
 }

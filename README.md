@@ -39,6 +39,8 @@ Create a `.env` file in the root folder and add the following environment variab
 * **EWS_SECRET_AUTH_KEY** : Key used for authentication between mattermost-plugin-exchange-ews-proxy and mattermost-plugin-exchange-mscalendar.
 * **JAR_PATH** : Path of the jar file that will be used to create docker image.
 * **SERVER_PORT** : Port on which the server will run.
+* **MATTERMOST_SITE_URL** : URL of the Mattermost server.
+* **MATTERMOST_EXCHANGE_CALENDAR_PLUGIN_ID** : ID of the mattermost-plugin-exchange-calendar.
 
 **Note**: When trying to run using java command, make sure to export these variables in the terminal.
 ![image](https://user-images.githubusercontent.com/85667960/155085353-7cd41275-9d10-41bc-9917-3eac23b26e43.png)

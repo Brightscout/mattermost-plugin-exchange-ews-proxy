@@ -4,4 +4,4 @@ build-server:
 
 run-server:
 	@echo Starting ews-server in a docker container
-	docker run -p $(SERVER_PORT):$(SERVER_PORT) --env-file=.env docker-ews-server .
+	docker run -p $(SERVER_PORT):$(SERVER_PORT) --network="host" --env-file=.env docker-ews-server .

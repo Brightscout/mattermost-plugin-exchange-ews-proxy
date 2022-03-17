@@ -1,4 +1,4 @@
-package com.brightscout.ews.model.subscribe;
+package com.brightscout.ews.model.subscription;
 
 import lombok.Getter;
 import lombok.NonNull;
