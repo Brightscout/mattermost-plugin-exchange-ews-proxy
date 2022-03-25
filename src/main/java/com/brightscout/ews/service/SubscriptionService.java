@@ -13,6 +13,6 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 public interface SubscriptionService {
 
 	@Retryable(value = InternalServerException.class, backoff = @Backoff(AppConstants.WAIT_INTERVAL_IN_MILLISECONDS))
-	public ResponseEntity<Subscription> subscribeToStreamNotifications(ExchangeService service, Subscription subscribe)
+	public ResponseEntity<Subscription> subscribeToPushNotifications(ExchangeService service, Subscription subscribe)
 			throws InternalServerException;
 }
