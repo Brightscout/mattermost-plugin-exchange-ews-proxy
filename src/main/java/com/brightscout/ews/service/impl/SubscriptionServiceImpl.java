@@ -30,7 +30,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public ResponseEntity<Subscription> subscribeToPushNotifications(ExchangeService service, Subscription subscribe)
+	public ResponseEntity<Subscription> subscribeToPushNotifications(ExchangeService service, Subscription subscription)
 			throws InternalServerException {
 		try {
 			// Get all folderIds of the user
@@ -39,7 +39,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 			// Create push subscription for user
 			PushSubscription pushSubscription = service.subscribeToPushNotifications(folderIds,
-					new URI(subscribe.getWebhookNotificationUrl()), subscriptionLifetimeInMinutes, null, EventType.Created);
+					new URI(subscription.getWebhookNotificationUrl()), subscriptionLifetimeInMinutes, null, EventType.Created);
 
 			return new ResponseEntity<Subscription>(new Subscription(pushSubscription.getId()), HttpStatus.OK);
 		} catch (Exception e) {
