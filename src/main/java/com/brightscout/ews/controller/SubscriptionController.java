@@ -32,8 +32,8 @@ public class SubscriptionController {
 	}
 
 	@PostMapping({ "/subscribe" })
-	public ResponseEntity<Subscription> subscribeToStreamNotifications(@RequestParam @Email String email,
+	public ResponseEntity<Subscription> subscribeToPushNotifications(@RequestParam @Email String email,
 			@RequestBody Subscription subscription) throws InternalServerException {
-		return subscriptionService.subscribeToStreamNotifications(ewsService.impersonateUser(email), subscription);
+		return subscriptionService.subscribeToPushNotifications(ewsService.impersonateUser(email), subscription);
 	}
 }

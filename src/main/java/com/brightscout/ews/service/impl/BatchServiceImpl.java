@@ -77,7 +77,7 @@ public class BatchServiceImpl implements BatchService {
 		List<SubscriptionBatchSingleResponse> subscriptions = new ArrayList<>();
 		for (SubscriptionBatchSingleRequest request : requests) {
 			try {
-				ResponseEntity<Subscription> subscription = subscriptionService.subscribeToStreamNotifications(
+				ResponseEntity<Subscription> subscription = subscriptionService.subscribeToPushNotifications(
 						ewsService.impersonateUser(request.getEmail()), request.getSubscription());
 				subscriptions.add(new SubscriptionBatchSingleResponse(request.getEmail(), subscription.getBody()));
 			} catch (InternalServerException e) {
