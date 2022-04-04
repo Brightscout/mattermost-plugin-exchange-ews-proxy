@@ -42,7 +42,7 @@ public class CalendarTests {
     Calendar calendar_2 = new Calendar(encodedCalendarId, "test-calendar-2");
 
     @Test
-    public void getCalendars(){
+    public void getCalendars() {
         List<Calendar> calendars = new ArrayList<>(Arrays.asList(calendar_1, calendar_2));
         // expected response
         ResponseEntity<List<Calendar>> calendarsResponse = new ResponseEntity<>(calendars, HttpStatus.OK);
@@ -57,7 +57,7 @@ public class CalendarTests {
     }
 
     @Test
-    public void getCalendarById(){
+    public void getCalendarById() {
         // expected response
         ResponseEntity<Calendar> calendarResponse = new ResponseEntity<>(calendar_1, HttpStatus.OK);
         Mockito.when(calendarService.getCalendar(ewsService.impersonateUser("abc@gm.com"), calendarId)).thenReturn(calendarResponse);
