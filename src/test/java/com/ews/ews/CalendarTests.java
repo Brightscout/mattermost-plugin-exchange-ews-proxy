@@ -58,7 +58,7 @@ public class CalendarTests {
     }
 
     @Test
-    public void getCalendarsFailed() {;
+    public void getCalendarsFailed() {
         Mockito.when(calendarService.getCalendars(ewsService.impersonateUser(email))).thenThrow(InternalServerException.class);
         Assertions.assertThrows(InternalServerException.class, () -> calendarController.getCalendars(email));
     }

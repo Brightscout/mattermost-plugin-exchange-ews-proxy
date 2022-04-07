@@ -31,9 +31,6 @@ public class BatchTests {
     private BatchController batchController;
 
     @Mock
-    private EwsService ewsService;
-
-    @Mock
     private BatchService batchService;
 
     // Dummy data
