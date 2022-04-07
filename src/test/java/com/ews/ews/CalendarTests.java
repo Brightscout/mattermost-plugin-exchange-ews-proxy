@@ -1,6 +1,7 @@
 package com.ews.ews;
 
 import com.brightscout.ews.controller.CalendarController;
+import com.brightscout.ews.exception.InternalServerException;
 import com.brightscout.ews.model.Calendar;
 import com.brightscout.ews.service.CalendarService;
 import com.brightscout.ews.service.EwsService;
@@ -42,7 +43,7 @@ public class CalendarTests {
     Calendar calendar_2 = new Calendar(encodedCalendarId, "test-calendar-2");
 
     @Test
-    public void getCalendars() {
+    public void getCalendarsSuccess() {
         List<Calendar> calendars = new ArrayList<>(Arrays.asList(calendar_1, calendar_2));
         // expected response
         ResponseEntity<List<Calendar>> calendarsResponse = new ResponseEntity<>(calendars, HttpStatus.OK);
@@ -57,16 +58,28 @@ public class CalendarTests {
     }
 
     @Test
-    public void getCalendarById() {
+    public void getCalendarsFailed() {;
+        Mockito.when(calendarService.getCalendars(ewsService.impersonateUser(email))).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> calendarController.getCalendars(email));
+    }
+
+    @Test
+    public void getCalendarByIdSuccess() {
         // expected response
         ResponseEntity<Calendar> calendarResponse = new ResponseEntity<>(calendar_1, HttpStatus.OK);
-        Mockito.when(calendarService.getCalendar(ewsService.impersonateUser("abc@gm.com"), calendarId)).thenReturn(calendarResponse);
+        Mockito.when(calendarService.getCalendar(ewsService.impersonateUser(email), calendarId)).thenReturn(calendarResponse);
 
         // call controller to be tested
-        ResponseEntity<Calendar> calendarResult = calendarController.getCalendar("abc@gm.com", encodedCalendarId);
+        ResponseEntity<Calendar> calendarResult = calendarController.getCalendar(email, encodedCalendarId);
 
         // compare results
         Assertions.assertEquals(HttpStatus.OK, calendarResponse.getStatusCode());
         Assertions.assertTrue(calendarResult.equals(calendarResponse));
+    }
+
+    @Test
+    public void getCalendarByIdFailed() {
+        Mockito.when(calendarService.getCalendar(ewsService.impersonateUser(email), calendarId)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> calendarController.getCalendar(email, encodedCalendarId));
     }
 }
