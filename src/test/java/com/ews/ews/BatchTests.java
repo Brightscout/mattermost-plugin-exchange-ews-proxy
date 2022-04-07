@@ -8,7 +8,6 @@ import com.brightscout.ews.model.CalendarViewSingleRequest;
 import com.brightscout.ews.model.CalendarViewSingleResponse;
 import com.brightscout.ews.model.event.Event;
 import com.brightscout.ews.service.BatchService;
-import com.brightscout.ews.service.EwsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
