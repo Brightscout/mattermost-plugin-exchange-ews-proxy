@@ -25,23 +25,19 @@ public class TimeZoneTests {
     @Mock
     private TimeZoneService timeZoneService;
 
-    // Dummy data
-    String email = "test-user@ad.brightscout.com";
-
     @Test
     public void getTimeZoneSuccess() {
         String timeZone = "Eastern Standard Time";
         ResponseEntity<String> timeZoneResponse = new ResponseEntity<>(timeZone, HttpStatus.OK);
-        Mockito.when(timeZoneService.getTimeZone(ewsService.impersonateUser(email), email)).thenReturn(timeZoneResponse);
+        Mockito.when(timeZoneService.getTimeZone(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.EMAIL)).thenReturn(timeZoneResponse);
 
-        ResponseEntity<String> timeZoneResult = timeZoneController.getTimeZone(email);
-        Assertions.assertEquals(HttpStatus.OK, timeZoneResult.getStatusCode());
+        ResponseEntity<String> timeZoneResult = timeZoneController.getTimeZone(TestUtils.EMAIL);
         Assertions.assertTrue(timeZoneResult.equals(timeZoneResponse));
     }
 
     @Test
     public void getTimeZoneFailed() {
-        Mockito.when(timeZoneService.getTimeZone(ewsService.impersonateUser(email), email)).thenThrow(InternalServerException.class);
-        Assertions.assertThrows(InternalServerException.class, () -> timeZoneController.getTimeZone(email));
+        Mockito.when(timeZoneService.getTimeZone(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.EMAIL)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> timeZoneController.getTimeZone(TestUtils.EMAIL));
     }
 }

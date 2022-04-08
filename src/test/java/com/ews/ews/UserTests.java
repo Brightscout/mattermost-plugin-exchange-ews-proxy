@@ -26,24 +26,20 @@ public class UserTests {
     @Mock
     private UserService userService;
 
-    // Dummy data
-    String email = "test-user@ad.brightscout.com";
-
     @Test
     public void getUserSuccess() {
-        User user = new User("TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu", "test-user", email);
+        User user = new User(TestUtils.ID, "test-user", TestUtils.EMAIL);
         ResponseEntity<User> userResponse = new ResponseEntity<>(user, HttpStatus.OK);
-        Mockito.when(userService.getUser(ewsService.impersonateUser(email), email)).thenReturn(userResponse);
+        Mockito.when(userService.getUser(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.EMAIL)).thenReturn(userResponse);
 
-        ResponseEntity<User> userResult = userController.getUser(email);
-        Assertions.assertEquals(HttpStatus.OK, userResult.getStatusCode());
+        ResponseEntity<User> userResult = userController.getUser(TestUtils.EMAIL);
         Assertions.assertTrue(userResult.equals(userResponse));
 
     }
 
     @Test
     public void getUserFailed() {
-        Mockito.when(userService.getUser(ewsService.impersonateUser(email), email)).thenThrow(InternalServerException.class);
-        Assertions.assertThrows(InternalServerException.class, () -> userController.getUser(email));
+        Mockito.when(userService.getUser(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.EMAIL)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> userController.getUser(TestUtils.EMAIL));
     }
 }

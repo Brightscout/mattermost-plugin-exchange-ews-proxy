@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,18 +31,14 @@ public class BatchTests {
     @Mock
     private BatchService batchService;
 
-    // Dummy data
-    String dummyId = "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu";
-    String dummyDate = LocalDate.now().toString();
-
     CalendarViewBatchRequest batchRequest;
 
     @BeforeEach
     public void setUp() {
         CalendarViewSingleRequest calendarViewSingleRequest = new CalendarViewSingleRequest();
-        calendarViewSingleRequest.setId(dummyId);
-        calendarViewSingleRequest.setStartDateTime(dummyDate);
-        calendarViewSingleRequest.setEndDateTime(dummyDate);
+        calendarViewSingleRequest.setId(TestUtils.ID);
+        calendarViewSingleRequest.setStartDateTime(TestUtils.DUMMY_DATE);
+        calendarViewSingleRequest.setEndDateTime(TestUtils.DUMMY_DATE);
 
         List<CalendarViewSingleRequest> calendarViewSingleRequests = new ArrayList<>(Arrays.asList(calendarViewSingleRequest));
         batchRequest = new CalendarViewBatchRequest();
@@ -52,20 +47,19 @@ public class BatchTests {
 
     @Test
     public void getEventsSuccess() {
-        Event event1 = new Event(dummyId);
+        Event event1 = new Event(TestUtils.ID);
         List<Event> events = new ArrayList<>(Arrays.asList(event1, event1));
 
-        CalendarViewSingleResponse calendarViewSingleResponse = new CalendarViewSingleResponse(dummyId, events);
+        CalendarViewSingleResponse calendarViewSingleResponse = new CalendarViewSingleResponse(TestUtils.ID, events);
         List<CalendarViewSingleResponse> calendarViewSingleResponses = new ArrayList<>(Arrays.asList(calendarViewSingleResponse));
         CalendarViewBatchResponse batchResponse = new CalendarViewBatchResponse(calendarViewSingleResponses);
 
-        ResponseEntity<CalendarViewBatchResponse> getEventResponse = new ResponseEntity<>(batchResponse, HttpStatus.OK);
+        ResponseEntity<CalendarViewBatchResponse> getEventsResponse = new ResponseEntity<>(batchResponse, HttpStatus.OK);
 
-        Mockito.when(batchService.getEvents(batchRequest)).thenReturn(getEventResponse);
+        Mockito.when(batchService.getEvents(batchRequest)).thenReturn(getEventsResponse);
         ResponseEntity<CalendarViewBatchResponse> getEventResult = batchController.getEvents(batchRequest);
 
-        Assertions.assertEquals(HttpStatus.OK, getEventResult.getStatusCode());
-        Assertions.assertTrue(getEventResult.equals(getEventResponse));
+        Assertions.assertTrue(getEventResult.equals(getEventsResponse));
     }
 
     @Test

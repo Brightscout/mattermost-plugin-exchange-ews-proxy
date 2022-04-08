@@ -27,31 +27,26 @@ public class SubscriptionTests {
     @Mock
     private SubscriptionService subscriptionService;
 
-    // Dummy data
-    String subscriptionId = "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu";
-    String email = "test-user@ad.brightscout.com";
-
     Subscription subscription;
 
     @BeforeEach
     public void setUp() {
-        subscription = new Subscription(subscriptionId);
+        subscription = new Subscription(TestUtils.ID);
     }
 
     @Test
     public void subscribeToPushNotificationsSuccess() {
         ResponseEntity<Subscription> subscriptionResponse = new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
 
-        Mockito.when(subscriptionService.subscribeToPushNotifications(ewsService.impersonateUser(email), subscription)).thenReturn(subscriptionResponse);
+        Mockito.when(subscriptionService.subscribeToPushNotifications(ewsService.impersonateUser(TestUtils.EMAIL), subscription)).thenReturn(subscriptionResponse);
 
-        ResponseEntity<Subscription> subscriptionResult = subscriptionController.subscribeToPushNotifications(email,subscription);
-        Assertions.assertEquals(HttpStatus.OK, subscriptionResult.getStatusCode());
+        ResponseEntity<Subscription> subscriptionResult = subscriptionController.subscribeToPushNotifications(TestUtils.EMAIL, subscription);
         Assertions.assertTrue(subscriptionResult.equals(subscriptionResponse));
     }
 
     @Test
     public void subscribeToPushNotificationsFailed() {
-        Mockito.when(subscriptionService.subscribeToPushNotifications(ewsService.impersonateUser(email), subscription)).thenThrow(InternalServerException.class);
-        Assertions.assertThrows(InternalServerException.class, () -> subscriptionController.subscribeToPushNotifications(email,subscription));
+        Mockito.when(subscriptionService.subscribeToPushNotifications(ewsService.impersonateUser(TestUtils.EMAIL), subscription)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> subscriptionController.subscribeToPushNotifications(TestUtils.EMAIL, subscription));
     }
 }

@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,32 +32,26 @@ public class EventTests {
     @Mock
     private EventService eventService;
 
-    // Dummy data
-    String eventId = "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu";
-    String email = "test-user@ad.brightscout.com";
-    String dummyDate = LocalDate.now().toString();
-
     Event event;
 
     @BeforeEach
     public void setUp() {
-        event = new Event(eventId);
+        event = new Event(TestUtils.ID);
     }
 
     @Test
     public void createEventSuccess() {
         ResponseEntity eventResponse = new ResponseEntity<>(event, HttpStatus.CREATED);
-        Mockito.when(eventService.createEvent(ewsService.impersonateUser(email), event)).thenReturn(eventResponse);
+        Mockito.when(eventService.createEvent(ewsService.impersonateUser(TestUtils.EMAIL), event)).thenReturn(eventResponse);
 
-        ResponseEntity eventResult = eventController.createEvent(email, event);
-        Assertions.assertEquals(HttpStatus.CREATED, eventResult.getStatusCode());
+        ResponseEntity eventResult = eventController.createEvent(TestUtils.EMAIL, event);
         Assertions.assertTrue(eventResult.equals(eventResponse));
     }
 
     @Test
     public void createEventFailed() {
-        Mockito.when(eventService.createEvent(ewsService.impersonateUser(email), event)).thenThrow(InternalServerException.class);
-        Assertions.assertThrows(InternalServerException.class, () -> eventController.createEvent(email, event));
+        Mockito.when(eventService.createEvent(ewsService.impersonateUser(TestUtils.EMAIL), event)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> eventController.createEvent(TestUtils.EMAIL, event));
     }
 
     @Test
@@ -66,16 +59,15 @@ public class EventTests {
         List<Event> events = new ArrayList<>(Arrays.asList(event, event));
 
         ResponseEntity<List<Event>> eventsResponse = new ResponseEntity<>(events, HttpStatus.OK);
-        Mockito.when(eventService.getEvents(ewsService.impersonateUser(email), dummyDate, dummyDate)).thenReturn(eventsResponse);
+        Mockito.when(eventService.getEvents(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.DUMMY_DATE, TestUtils.DUMMY_DATE)).thenReturn(eventsResponse);
 
-        ResponseEntity<List<Event>> eventsResult = eventController.getEvents(email, dummyDate, dummyDate);
-        Assertions.assertEquals(HttpStatus.OK, eventsResult.getStatusCode());
+        ResponseEntity<List<Event>> eventsResult = eventController.getEvents(TestUtils.EMAIL, TestUtils.DUMMY_DATE, TestUtils.DUMMY_DATE);
         Assertions.assertTrue(eventsResult.equals(eventsResponse));
     }
 
     @Test
     public void getEventsFailed() {
-        Mockito.when(eventService.getEvents(ewsService.impersonateUser(email), dummyDate, dummyDate)).thenThrow(InternalServerException.class);
-        Assertions.assertThrows(InternalServerException.class, () -> eventController.getEvents(email, dummyDate, dummyDate));
+        Mockito.when(eventService.getEvents(ewsService.impersonateUser(TestUtils.EMAIL), TestUtils.DUMMY_DATE, TestUtils.DUMMY_DATE)).thenThrow(InternalServerException.class);
+        Assertions.assertThrows(InternalServerException.class, () -> eventController.getEvents(TestUtils.EMAIL, TestUtils.DUMMY_DATE, TestUtils.DUMMY_DATE));
     }
 }
