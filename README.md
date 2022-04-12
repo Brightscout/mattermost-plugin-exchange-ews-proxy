@@ -93,7 +93,7 @@ cd mattermost-plugin-exchange-ews-proxy
 ./gradlew build
 ```
 
-This will produce a `.jar` file in `/build/libs` directory that can be used to run the server as follows:
+This will produce a `.jar` file in `build/libs` directory that can be used to run the server as follows:
 
 ```bash
 java -jar build/libs/*.jar
