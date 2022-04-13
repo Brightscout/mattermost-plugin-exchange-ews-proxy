@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [License]($license)
+- [License](#license)
 - [Overview](#overview)
 - [Setup](#setup)
 - [Development](#development)
