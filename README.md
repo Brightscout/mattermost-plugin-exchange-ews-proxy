@@ -41,7 +41,7 @@ SERVER_PORT=8080
 | EWS_SECRET_AUTH_KEY | Secret used to authenticate API requests to this server.|
 | EWS_SUBSCRIPTION_LIFETIME_IN_MINUTES | Length of time that Exchange will tolerate delivery failures before cancelling subscriptions for a user.|
 | JAR_PATH | Path of the JAR file which is the server's executable.|
-| SERVER_PORT | Port on which the server listen on.|
+| SERVER_PORT | Port on which the server listens.
 
 ### Run with Docker
 
