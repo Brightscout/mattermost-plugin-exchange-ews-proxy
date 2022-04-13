@@ -13,7 +13,7 @@ See the [LICENSE](./LICENSE) file for license rights and limitations.
 
 ## Overview
 
-The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service which enables the  [Mattermost Microsoft Exchange Calendar Plugin](https://github.com/Brightscout/mattermost-plugin-exchange-calendar) to communicate with on-premise Microsoft Exchange servers.
+The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service that enables the [Mattermost Microsoft Exchange Calendar Plugin](https://github.com/Brightscout/mattermost-plugin-exchange-calendar) to communicate with on-premise Microsoft Exchange servers.
 
 ## Setup
 
