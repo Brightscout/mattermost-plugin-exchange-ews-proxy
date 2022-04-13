@@ -19,7 +19,7 @@ The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service t
 
 ### Configuration
 
-The EWS Proxy is configured through the use of environment variables that are optionally provided via a env file (to the docker container) as follows:
+The EWS Proxy is configured through the use of environment variables that are optionally provided via an env file (to the docker container) as follows:
 
 ```bash
 EWS_DOMAIN=your-exchange-domain
