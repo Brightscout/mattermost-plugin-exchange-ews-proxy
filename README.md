@@ -45,7 +45,7 @@ SERVER_PORT=8080
 
 ### Run with Docker
 
-The simplest way to run this service is to do so via Docker. A public [Docker image is available on Docker Hub](https://hub.docker.com/layers/mattermost-plugin-exchange-ews-proxy/brightscout/mattermost-plugin-exchange-ews-proxy/latest/images/sha256-f1172b134258a2bf9d75231ba4c7fd92c8161f7a4ffe4ec16adb3ea74b977e5c?context=explore).
+The simplest way to run this service is to do so via Docker. A public [Docker image](https://hub.docker.com/layers/mattermost-plugin-exchange-ews-proxy/brightscout/mattermost-plugin-exchange-ews-proxy/latest/images/sha256-f1172b134258a2bf9d75231ba4c7fd92c8161f7a4ffe4ec16adb3ea74b977e5c?context=explore) is available on Docker Hub.
 
 **Pull the image:**
 
