@@ -78,7 +78,7 @@ To run the JAR file directly on a host, do the following:
 ## Development
 
 Make sure you have the following components installed:
-  - [JDK 6+](https://openjdk.java.net/install/) or later
+  - [JDK 6](https://openjdk.java.net/install/) or later
   - [Gradle](https://gradle.org/install/)
   - [Docker](https://docs.docker.com/engine/install/)
   - Make
