@@ -68,7 +68,7 @@ To run the JAR file directly on a host, do the following:
 
 1. Ensure you have JDK 6 or later installed.
 2. Go to the [releases page of this GitHub repository](https://github.com/Brightscout/mattermost-plugin-exchange-ews-proxy/releases) and download the JAR file from the latest release.
-3. Ensure that the environment variables are exported to the shell.
+3. Ensure that the [environment variables](#configuration) are exported to the shell.
 4. Start the server
 
     ```bash
@@ -78,10 +78,13 @@ To run the JAR file directly on a host, do the following:
 ## Development
 
 Make sure you have the following components installed:
-  - [JDK 6](https://openjdk.java.net/install/) or later
-  - [Gradle](https://gradle.org/install/)
-  - [Docker](https://docs.docker.com/engine/install/)
-  - Make
+
+- [JDK 6](https://openjdk.java.net/install/) or later
+- [Gradle](https://gradle.org/install/)
+- [Docker](https://docs.docker.com/engine/install/)
+- Make
+
+... and you have the [environment variables](#configuration) exported to the shell.
 
 ### Build and Run the JAR
 
@@ -105,5 +108,5 @@ To validate that it is running, open `http://localhost:8080` in your browser.
 
 Run these commands after installing Docker.
 
-    make build-server
-    make run-server
+  make build-server
+  make run-server
