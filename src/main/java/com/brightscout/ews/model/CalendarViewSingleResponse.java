@@ -3,6 +3,7 @@ package com.brightscout.ews.model;
 import java.util.List;
 
 import com.brightscout.ews.model.event.Event;
+import com.brightscout.ews.payload.ApiResponse;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -17,6 +18,13 @@ public class CalendarViewSingleResponse {
 	@NonNull
 	private String id;
 
-	@NonNull
 	private List<Event> events;
+
+	@NonNull
+	private ApiResponse error;
+
+	public CalendarViewSingleResponse(@NonNull String id, @NonNull List<Event> events) {
+		this.id = id;
+		this.events = events;
+	}
 }
