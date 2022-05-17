@@ -48,9 +48,13 @@ public class BatchServiceImpl implements BatchService {
 	public ResponseEntity<CalendarViewBatchResponse> getEvents(CalendarViewBatchRequest requests) throws InternalServerException {
 		List<CalendarViewSingleResponse> responses = new ArrayList<>();
 		for (CalendarViewSingleRequest request : requests.getRequests()) {
-			ResponseEntity<List<Event>> response = eventService.getEvents(
-					ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
-			responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
+			try {
+				ResponseEntity<List<Event>> response = eventService.getEvents(
+						ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
+				responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
+			} catch (InternalServerException e) {
+				responses.add(new CalendarViewSingleResponse(request.getId(), e.getApiResponse()));
+			}
 		}
 
 		return new ResponseEntity<>(new CalendarViewBatchResponse(responses), HttpStatus.OK);
