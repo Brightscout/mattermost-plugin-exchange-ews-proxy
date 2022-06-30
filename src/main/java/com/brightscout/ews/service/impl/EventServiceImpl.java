@@ -81,7 +81,6 @@ public class EventServiceImpl implements EventService {
 			// If IsCancelled property is not returned from the server set it to false by default
 			event.setCancelled(false);
 		}
-		event.setCancelled(appointment.getIsCancelled());
 		event.setResponseRequested(appointment.getIsResponseRequested());
 		event.setImportance(appointment.getImportance().toString());
 		event.setLocation(appointment.getLocation());
