@@ -25,11 +25,14 @@ import com.brightscout.ews.utils.AppUtils;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.availability.MeetingAttendeeType;
+import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.service.ResponseActions;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendInvitationsMode;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.property.complex.Attendee;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
@@ -72,12 +75,17 @@ public class EventServiceImpl implements EventService {
 		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString()));
 		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+		try {
+			event.setCancelled(appointment.getIsCancelled());
+		} catch(ServiceLocalException e) {
+			// If IsCancelled property is not returned from the server set it to false by default
+			event.setCancelled(false);
+		}
 		event.setCancelled(appointment.getIsCancelled());
 		event.setResponseRequested(appointment.getIsResponseRequested());
 		event.setImportance(appointment.getImportance().toString());
 		event.setLocation(appointment.getLocation());
 		event.setAllDay(appointment.getIsAllDayEvent());
-		event.setWebLink(appointment.getNetShowUrl());
 		event.setWebLink(getEventUrl(event.getId()));
 		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
@@ -128,6 +136,12 @@ public class EventServiceImpl implements EventService {
 			CalendarFolder calendar = CalendarFolder.bind(service, WellKnownFolderName.Calendar);
 			CalendarView calView = new CalendarView(AppUtils.parseDateString(start), AppUtils.parseDateString(end),
 					AppConstants.MAX_NUMBER_OF_EVENTS);
+			PropertySet propertySet = new PropertySet(
+				BasePropertySet.FirstClassProperties,
+				AppointmentSchema.AppointmentState,
+				AppointmentSchema.IsCancelled
+			);
+			calView.setPropertySet(propertySet);
 			FindItemsResults<Appointment> appointments = calendar.findAppointments(calView);
 			List<Event> events = new ArrayList<>();
 			for (Appointment appointment : appointments) {
