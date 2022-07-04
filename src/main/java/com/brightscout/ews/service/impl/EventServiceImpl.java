@@ -75,26 +75,39 @@ public class EventServiceImpl implements EventService {
 		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString()));
 		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+
 		try {
 			event.setCancelled(appointment.getIsCancelled());
 		} catch(ServiceLocalException e) {
-			// If IsCancelled property is not returned from the server set it to false by default
+			// If IsCancelled property is not returned from the server, set it to false by default
 			event.setCancelled(false);
 		}
+
 		try {
 			event.setResponseRequested(appointment.getIsResponseRequested());
 		} catch(ServiceLocalException e) {
-			event.setResponseRequested(false);
+			// We should not set the default value for this property as the actions to accept or decline
+			// an event depend on this property, so we are throwing the exception.
+			throw e;
 		}
-		event.setImportance(appointment.getImportance().toString());
-		event.setLocation(appointment.getLocation());
+
 		try {
 			event.setAllDay(appointment.getIsAllDayEvent());
 		} catch(ServiceLocalException e) {
+			// If IsAllDay property is not returned from the server, set it to false by default
 			event.setAllDay(false);
 		}
+
+		try {
+			event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
+		} catch (ServiceLocalException e) {
+			// If there is any exception in getting the IsAttendee property, set it to false by default
+			event.setAttendeeOrganizer(false);
+		}
+
+		event.setImportance(appointment.getImportance().toString());
+		event.setLocation(appointment.getLocation());
 		event.setWebLink(getEventUrl(event.getId()));
-		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
 		event.setOrganizer(new com.brightscout.ews.model.event.Attendee(
 				new EmailAddress(appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
