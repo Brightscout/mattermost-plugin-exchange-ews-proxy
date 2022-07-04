@@ -81,10 +81,18 @@ public class EventServiceImpl implements EventService {
 			// If IsCancelled property is not returned from the server set it to false by default
 			event.setCancelled(false);
 		}
-		event.setResponseRequested(appointment.getIsResponseRequested());
+		try {
+			event.setResponseRequested(appointment.getIsResponseRequested());
+		} catch(ServiceLocalException e) {
+			event.setResponseRequested(false);
+		}
 		event.setImportance(appointment.getImportance().toString());
 		event.setLocation(appointment.getLocation());
-		event.setAllDay(appointment.getIsAllDayEvent());
+		try {
+			event.setAllDay(appointment.getIsAllDayEvent());
+		} catch(ServiceLocalException e) {
+			event.setAllDay(false);
+		}
 		event.setWebLink(getEventUrl(event.getId()));
 		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
