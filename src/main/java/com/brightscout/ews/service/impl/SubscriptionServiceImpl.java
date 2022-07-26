@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private int subscriptionLifetimeInMinutes;
 
+	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+
 	public SubscriptionServiceImpl(@Value("${app.subscriptionLifetimeInMinutes}") int subscriptionLifetimeInMinutes) {
 		this.subscriptionLifetimeInMinutes = subscriptionLifetimeInMinutes;
 	}
@@ -32,6 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public ResponseEntity<Subscription> subscribeToPushNotifications(ExchangeService service, Subscription subscription)
 			throws InternalServerException {
+		logger.debug("Pushing the notification for subscription: {}", subscription.getSubscriptionId());
 		try {
 			// Get all folderIds of the user
 			List<FolderId> folderIds = new ArrayList<FolderId>();
@@ -43,6 +48,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 			return new ResponseEntity<Subscription>(new Subscription(pushSubscription.getId()), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while creating subscription. Error: " + e.getMessage()));
 		}
