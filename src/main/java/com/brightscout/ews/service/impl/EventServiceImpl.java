@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,8 @@ public class EventServiceImpl implements EventService {
 
 	private String exchangeServerUrl;
 
+	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+
 	public EventServiceImpl(@Value("${app.exchangeServerURL}") String exchangeServerUrl) {
 		this.exchangeServerUrl = exchangeServerUrl;
 	}
@@ -67,6 +71,7 @@ public class EventServiceImpl implements EventService {
 	private Event getEventFromAppointment(Appointment appointment) throws Exception {
 		Event event = new Event();
 		appointment.load();
+		logger.debug("Getting the event from appointment: {}", appointment.getId().toString());
 		event.setId(appointment.getId().toString());
 		event.setCalUId(appointment.getICalUid());
 		event.setSubject(appointment.getSubject().toString());
@@ -75,18 +80,43 @@ public class EventServiceImpl implements EventService {
 		event.setStart(new DateTime(dateFormat.format(appointment.getStart()).toString()));
 		event.setEnd(new DateTime(dateFormat.format(appointment.getEnd()).toString()));
 		event.setShowAs(appointment.getLegacyFreeBusyStatus().toString());
+
 		try {
 			event.setCancelled(appointment.getIsCancelled());
-		} catch(ServiceLocalException e) {
-			// If IsCancelled property is not returned from the server set it to false by default
+		} catch (ServiceLocalException e) {
+			logger.error(e.getMessage());
+			// If IsCancelled property is not returned from the server, set it to false by default
 			event.setCancelled(false);
 		}
-		event.setResponseRequested(appointment.getIsResponseRequested());
+
+		try {
+			event.setResponseRequested(appointment.getIsResponseRequested());
+		} catch (ServiceLocalException e) {
+			logger.error(e.getMessage());
+			// We should not set the default value for this property as the actions to accept or decline
+			// an event depend on this property, so we are throwing the exception.
+			throw e;
+		}
+
+		try {
+			event.setAllDay(appointment.getIsAllDayEvent());
+		} catch (ServiceLocalException e) {
+			logger.error(e.getMessage());
+			// If IsAllDay property is not returned from the server, set it to false by default
+			event.setAllDay(false);
+		}
+
+		try {
+			event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
+		} catch (ServiceLocalException e) {
+			logger.error(e.getMessage());
+			// If there is any exception in getting the IsAttendee property, set it to false by default
+			event.setAttendeeOrganizer(false);
+		}
+
 		event.setImportance(appointment.getImportance().toString());
 		event.setLocation(appointment.getLocation());
-		event.setAllDay(appointment.getIsAllDayEvent());
 		event.setWebLink(getEventUrl(event.getId()));
-		event.setAttendeeOrganizer(!appointment.getAllowedResponseActions().contains(ResponseActions.Accept));
 		event.setResponseStatus(new EventResponseStatus(appointment.getMyResponseType().toString()));
 		event.setOrganizer(new com.brightscout.ews.model.event.Attendee(
 				new EmailAddress(appointment.getOrganizer().getAddress(), appointment.getOrganizer().getName())));
@@ -123,6 +153,7 @@ public class EventServiceImpl implements EventService {
 
 			return new ResponseEntity<>(event, HttpStatus.CREATED);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while creating event. Error: " + e.getMessage()));
 		}
@@ -149,6 +180,7 @@ public class EventServiceImpl implements EventService {
 
 			return new ResponseEntity<>(events, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while fetching events. Error: " + e.getMessage()));
 		}
@@ -162,6 +194,7 @@ public class EventServiceImpl implements EventService {
 
 			return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while accepting event" + e.getMessage()));
 		}
@@ -175,6 +208,7 @@ public class EventServiceImpl implements EventService {
 
 			return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while declining event. Error: " + e.getMessage()));
 		}
@@ -188,6 +222,7 @@ public class EventServiceImpl implements EventService {
 
 			return new ResponseEntity<>(new Event(eventId), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while tentatively accepting event. Error: " + e.getMessage()));
 		}
@@ -198,6 +233,7 @@ public class EventServiceImpl implements EventService {
 		try {
 			return new ResponseEntity<Event>(getEventFromAppointment(Appointment.bind(service, new ItemId(id))), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching event by id. Error: " + e.getMessage()));
 		}

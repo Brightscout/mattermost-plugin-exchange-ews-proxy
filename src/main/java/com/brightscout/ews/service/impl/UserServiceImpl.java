@@ -1,5 +1,7 @@
 package com.brightscout.ews.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,12 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+	Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Override
 	public ResponseEntity<User> getUser(ExchangeService service, String email) throws InternalServerException {
+		logger.debug("Getting user details for user: {}", email);
 		try {
 			NameResolutionCollection resolvedNames = service.resolveName(email);
 
@@ -37,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
 			return new ResponseEntity<>(new User(mail, displayName, mail), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching user details. Error: " + e.getMessage()));
 		}

@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString
 public class Event {
 
 	@NonNull

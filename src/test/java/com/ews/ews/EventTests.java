@@ -41,10 +41,10 @@ public class EventTests {
 
     @Test
     public void createEventSuccess() {
-        ResponseEntity eventResponse = new ResponseEntity<>(event, HttpStatus.CREATED);
+        ResponseEntity<Event> eventResponse = new ResponseEntity<>(event, HttpStatus.CREATED);
         Mockito.when(eventService.createEvent(ewsService.impersonateUser(TestUtils.EMAIL), event)).thenReturn(eventResponse);
 
-        ResponseEntity eventResult = eventController.createEvent(TestUtils.EMAIL, event);
+        ResponseEntity<Event> eventResult = eventController.createEvent(TestUtils.EMAIL, event);
         Assertions.assertTrue(eventResult.equals(eventResponse));
     }
 

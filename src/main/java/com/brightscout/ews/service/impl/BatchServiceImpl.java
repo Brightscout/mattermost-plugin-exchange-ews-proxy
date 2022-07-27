@@ -3,6 +3,8 @@ package com.brightscout.ews.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,8 @@ public class BatchServiceImpl implements BatchService {
 
 	private SubscriptionService subscriptionService;
 
+	Logger logger = LoggerFactory.getLogger(BatchServiceImpl.class);
+
 	@Autowired
 	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService, SubscriptionService subscriptionService) {
 		this.ewsService = ewsService;
@@ -53,6 +57,7 @@ public class BatchServiceImpl implements BatchService {
 						ewsService.impersonateUser(request.getId()), request.getStartDateTime(), request.getEndDateTime());
 				responses.add(new CalendarViewSingleResponse(request.getId(), response.getBody()));
 			} catch (InternalServerException e) {
+				logger.error(e.getMessage());
 				responses.add(new CalendarViewSingleResponse(request.getId(), e.getApiResponse()));
 			}
 		}
@@ -68,6 +73,7 @@ public class BatchServiceImpl implements BatchService {
 				ResponseEntity<User> user = userService.getUser(ewsService.impersonateUser(email), email);
 				users.add(new UserBatchSingleResponse(user.getBody()));
 			} catch (InternalServerException e) {
+				logger.error(e.getMessage());
 				users.add(new UserBatchSingleResponse(new User(email), e.getApiResponse()));
 			}
 		}
@@ -85,6 +91,7 @@ public class BatchServiceImpl implements BatchService {
 						ewsService.impersonateUser(request.getEmail()), request.getSubscription());
 				subscriptions.add(new SubscriptionBatchSingleResponse(request.getEmail(), subscription.getBody()));
 			} catch (InternalServerException e) {
+				logger.error(e.getMessage());
 				subscriptions.add(new SubscriptionBatchSingleResponse(request.getEmail(), e.getApiResponse()));
 			}
 		}

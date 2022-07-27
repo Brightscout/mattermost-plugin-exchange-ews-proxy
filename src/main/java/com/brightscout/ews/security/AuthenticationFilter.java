@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +23,8 @@ import com.brightscout.ews.payload.ApiResponse;
 public class AuthenticationFilter extends OncePerRequestFilter {
 
 	private String secretAuthKey;
+
+	Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	@Autowired
 	public void setValues(@Value("${app.secretAuthKey}") String secretAuthKey) {
@@ -38,6 +42,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 			}
 		} catch (Exception ex) {
+			logger.error(ex.getMessage());
 			throw new UnauthorizedException(new ApiResponse(Boolean.FALSE,
 					"Could not set user authentication in security context. Error: " + ex.getMessage()));
 		}
