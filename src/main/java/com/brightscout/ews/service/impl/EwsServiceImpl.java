@@ -30,7 +30,7 @@ public class EwsServiceImpl implements EwsService {
 
 	private String exchangeServerUrl;
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(EwsServiceImpl.class);
 
 	public EwsServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerUrl) {
@@ -42,7 +42,7 @@ public class EwsServiceImpl implements EwsService {
 
 	@Override
 	public ExchangeService impersonateUser(String userEmail) {
-		logger.debug("Impersonating User for user: {}", userEmail);
+		logger.debug("Impersonating user with email: {}", userEmail);
 		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		service.setCredentials(credentials);

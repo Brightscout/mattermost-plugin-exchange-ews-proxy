@@ -38,7 +38,7 @@ public class BatchServiceImpl implements BatchService {
 
 	private SubscriptionService subscriptionService;
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(BatchServiceImpl.class);
 
 	@Autowired
 	public BatchServiceImpl(EwsService ewsService, EventService eventService, UserService userService, SubscriptionService subscriptionService) {

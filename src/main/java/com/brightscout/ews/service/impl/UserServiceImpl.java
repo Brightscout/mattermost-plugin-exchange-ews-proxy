@@ -19,7 +19,7 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 @Service
 public class UserServiceImpl implements UserService {
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Override
 	public ResponseEntity<User> getUser(ExchangeService service, String email) throws InternalServerException {

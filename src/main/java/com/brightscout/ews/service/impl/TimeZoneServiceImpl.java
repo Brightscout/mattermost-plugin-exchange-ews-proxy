@@ -24,12 +24,12 @@ import microsoft.exchange.webservices.data.misc.availability.TimeWindow;
 @Service
 public class TimeZoneServiceImpl implements TimeZoneService {
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(TimeZoneServiceImpl.class);
 
 	@Override
 	public ResponseEntity<String> getTimeZone(ExchangeService service, String userEmail)
 			throws InternalServerException {
-		logger.debug("Getting time zone for user: {}", userEmail);
+		logger.debug("Getting timezone for user: {}", userEmail);
 		try {
 			GetUserAvailabilityResults userAvailability = service.getUserAvailability(
 					Collections.singletonList(new AttendeeInfo(userEmail)),

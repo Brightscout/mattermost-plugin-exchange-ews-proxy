@@ -46,7 +46,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(CalendarServiceImpl.class);
 
 	public Calendar getCalendarById(ExchangeService service, String calendarId) throws Exception {
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, new FolderId(calendarId), PropertySet.FirstClassProperties);
@@ -126,7 +126,6 @@ public class CalendarServiceImpl implements CalendarService {
 	@Override
 	public ResponseEntity<MeetingTimeSuggestionResults> findMeetingTimes(ExchangeService service, String organizerEmail,
 			FindMeetingTimesParameters findMeetingTimes) throws InternalServerException {
-		logger.debug("Finding Meeting times for organizer: {}", organizerEmail);
 		try {
 			List<AttendeeInfo> attendees = new ArrayList<>();
 			for (com.brightscout.ews.model.event.Attendee attendee : findMeetingTimes.getAttendees()) {

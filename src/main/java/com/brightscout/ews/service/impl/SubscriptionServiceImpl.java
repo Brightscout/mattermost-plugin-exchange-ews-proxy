@@ -27,7 +27,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private int subscriptionLifetimeInMinutes;
 
-	Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 
 	public SubscriptionServiceImpl(@Value("${app.subscriptionLifetimeInMinutes}") int subscriptionLifetimeInMinutes) {
 		this.subscriptionLifetimeInMinutes = subscriptionLifetimeInMinutes;
@@ -36,7 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public ResponseEntity<Subscription> subscribeToPushNotifications(ExchangeService service, Subscription subscription)
 			throws InternalServerException {
-		logger.debug("Pushing the notification for subscription: {}", subscription.getSubscriptionId());
+		logger.debug("Subscribing to push notifications for subscription id: {}", subscription.getSubscriptionId());
 		try {
 			// Get all folderIds of the user
 			List<FolderId> folderIds = new ArrayList<FolderId>();
