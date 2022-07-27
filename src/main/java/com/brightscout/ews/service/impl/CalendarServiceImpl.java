@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
+	Logger logger = LoggerFactory.getLogger(CalendarServiceImpl.class);
+
 	public Calendar getCalendarById(ExchangeService service, String calendarId) throws Exception {
 		CalendarFolder calendarFolder = CalendarFolder.bind(service, new FolderId(calendarId), PropertySet.FirstClassProperties);
 		Calendar calendar = new Calendar(calendarFolder.getId().toString(), calendarFolder.getDisplayName());
@@ -53,6 +57,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<Calendar> createCalendar(ExchangeService service, Calendar calendar) throws InternalServerException {
+		logger.debug("Creating the calendar: {}", calendar.getId());
 		try {
 			CalendarFolder folder = new CalendarFolder(service);
 			folder.setDisplayName(calendar.getName());
@@ -60,6 +65,7 @@ public class CalendarServiceImpl implements CalendarService {
 			return new ResponseEntity<>(new Calendar(folder.getId().toString(), folder.getDisplayName()),
 					HttpStatus.CREATED);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while creating calendar. Error: " + e.getMessage()));
 		}
@@ -83,6 +89,7 @@ public class CalendarServiceImpl implements CalendarService {
 			}
 			return new ResponseEntity<>(calendars, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while fetching calendars. Error: " + e.getMessage()));
 		}
@@ -90,6 +97,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<Calendar> deleteCalendar(ExchangeService service, String calendarId) throws InternalServerException {
+		logger.debug("Deleting the calendar: {}", calendarId);
 		try {
 			FolderId folderId = new FolderId(calendarId);
 			Folder folder = Folder.bind(service, folderId);
@@ -97,6 +105,7 @@ public class CalendarServiceImpl implements CalendarService {
 			folder.delete(DeleteMode.HardDelete);
 			return new ResponseEntity<>(calendar, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while deleting calendar. Error: " + e.getMessage()));
 		}
@@ -104,9 +113,11 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public ResponseEntity<Calendar> getCalendar(ExchangeService service, String calendarId) throws InternalServerException {
+		logger.debug("Getting the calendar details: {}", calendarId);
 		try {
 			return new ResponseEntity<>(getCalendarById(service, calendarId), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(
 					new ApiResponse(Boolean.FALSE, "error occurred while fetching calendar. Error: " + e.getMessage()));
 		}
@@ -142,6 +153,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 			return new ResponseEntity<>(new MeetingTimeSuggestionResults(meetingTimes), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while finding meeting times. Error: " + e.getMessage()));
 		}

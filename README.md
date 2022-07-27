@@ -30,6 +30,7 @@ EWS_SECRET_AUTH_KEY=<secret>
 EWS_SUBSCRIPTION_LIFETIME_IN_MINUTES=30
 JAR_PATH=build/libs/*.jar
 SERVER_PORT=8080
+SERVER_LOG_LEVEL=<log-levels>
 ```
 
 | Variable | Description |
@@ -41,7 +42,8 @@ SERVER_PORT=8080
 | EWS_SECRET_AUTH_KEY | Secret used to authenticate API requests to this server.|
 | EWS_SUBSCRIPTION_LIFETIME_IN_MINUTES | Length of time that Exchange will tolerate delivery failures before cancelling subscriptions for a user.|
 | JAR_PATH | Path of the JAR file which is the server's executable.|
-| SERVER_PORT | Port on which the server listens.
+| SERVER_PORT | Port on which the server listens.|
+| SERVER_LOG_LEVEL | Log levels for server logging. Possible values are INFO, DEBUG, ERROR, TRACE.
 
 ### Run with Docker
 

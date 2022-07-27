@@ -2,6 +2,8 @@ package com.brightscout.ews.service.impl;
 
 import java.net.URI;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class EwsServiceImpl implements EwsService {
 
 	private String exchangeServerUrl;
 
+	Logger logger = LoggerFactory.getLogger(EwsServiceImpl.class);
+
 	public EwsServiceImpl(@Value("${app.username}") String username, @Value("${app.password}") String password,
 			@Value("${app.domain}") String domain, @Value("${app.exchangeServerURL}") String exchangeServerUrl) {
 		this.username = username;
@@ -38,12 +42,14 @@ public class EwsServiceImpl implements EwsService {
 
 	@Override
 	public ExchangeService impersonateUser(String userEmail) {
+		logger.debug("Impersonating user with email: {}", userEmail);
 		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
 		ExchangeCredentials credentials = new WebCredentials(username, password, domain);
 		service.setCredentials(credentials);
 		try {
 			service.setUrl(new URI(String.format("%s/%s", exchangeServerUrl, AppConstants.EXCHANGE_SERVER_ADDRESS)));
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new InternalServerException(new ApiResponse(Boolean.FALSE,
 					"error occurred while instantiating exchange service. Error: " + e.getMessage()));
 		}
