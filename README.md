@@ -54,6 +54,7 @@ The simplest way to run this service is to do so via Docker. A public [Docker im
 ```bash
 docker pull brightscout/mattermost-plugin-exchange-ews-proxy:latest
 ```
+**Note-** Users can also pull using the specific tag version that is same as the Github's latest release tag. Example- `docker pull brightscout/mattermost-plugin-exchange-ews-proxy:<tagname>`
 
 **Run the container:**
 
