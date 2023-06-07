@@ -19,15 +19,15 @@ The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service t
 
 ### Create an Exchange Service Account([Reference](https://www.cirrusinsight.com/knowledgebase/exchange-impersonated-sa))
 
-1. Go to you exchange admin center.(https://your-exchange-server-url/ecp)
+1. Go to your exchange admin center.(https://your-exchange-server-url/ecp)
 2. Click on 'recipients' in the navigation panel.
-3. Click the + and select the 'User mailbox' option to create the new service account.
+3. Click on the + icon and select the 'User mailbox' option to create the new service account.
 4. Select the 'New user' option and complete the form.
 5. Click on 'permissions' in the navigation panel.
-6. Click the + to add a new Role Group. Enter a value for Name and Description. Leave the 'Write scope' value set to 'Default’.
-7. Click the + under 'Roles' and add 'ApplicationImpersonation’. Click 'OK' once it has been added to the list.
-8. Click the + under 'Members' and add the service account you created. Click 'OK' once it has been added to the list.
-9. After completing the form click the 'Save' button and the new Role Group should be added to your list.
+6. Click on the + icon to add a new Role Group. Enter the values for Name and Description. Leave the 'Write scope' value set to 'Default’
+7. Click on the + icon under 'Roles' and add 'ApplicationImpersonation’. Click 'OK' once it has been added to the list.
+8. Click on the + icon under 'Members' and add the service account you created. Click 'OK' once it has been added to the list.
+9. After completing the form, click the 'Save' button and the new role group should be added to your list.
 
 ### Configuration
 
