@@ -27,7 +27,7 @@ The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service t
 6. Click on the + icon to add a new Role Group. Enter the values for Name and Description. Leave the 'Write scope' value set to 'Default’
 7. Click on the + icon under 'Roles' and add 'ApplicationImpersonation’. Click 'OK' once it has been added to the list.
 8. Click on the + icon under 'Members' and add the service account you created. Click 'OK' once it has been added to the list.
-9. After completing the form, click the 'Save' button and the new role group should be added to your list.
+9. After completing the form, click on the 'Save' button and the new role group should be added to your list.
 
 ### Configuration
 
