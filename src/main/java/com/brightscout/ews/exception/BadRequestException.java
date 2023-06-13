@@ -17,7 +17,7 @@ public class BadRequestException extends RuntimeException {
 	private ApiResponse apiResponse;
 
 	public BadRequestException(ApiResponse apiResponse) {
-		super();
+		super(apiResponse.getMessage());
 		this.apiResponse = apiResponse;
 	}
 

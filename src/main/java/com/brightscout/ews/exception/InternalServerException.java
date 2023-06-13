@@ -17,7 +17,7 @@ public class InternalServerException extends RuntimeException {
 	private ApiResponse apiResponse;
 
 	public InternalServerException(ApiResponse apiResponse) {
-		super();
+		super(apiResponse.getMessage());
 		this.apiResponse = apiResponse;
 	}
 

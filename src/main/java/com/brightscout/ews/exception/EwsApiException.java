@@ -14,7 +14,7 @@ public class EwsApiException extends RuntimeException {
 	private final String message;
 
 	public EwsApiException(HttpStatus status, String message) {
-		super();
+		super(message);
 		this.status = status;
 		this.message = message;
 	}
