@@ -20,7 +20,7 @@ public class UnauthorizedException extends RuntimeException {
 	private String message;
 
 	public UnauthorizedException(ApiResponse apiResponse) {
-		super();
+		super(apiResponse.getMessage());
 		this.apiResponse = apiResponse;
 	}
 
