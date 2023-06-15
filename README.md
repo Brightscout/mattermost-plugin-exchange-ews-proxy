@@ -19,7 +19,7 @@ The Microsoft Exchange Calendar EWS Proxy is a JAVA-based intermediary service t
 
 ### Create an Exchange Service Account([Reference](https://www.cirrusinsight.com/knowledgebase/exchange-impersonated-sa))
 
-1. Go to your exchange admin center.(https://your-exchange-server-url/ecp)
+1. Go to your Exchange admin center.(https://your-exchange-server-url/ecp)
 2. Click on 'recipients' in the navigation panel.
 3. Click on the + icon and select the 'User mailbox' option to create the new service account.
 4. Select the 'New user' option and complete the form.
