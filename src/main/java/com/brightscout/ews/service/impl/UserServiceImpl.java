@@ -13,6 +13,7 @@ import com.brightscout.ews.service.UserService;
 import com.brightscout.ews.utils.AppConstants;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.search.ResolveNameSearchLocation;
 import microsoft.exchange.webservices.data.misc.NameResolution;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<User> getUser(ExchangeService service, String email) throws InternalServerException {
 		logger.debug("Getting user details for user: {}", email);
 		try {
-			NameResolutionCollection resolvedNames = service.resolveName(email);
+			NameResolutionCollection resolvedNames = service.resolveName(email, ResolveNameSearchLocation.DirectoryOnly, false);
 
 			if (resolvedNames.getCount() == 0) {
 				throw new InternalServerException(
